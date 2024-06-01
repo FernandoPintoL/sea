@@ -3,6 +3,8 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\TipoDocumentoController;
+use App\Http\Controllers\HabitanteController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -21,4 +23,10 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+    /* TIPO DOCUMENTO RUTAS */
+    Route::resource('tipodocumento', TipoDocumentoController::class);
+    Route::post('/tipodocumento/query',[TipoDocumentoController::class, 'query'])->name('tipodocumento.query');
+    /* HABITANTES RUTAS */
+    Route::resource('habitante', HabitanteController::class);
+    Route::post('/habitante/query',[HabitanteController::class, 'query'])->name('habitante.query');
 });
