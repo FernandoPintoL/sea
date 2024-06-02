@@ -11,8 +11,8 @@ class Vehiculo extends Model
     protected $table = "vehiculo";
     protected $primaryKey = "id";
     protected $fillable = [
-        'placa' => "",
-        'photo_path' => "",
-        'tipo_vehiculo' => "automóvil",
+        'placa',
+        'photo_path',
+        'tipo_vehiculo',
     ];
 }

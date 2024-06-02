@@ -11,7 +11,7 @@ class TipoVivienda extends Model
     protected $table = "tipo_vivienda";
     protected $primaryKey = "id";
     protected $fillable = [
-        'sigla' => "",
-        'detalle' => "",
+        'sigla',
+        'detalle',
     ];
 }

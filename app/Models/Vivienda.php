@@ -12,11 +12,11 @@ class Vivienda extends Model
     protected $table = "vivienda";
     protected $primaryKey = "id";
     protected $fillable = [
-        'nroVivienda' => "",
-        'detalle' => "",
-        'nroEspacios' => 0,
-        "tipo_vivienda_id" => 0,
-        "condominio_id" => 0,
+        'nroVivienda',
+        'detalle',
+        'nroEspacios',
+        "tipo_vivienda_id", ///FK
+        "condominio_id", ///FK
     ];
 
     public function tipoVivienda(){

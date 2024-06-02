@@ -6,6 +6,7 @@ use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\HabitanteController;
 use App\Http\Controllers\VisitanteController;
 use App\Http\Controllers\PerfilController;
+use App\Http\Controllers\IngresoController;
 
 Route::get('/appuser', function (Request $request) {
     return $request->user();
@@ -30,3 +31,6 @@ Route::post('/apphabitante/query',[HabitanteController::class, 'query'])->name('
 /* VISITANTES RUTAS */
 Route::apiResource('appvisitante', VisitanteController::class);
 Route::post('/appvisitante/query',[VisitanteController::class, 'query'])->name('appvisitante.query');
+/* INGRESOS RUTAS */
+Route::apiResource('appingreso', IngresoController::class);
+Route::post('/appingreso/query',[IngresoController::class, 'query'])->name('appingreso.query');

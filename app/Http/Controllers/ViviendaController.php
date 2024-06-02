@@ -5,9 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Vivienda;
 use App\Http\Requests\StoreViviendaRequest;
 use App\Http\Requests\UpdateViviendaRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ViviendaController extends Controller
 {
+    public function query(Request $request){
+        try{
+            $response = Vivienda::all();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Listado correctamente..",
+                "data" => $response
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */

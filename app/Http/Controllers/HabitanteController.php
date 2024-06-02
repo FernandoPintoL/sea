@@ -36,6 +36,28 @@ class HabitanteController extends Controller
                 "data" => []
             ]);
         }
+    }
+    public function queryAutoriza(Request $request){
+        try{
+            $habitantes = Habitante::with('perfil')->with('responsable')->get();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Session cerrada conrrectamente..",
+                "data" => $habitantes
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }    
     public function index()
     {

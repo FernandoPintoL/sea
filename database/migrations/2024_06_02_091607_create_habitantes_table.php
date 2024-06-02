@@ -17,10 +17,12 @@ return new class extends Migration
             $table->boolean('isDependiente')->default(false)->nullable();
             $table->unsignedBigInteger('responsable_id')->nullable();
             $table->unsignedBigInteger('perfil_id')->nullable();
+            $table->unsignedBigInteger('vivienda_id')->nullable();
             $table->timestamps();
             $table->string('profile_photo_path', 2048)->default('')->nullable();
             $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'responsable_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'vivienda_id' )->references( 'id' )->on('viviendas')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

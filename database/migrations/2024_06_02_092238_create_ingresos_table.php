@@ -13,17 +13,19 @@ return new class extends Migration
     {
         Schema::create('ingresos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('visitante_id');
-            $table->unsignedBigInteger('autoriza_habitante_id');
-            $table->unsignedBigInteger('ingresa_habitante_id');
             $table->enum('tipo_ingreso', ['vehiculo','caminando'])->default('vehiculo')->nullable();
-            $table->unsignedBigInteger('vehiculo_id')->nullable();
             $table->string('detalle')->nullable();
             $table->boolean('isAutorizado')->default(false)->nullable();
+            $table->unsignedBigInteger('visitante_id');
+            $table->unsignedBigInteger('vivienda_id');
+            $table->unsignedBigInteger('autoriza_habitante_id');
+            $table->unsignedBigInteger('ingresa_habitante_id');
+            $table->unsignedBigInteger('vehiculo_id')->nullable();
             $table->unsignedBigInteger('tipo_visita_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->foreign( 'visitante_id' )->references( 'id' )->on('visitantes')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'vivienda_id' )->references( 'id' )->on('viviendas')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'autoriza_habitante_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'ingresa_habitante_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'vehiculo_id' )->references( 'id' )->on('vehiculos')->noActionOnDelete()->noActionOnUpdate();

@@ -11,8 +11,7 @@ class TipoVisita extends Model
     protected $table = "tipo_visitas";
     protected $primaryKey = "id";
     protected $fillable = [
-        'tipo_cambio',
-        'user_creacion_id',
-        'moneda_id' => 1,
+        'sigla',
+        'detalle'
     ];
 }
