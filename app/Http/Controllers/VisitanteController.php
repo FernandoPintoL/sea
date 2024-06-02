@@ -3,11 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Visitante;
+use App\Models\Perfil;
 use App\Http\Requests\StoreVisitanteRequest;
 use App\Http\Requests\UpdateVisitanteRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class VisitanteController extends Controller
 {
+    public function query(Request $request){
+        try{
+            $response = Visitante::with('perfil')->get();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Listado correctamente..",
+                "data" => $response
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */
@@ -29,7 +54,50 @@ class VisitanteController extends Controller
      */
     public function store(StoreVisitanteRequest $request)
     {
-        //
+        try{
+            $perfil = [];
+            if($request->isMobile){
+                $perfil    = $request->perfil;
+                $validator = Validator::make($perfil, [
+                    'name' => ['required', 'string', 'max:255', 'min:5'],
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:perfils'],
+                    'nroDocumento' => ['required','min:5'],
+                    'tipo_documento_id' => ['required', 'numeric']
+                ]);
+                if ($validator->fails()) {
+                    return response()->json( [ 
+                        "isRequest" => true,
+                        "success" => false,
+                        "messageError" => true,
+                        "message" => $validator->errors(),
+                        "data" => []
+                    ], 422 );
+                }
+                $perfil = Perfil::create($perfil);
+            }else{
+                $perfil = Perfil::create($request->all());
+            }
+            $responsse = Visitante::create([
+                'perfil_id' => $perfil->id
+            ]);
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $responsse != null,
+                "messageError" => $responsse != null,
+                "message" => $responsse != null ? "Registro completo" : "Error!!!",
+                "data" => $responsse
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 
     /**
@@ -51,9 +119,65 @@ class VisitanteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateVisitanteRequest $request, Visitante $visitante)
+    public function update(UpdateVisitanteRequest $request, Visitante $appvisitante)
     {
-        //
+        try{
+            /* return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Verificacion",
+                "data" => $apphabitante
+            ]);  */
+            $responsse = 0;
+            $perfil = Perfil::findOrFail($appvisitante->perfil_id);
+            if($request->isMobile){
+                /* $array    = $request->perfil;
+                $validator = Validator::make($array, [
+                    'name' => ['required', 'string', 'max:255', 'min:5'],
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:perfils'],
+                    'nroDocumento' => ['required','min:5'],
+                    'tipo_documento_id' => ['required', 'numeric']
+                ]);
+                if ($validator->fails()) {
+                    return response()->json( [ 
+                        "isRequest" => true,
+                        "success" => false,
+                        "messageError" => true,
+                        "message" => $validator->errors(),
+                        "data" => []
+                    ], 422 );
+                } */
+                $responsse = $perfil->update($request->perfil);
+            }else{
+                //ACTUALIZAR DESDE LA WEB
+                $responsse = $perfil->update($request->all());
+            }
+            /*$responsse = $appvisitante->update([
+                'isDuenho' => $request->isDuenho,
+                'isDependiente' => $request->isDependiente,
+                'responsable_id' => $request->responsable_id,
+                'perfil_id' => $request->perfil_id,
+                'profile_photo_path' => '',
+            ]);*/
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $responsse != null,
+                "messageError" => $responsse != null,
+                "message" => $responsse != null ? "Registro completo" : "Error!!!",
+                "data" => $responsse
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 
     /**
