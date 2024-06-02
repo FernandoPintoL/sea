@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('ingreso_id')->nullable();
             $table->text('detalle_no_autorizado')->default("")->nullable();
             $table->timestamps();
-            $table->foreign( "ingreso_id" )->references( "id" )->on("ingresos")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign( "ingreso_id" )->references( "id" )->on("ingresos")->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

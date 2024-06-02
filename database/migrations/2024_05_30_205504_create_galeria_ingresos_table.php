@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean("isAutorizado")->default(false);
             $table->unsignedBigInteger("ingreso_id")->default(0)->nullable();
             $table->timestamps();
-            $table->foreign( "ingreso_id" )->references( "id" )->on("ingresos")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign( "ingreso_id" )->references( "id" )->on("ingresos")->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

@@ -21,9 +21,9 @@ return new class extends Migration
             $table->unsignedBigInteger('perfil_id')->nullable();
             $table->unsignedBigInteger('tipo_vivienda_id')->default(0)->nullable();
             $table->timestamps();
-            $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign( 'condominio_id' )->references( 'id' )->on('condominios')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign( 'tipo_vivienda_id' )->references( 'id' )->on('tipo_viviendas')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'condominio_id' )->references( 'id' )->on('condominios')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'tipo_vivienda_id' )->references( 'id' )->on('tipo_viviendas')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

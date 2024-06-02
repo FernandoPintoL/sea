@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("detalle")->default("")->nullable();
             $table->unsignedBigInteger("condominio_id")->default(0)->nullable();
             $table->timestamps();
-            $table->foreign( "condominio_id" )->references( "id" )->on("condominios")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign( "condominio_id" )->references( "id" )->on("condominios")->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

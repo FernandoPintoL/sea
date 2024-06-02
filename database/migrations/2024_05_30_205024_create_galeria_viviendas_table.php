@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string("detalle")->default("")->nullable();
             $table->unsignedBigInteger("vivienda_id")->default(0)->nullable();
             $table->timestamps();
-            $table->foreign( "vivienda_id" )->references( "id" )->on("viviendas")->onDelete("cascade")->onUpdate("cascade");
+            $table->foreign( "vivienda_id" )->references( "id" )->on("viviendas")->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

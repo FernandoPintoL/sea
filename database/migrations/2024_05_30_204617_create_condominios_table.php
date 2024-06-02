@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('cantidad_viviendas')->default(0)->nullable();
             $table->unsignedBigInteger('perfil_id')->nullable();
             $table->timestamps();
-            $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

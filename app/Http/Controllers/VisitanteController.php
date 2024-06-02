@@ -132,34 +132,12 @@ class VisitanteController extends Controller
             $responsse = 0;
             $perfil = Perfil::findOrFail($appvisitante->perfil_id);
             if($request->isMobile){
-                /* $array    = $request->perfil;
-                $validator = Validator::make($array, [
-                    'name' => ['required', 'string', 'max:255', 'min:5'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:perfils'],
-                    'nroDocumento' => ['required','min:5'],
-                    'tipo_documento_id' => ['required', 'numeric']
-                ]);
-                if ($validator->fails()) {
-                    return response()->json( [ 
-                        "isRequest" => true,
-                        "success" => false,
-                        "messageError" => true,
-                        "message" => $validator->errors(),
-                        "data" => []
-                    ], 422 );
-                } */
+                //ACTUALIZACION DESDE EL MOVIL
                 $responsse = $perfil->update($request->perfil);
             }else{
                 //ACTUALIZAR DESDE LA WEB
                 $responsse = $perfil->update($request->all());
             }
-            /*$responsse = $appvisitante->update([
-                'isDuenho' => $request->isDuenho,
-                'isDependiente' => $request->isDependiente,
-                'responsable_id' => $request->responsable_id,
-                'perfil_id' => $request->perfil_id,
-                'profile_photo_path' => '',
-            ]);*/
             return response()->json([
                 "isRequest"=> true,
                 "success" => $responsse != null,
@@ -183,8 +161,37 @@ class VisitanteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Visitante $visitante)
+    public function destroy(Visitante $appvisitante)
     {
-        //
+        try{
+            /* return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Verificacion",
+                "data" => $apphabitante
+            ]);  */
+            $model = Perfil::findOrFail($appvisitante->perfil_id);
+            $response = $model->delete();
+            //$model = Visitante::findOrFail($appvisitante->id);
+            //$response = $model->delete();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $response,
+                "messageError" => !$response,
+                "message" => $response != null ? "Eliminado Correctamente" : "Error!!!",
+                "data" => []
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 }

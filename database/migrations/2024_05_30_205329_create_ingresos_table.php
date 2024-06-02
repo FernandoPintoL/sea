@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ingresos', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('visita_id');
+            $table->unsignedBigInteger('visitante_id');
             $table->unsignedBigInteger('autoriza_habitante_id');
             $table->unsignedBigInteger('ingresa_habitante_id');
             $table->enum('tipo_ingreso', ['vehiculo','caminando'])->default('vehiculo')->nullable();
@@ -23,11 +23,12 @@ return new class extends Migration
             $table->unsignedBigInteger('tipo_visita_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
-            $table->foreign( 'autoriza_habitante_id' )->references( 'id' )->on('habitantes')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign( 'ingresa_habitante_id' )->references( 'id' )->on('habitantes')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign( 'vehiculo_id' )->references( 'id' )->on('vehiculos')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign( 'tipo_visita_id' )->references( 'id' )->on('tipo_visitas')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign( 'user_id' )->references( 'id' )->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign( 'visitante_id' )->references( 'id' )->on('visitantes')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'autoriza_habitante_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'ingresa_habitante_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'vehiculo_id' )->references( 'id' )->on('vehiculos')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'tipo_visita_id' )->references( 'id' )->on('tipo_visitas')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'user_id' )->references( 'id' )->on('users')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\HabitanteController;
+use App\Http\Controllers\VisitanteController;
 use App\Http\Controllers\PerfilController;
 
 Route::get('/appuser', function (Request $request) {
@@ -18,11 +19,14 @@ Route::post('/appusers/loginOnApi', [UserController::class,'loginOnApi'])->name(
 Route::post('/appusers/logout', [UserController::class,'logout'])->name('appusers.logout');
 
 /* TIPO PERFIL RUTAS */
-Route::resource('appperfil', PerfilController::class);
+Route::apiResource('appperfil', PerfilController::class);
 Route::post('/appperfil/query',[PerfilController::class, 'query'])->name('appperfil.query');
 /* TIPO DOCUMENTO RUTAS */
-Route::resource('apptipodocumento', TipoDocumentoController::class);
+Route::apiResource('apptipodocumento', TipoDocumentoController::class);
 Route::post('/apptipodocumento/query',[TipoDocumentoController::class, 'query'])->name('apptipodocumento.query');
 /* HABITANTES RUTAS */
-Route::resource('apphabitante', HabitanteController::class);
+Route::apiResource('apphabitante', HabitanteController::class);
 Route::post('/apphabitante/query',[HabitanteController::class, 'query'])->name('apphabitante.query');
+/* VISITANTES RUTAS */
+Route::apiResource('appvisitante', VisitanteController::class);
+Route::post('/appvisitante/query',[VisitanteController::class, 'query'])->name('appvisitante.query');
