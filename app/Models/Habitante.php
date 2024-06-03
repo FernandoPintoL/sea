@@ -17,10 +17,14 @@ class Habitante extends Model
         'isDependiente',
         'responsable_id',
         'perfil_id',
+        'vivienda_id',
         'profile_photo_path'
     ];
     public function perfil(){
         return $this->belongsTo(Perfil::class, 'perfil_id','id');
+    }
+    public function vivienda(){
+        return $this->belongsTo(Vivienda::class, 'vivienda_id','id');
     }
     public function responsable(){
         return $this->hasOne(Habitante::class, 'responsable_id','id');

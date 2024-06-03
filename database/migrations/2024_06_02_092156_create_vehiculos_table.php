@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('placa')->default('')->nullable();
             $table->string('photo_path')->default('')->nullable();
             $table->string('detalle')->default('')->nullable();
-            $table->enum('tipo_vehiculo', ['automóvil','motocicleta','camión', 'bicicleta','caminando','otro'])->default('caminando')->nullable();
+            $table->enum('tipo_vehiculo', ['automóvil','motocicleta','camión', 'bicicleta','otro'])->default('automóvil')->nullable();
             $table->timestamps();
         });
     }
