@@ -9,12 +9,13 @@ use App\Models\Condominio;
 class Vivienda extends Model
 {
     use HasFactory;
-    protected $table = "vivienda";
+    protected $table = "viviendas";
     protected $primaryKey = "id";
     protected $fillable = [
         'nroVivienda',
         'detalle',
         'nroEspacios',
+        "vivienda_ocupada",
         "tipo_vivienda_id", ///FK
         "condominio_id", ///FK
     ];

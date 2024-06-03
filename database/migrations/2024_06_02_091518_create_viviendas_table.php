@@ -15,13 +15,11 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('condominio_id')->nullable();
             $table->boolean('vivienda_ocupada')->default(false)->nullable();
-            $table->unsignedBigInteger('nroVivienda')->default(0)->nullable();
+            $table->string('nroVivienda')->default("C1")->nullable();
             $table->string('detalle')->default("")->nullable();
-            $table->unsignedBigInteger('nroEspacios')->nullable();
-            $table->unsignedBigInteger('perfil_id')->nullable();
+            $table->unsignedInteger('nroEspacios')->default(1)->nullable();
             $table->unsignedBigInteger('tipo_vivienda_id')->default(0)->nullable();
             $table->timestamps();
-            $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'condominio_id' )->references( 'id' )->on('condominios')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'tipo_vivienda_id' )->references( 'id' )->on('tipo_viviendas')->noActionOnDelete()->noActionOnUpdate();
         });

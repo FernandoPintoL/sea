@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\TipoVisita;
 class TipoVisitaSeeder extends Seeder
 {
     /**
@@ -12,6 +12,13 @@ class TipoVisitaSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        TipoVisita::create([
+            'sigla' => "FT",
+            'detalle' => "FIESTA",
+        ]);
+        TipoVisita::create([
+            'sigla' => "OTRO",
+            'detalle' => "OTRO",
+        ]);
     }
 }

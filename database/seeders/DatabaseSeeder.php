@@ -21,6 +21,15 @@ class DatabaseSeeder extends Seeder
             'usernick' => 'administrador',
             'password' => '123456789',
         ]);
-        $this->call([TipoDocumentoSeeder::class]);
+        $this->call([
+            TipoDocumentoSeeder::class,
+            TipoViviendaSeeder::class,
+            TipoVisitaSeeder::class,
+            CondominioSeeder::class,
+            ViviendaSeeder::class,
+            HabitanteSeeder::class,
+            VisitanteSeeder::class,
+            IngresoSeeder::class
+        ]);
     }
 }
