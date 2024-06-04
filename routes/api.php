@@ -8,6 +8,7 @@ use App\Http\Controllers\VisitanteController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\TipoVisitaController;
+use App\Http\Controllers\VehiculoController;
 
 Route::get('/appuser', function (Request $request) {
     return $request->user();
@@ -42,5 +43,5 @@ Route::post('/appingreso/query',[IngresoController::class, 'query'])->name('appi
 Route::apiResource('apptipovisita', TipoVisitaController::class);
 Route::post('/apptipovisita/query',[TipoVisitaController::class, 'query'])->name('apptipovisita.query');
 /* VEHICULOS RUTAS */
-Route::apiResource('appvehiculo', TipoVisitaController::class);
-Route::post('/appvehiculo/query',[TipoVisitaController::class, 'query'])->name('appvehiculo.query');
+Route::apiResource('appvehiculo', VehiculoController::class);
+Route::post('/appvehiculo/query',[VehiculoController::class, 'query'])->name('appvehiculo.query');
