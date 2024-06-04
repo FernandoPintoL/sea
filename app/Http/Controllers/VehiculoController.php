@@ -5,9 +5,33 @@ namespace App\Http\Controllers;
 use App\Models\Vehiculo;
 use App\Http\Requests\StoreVehiculoRequest;
 use App\Http\Requests\UpdateVehiculoRequest;
+use Illuminate\Http\Request;
 
 class VehiculoController extends Controller
 {
+    public function query(Request $request){
+        try{
+            $query = Vehiculo::where('placa','LIKE',"%".$request->query."%")
+                    ->with('perfil')->with('responsable')->with('vivienda')->get();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta realizada",
+                "data" => $query
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    } 
     /**
      * Display a listing of the resource.
      */
