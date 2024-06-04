@@ -58,7 +58,7 @@ class TipoVisitaController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TipoVisita $tipoVisita)
+    public function show(TipoVisita $apptipoVisita)
     {
         //
     }

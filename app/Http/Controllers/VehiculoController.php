@@ -11,14 +11,14 @@ class VehiculoController extends Controller
 {
     public function query(Request $request){
         try{
-            $query = Vehiculo::where('placa','LIKE',"%".$request->query."%")
-                    ->with('perfil')->with('responsable')->with('vivienda')->get();
+            $queryStr    = $request->get('query');
+            $response = Vehiculo::where('placa','LIKE',"%".$queryStr."%")->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
                 "message" => "Consulta realizada",
-                "data" => $query
+                "data" => $response
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

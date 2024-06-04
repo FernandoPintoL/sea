@@ -44,9 +44,15 @@ class PerfilController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Perfil $perfil)
+    public function show(Perfil $appperfil)
     {
-        //
+        return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "consulta completa",
+                "data" => $appperfil
+        ]);
     }
 
     /**

@@ -13,7 +13,8 @@ class VisitanteController extends Controller
 {
     public function query(Request $request){
         try{
-            $response = Visitante::with('perfil')->get();
+            $queryStr    = $request->get('query');
+            $response = Visitante::where('placa','LIKE',"%".$queryStr."%")->with('perfil')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,

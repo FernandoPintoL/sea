@@ -131,9 +131,34 @@ class HabitanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Habitante $habitante)
+    public function show(Habitante $apphabitante)
     {
         //
+    }
+
+    public function getVivienda($idvivienda)
+    {
+        try{
+            $habitante = Habitante::where('vivienda_id','=',$idvivienda)->first();
+            // $perfil    = Perfil::findOrFail( $habitante->perfil_id );
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consula conrrectamente..",
+                "data" => $habitante->perfil
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 
     /**
