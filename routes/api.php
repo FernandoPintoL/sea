@@ -7,6 +7,7 @@ use App\Http\Controllers\HabitanteController;
 use App\Http\Controllers\VisitanteController;
 use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\IngresoController;
+use App\Http\Controllers\TipoVisitaController;
 
 Route::get('/appuser', function (Request $request) {
     return $request->user();
@@ -31,6 +32,15 @@ Route::post('/apphabitante/query',[HabitanteController::class, 'query'])->name('
 /* VISITANTES RUTAS */
 Route::apiResource('appvisitante', VisitanteController::class);
 Route::post('/appvisitante/query',[VisitanteController::class, 'query'])->name('appvisitante.query');
+/* VIVIENDAS RUTAS */
+Route::apiResource('appvivienda', VisitanteController::class);
+Route::post('/appvivienda/query',[VisitanteController::class, 'query'])->name('appvivienda.query');
 /* INGRESOS RUTAS */
 Route::apiResource('appingreso', IngresoController::class);
 Route::post('/appingreso/query',[IngresoController::class, 'query'])->name('appingreso.query');
+/* TIPOVISITA RUTAS */
+Route::apiResource('apptipovisita', TipoVisitaController::class);
+Route::post('/apptipovisita/query',[TipoVisitaController::class, 'query'])->name('apptipovisita.query');
+/* VEHICULOS RUTAS */
+Route::apiResource('appvehiculo', TipoVisitaController::class);
+Route::post('/appvehiculo/query',[TipoVisitaController::class, 'query'])->name('appvehiculo.query');

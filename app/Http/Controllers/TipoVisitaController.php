@@ -5,9 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\TipoVisita;
 use App\Http\Requests\StoreTipoVisitaRequest;
 use App\Http\Requests\UpdateTipoVisitaRequest;
-
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 class TipoVisitaController extends Controller
 {
+    public function query(Request $request){
+        try{
+            $response = TipoVisita::all();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta conrrectamente..",
+                "data" => $response
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */

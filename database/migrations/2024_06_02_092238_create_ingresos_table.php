@@ -16,13 +16,13 @@ return new class extends Migration
             $table->enum('tipo_ingreso', ['vehiculo','caminando'])->default('vehiculo')->nullable();
             $table->string('detalle')->default("")->nullable();
             $table->boolean('isAutorizado')->default(false)->nullable();
-            $table->unsignedBigInteger('visitante_id')->default(0);
-            $table->unsignedBigInteger('vivienda_id')->default(0);
-            $table->unsignedBigInteger('autoriza_habitante_id')->default(0); //HABITANTE QUE AUTORIZA EL INGRESO 
-            $table->unsignedBigInteger('ingresa_habitante_id')->default(0); //HABITANTE RESIDENTE QUE INGRESA
-            $table->unsignedBigInteger('vehiculo_id')->default(0)->nullable();
-            $table->unsignedBigInteger('tipo_visita_id')->default(0)->nullable(); 
-            $table->unsignedBigInteger('user_id')->default(0)->nullable();
+            $table->unsignedBigInteger('visitante_id')->nullable();
+            $table->unsignedBigInteger('vivienda_id')->nullable();
+            $table->unsignedBigInteger('autoriza_habitante_id')->nullable(); //HABITANTE QUE AUTORIZA EL INGRESO 
+            $table->unsignedBigInteger('ingresa_habitante_id')->nullable(); //HABITANTE RESIDENTE QUE INGRESA
+            $table->unsignedBigInteger('vehiculo_id')->nullable();
+            $table->unsignedBigInteger('tipo_visita_id')->nullable(); 
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->foreign( 'visitante_id' )->references( 'id' )->on('visitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'vivienda_id' )->references( 'id' )->on('viviendas')->noActionOnDelete()->noActionOnUpdate();

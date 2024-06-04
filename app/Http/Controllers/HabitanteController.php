@@ -17,7 +17,7 @@ class HabitanteController extends Controller
      */
     public function query(Request $request){
         try{
-            $habitantes = Habitante::with('perfil')->with('responsable')->get();
+            $habitantes = Habitante::with('perfil')->with('responsable')->with('vivienda')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
