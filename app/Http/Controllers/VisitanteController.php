@@ -14,7 +14,7 @@ class VisitanteController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Visitante::where('placa','LIKE',"%".$queryStr."%")->with('perfil')->get();
+            $response = Visitante::with('perfil')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
@@ -123,13 +123,6 @@ class VisitanteController extends Controller
     public function update(UpdateVisitanteRequest $request, Visitante $appvisitante)
     {
         try{
-            /* return response()->json([
-                "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Verificacion",
-                "data" => $apphabitante
-            ]);  */
             $responsse = 0;
             $perfil = Perfil::findOrFail($appvisitante->perfil_id);
             if($request->isMobile){
@@ -170,9 +163,11 @@ class VisitanteController extends Controller
                 "success" => false,
                 "messageError" => true,
                 "message" => "Verificacion",
-                "data" => $apphabitante
-            ]);  */
-            $model = Perfil::findOrFail($appvisitante->perfil_id);
+                "data" => $appvisitante
+            ]); */
+            $id       = $appvisitante->perfil_id;
+            $response = $appvisitante->delete();
+            $model = Perfil::findOrFail($id);
             $response = $model->delete();
             //$model = Visitante::findOrFail($appvisitante->id);
             //$response = $model->delete();
@@ -181,7 +176,7 @@ class VisitanteController extends Controller
                 "success" => $response,
                 "messageError" => !$response,
                 "message" => $response != null ? "Eliminado Correctamente" : "Error!!!",
-                "data" => []
+                "data" => $model
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

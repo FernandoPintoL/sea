@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('direccion')->default('')->nullable();
             $table->string('celular')->default('')->nullable();
             $table->string('nroDocumento')->default('')->nullable();
-            $table->unsignedBigInteger('tipo_documento_id')->default(0)->nullable();
+            $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->timestamps();
             $table->foreign( 'tipo_documento_id' )->references( 'id' )->on( 'tipo_documentos' )->noActionOnDelete()->noActionOnUpdate();
         });
