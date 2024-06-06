@@ -12,7 +12,8 @@ class VehiculoController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Vehiculo::where('placa','LIKE',"%".$queryStr."%")->get();
+            $response = Vehiculo::where('placa','LIKE',"%".$queryStr."%")
+                        ->orWhere('id','LIKE',"%".$queryStr."%")->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,

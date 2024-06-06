@@ -12,6 +12,7 @@ class Vehiculo extends Model
     protected $primaryKey = "id";
     protected $fillable = [
         'placa',
+        'detalle',
         'photo_path',
         'tipo_vehiculo',
     ];

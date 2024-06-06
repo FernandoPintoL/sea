@@ -8,13 +8,19 @@ use App\Http\Requests\StoreVisitanteRequest;
 use App\Http\Requests\UpdateVisitanteRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class VisitanteController extends Controller
 {
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Visitante::with('perfil')->get();
+            $response = DB::table('visitantes as v')
+                        ->select('v.*','p.*')
+                        ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
+                        ->where('p.name','LIKE',"%".$queryStr."%")
+                        ->orWhere('v.id','LIKE',"%".$queryStr."%")
+                        ->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
