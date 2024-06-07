@@ -21,6 +21,7 @@ class IngresoController extends Controller
                         ->with('autoriza')
                         ->with('vehiculo')
                         ->with('tipoVisita')
+                        ->with('vivienda')
                         ->with('visitante')->get();
             return response()->json([
                 "isRequest"=> true,
@@ -134,7 +135,44 @@ class IngresoController extends Controller
      */
     public function show(Ingreso $appingreso)
     {
-        //
+        try{
+            /*return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Llegando de la api..",
+                "data" => $appingreso->perfil
+            ]);*/
+            $responsse = $appingreso;
+            /*$responsse = $appingreso->update([
+                'tipo_ingreso' => $request->tipo_ingreso,
+                'detalle'=> $request->detalle,
+                'isAutorizado' => $request->isAutorizado,
+                'visitante_id' => $request->visitante_id, ///FK
+                'vivienda_id' => $request->vivienda_id, ///FK
+                'autoriza_habitante_id'=> $request->autoriza_habitante_id,
+                'vehiculo_id'=> $request->vehiculo_id == 0 ? null : $request->vehiculo_id, ///FK
+                'tipo_visita_id' => $request->tipo_visita_id, ///FK
+                'user_id' => $request->user_id,///FK
+            ]);*/
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $appingreso != null,
+                "messageError" => $appingreso != null,
+                "message" => $appingreso != null ? "Registro completo" : "Error!!!",
+                "data" => $appingreso
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 
     /**

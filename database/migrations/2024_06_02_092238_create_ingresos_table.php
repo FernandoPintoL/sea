@@ -17,7 +17,8 @@ return new class extends Migration
             $table->string('detalle')->default("")->nullable();
             $table->boolean('isAutorizado')->default(false)->nullable();
             $table->unsignedBigInteger('visitante_id')->nullable();
-            $table->unsignedBigInteger('vivienda_id')->nullable();
+            //$table->unsignedBigInteger('vivienda_id')->nullable();
+            $table->unsignedBigInteger('residente_habitante_id')->nullable(); //HABITANTE QUE AUTORIZA EL INGRESO 
             $table->unsignedBigInteger('autoriza_habitante_id')->nullable(); //HABITANTE QUE AUTORIZA EL INGRESO 
             $table->unsignedBigInteger('ingresa_habitante_id')->nullable(); //HABITANTE RESIDENTE QUE INGRESA
             $table->unsignedBigInteger('vehiculo_id')->nullable();
@@ -25,7 +26,7 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->foreign( 'visitante_id' )->references( 'id' )->on('visitantes')->noActionOnDelete()->noActionOnUpdate();
-            $table->foreign( 'vivienda_id' )->references( 'id' )->on('viviendas')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'residente_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'autoriza_habitante_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'ingresa_habitante_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'vehiculo_id' )->references( 'id' )->on('vehiculos')->noActionOnDelete()->noActionOnUpdate();
