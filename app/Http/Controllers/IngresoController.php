@@ -27,7 +27,7 @@ class IngresoController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Listado correctamente..",
+                "message" => "Consulta Ingreso realizada correctamente...",
                 "data" => $response
             ]);
         }catch(\Exception $e){

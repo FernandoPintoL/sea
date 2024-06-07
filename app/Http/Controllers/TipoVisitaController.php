@@ -16,7 +16,7 @@ class TipoVisitaController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta conrrectamente..",
+                "message" => "Consulta TipoVisita realizada correctamente...",
                 "data" => $response
             ]);
         }catch(\Exception $e){

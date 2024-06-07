@@ -145,7 +145,7 @@ class HabitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consula conrrectamente..",
+                "message" => "Consulta Habitante realizada correctamente...",
                 "data" => $habitante->perfil
             ]);
         }catch(\Exception $e){

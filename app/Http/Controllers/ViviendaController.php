@@ -17,7 +17,7 @@ class ViviendaController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Listado correctamente..",
+                "message" => "Consulta vivienda realizada correctamente...",
                 "data" => $response
             ]);
         }catch(\Exception $e){

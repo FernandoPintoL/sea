@@ -25,7 +25,7 @@ class VisitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Listado correctamente..",
+                "message" => "Consulta visitante realizada correctamente...",
                 "data" => $response
             ]);
         }catch(\Exception $e){

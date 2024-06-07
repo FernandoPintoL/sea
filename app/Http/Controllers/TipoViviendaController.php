@@ -5,9 +5,32 @@ namespace App\Http\Controllers;
 use App\Models\TipoVivienda;
 use App\Http\Requests\StoreTipoViviendaRequest;
 use App\Http\Requests\UpdateTipoViviendaRequest;
+use Illuminate\Http\Request;
 
 class TipoViviendaController extends Controller
 {
+    public function query(Request $request){
+        try{
+            $response = TipoVivienda::all();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta TipoVivienda realizada correctamente...",
+                "data" => $response
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */

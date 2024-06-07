@@ -20,7 +20,7 @@ class TipoDocumentoController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Session cerrada conrrectamente..",
+                "message" => "Consulta TipoDocumento realizada correctamente...",
                 "data" => $response
             ]);
         }catch(\Exception $e){
