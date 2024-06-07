@@ -12,7 +12,7 @@ class ViviendaController extends Controller
 {
     public function query(Request $request){
         try{
-            $response = Vivienda::all()->with('tipoVivienda');
+            $response = Vivienda::all()->with('tipoVivienda')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
