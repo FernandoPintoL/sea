@@ -9,6 +9,7 @@ use App\Http\Controllers\PerfilController;
 use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\TipoVisitaController;
 use App\Http\Controllers\VehiculoController;
+use App\Http\Controllers\ViviendaController;
 
 Route::get('/appuser', function (Request $request) {
     return $request->user();
@@ -35,8 +36,8 @@ Route::get('/apphabitante/vivienda/{idvivienda}',[HabitanteController::class, 'g
 Route::apiResource('appvisitante', VisitanteController::class);
 Route::post('/appvisitante/query',[VisitanteController::class, 'query'])->name('appvisitante.query');
 /* VIVIENDAS RUTAS */
-Route::apiResource('appvivienda', VisitanteController::class);
-Route::post('/appvivienda/query',[VisitanteController::class, 'query'])->name('appvivienda.query');
+Route::apiResource('appvivienda', ViviendaController::class);
+Route::post('/appvivienda/query',[ViviendaController::class, 'query'])->name('appvivienda.query');
 /* INGRESOS RUTAS */
 Route::apiResource('appingreso', IngresoController::class);
 Route::post('/appingreso/query',[IngresoController::class, 'query'])->name('appingreso.query');
