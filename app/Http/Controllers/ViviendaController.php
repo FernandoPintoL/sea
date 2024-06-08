@@ -12,7 +12,8 @@ class ViviendaController extends Controller
 {
     public function query(Request $request){
         try{
-            $response = Vivienda::all()->with('tipoVivienda')->get();
+            $queryStr    = $request->get('query');
+            $response = Vivienda::where('nroVivienda','LIKE',"%".$queryStr."%")->with('tipoVivienda')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
