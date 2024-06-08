@@ -32,6 +32,7 @@ Route::post('/apptipodocumento/query',[TipoDocumentoController::class, 'query'])
 Route::apiResource('apphabitante', HabitanteController::class);
 Route::post('/apphabitante/query',[HabitanteController::class, 'query'])->name('apphabitante.query');
 Route::get('/apphabitante/vivienda/{idvivienda}',[HabitanteController::class, 'getVivienda'])->name('apphabitante.getvivienda');
+Route::get('/apphabitante/residente/{idresidente}',[HabitanteController::class, 'getResidente'])->name('apphabitante.getResidente');
 /* VISITANTES RUTAS */
 Route::apiResource('appvisitante', VisitanteController::class);
 Route::post('/appvisitante/query',[VisitanteController::class, 'query'])->name('appvisitante.query');

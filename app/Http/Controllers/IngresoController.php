@@ -154,6 +154,7 @@ class IngresoController extends Controller
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id,///FK
             ]);*/
+            
             return response()->json([
                 "isRequest"=> true,
                 "success" => $appingreso != null,
@@ -195,6 +196,36 @@ class IngresoController extends Controller
                 "message" => "Llegando de la api..",
                 "data" => $request->all()
             ]); */ 
+            //creamos perfil
+                if($request->isNewVisitante){
+                    $profileId     = $request->perfil->id;
+                    $perfil = Perfil::findOrFail($profileId);
+                    $response  = $perfil->update( $request->perfil );
+                    /*$response = $perfil->update( [
+                        "name" => $request->perfil->name,
+                        "nroDocumento" => $request->perfil->nroDocumento,
+                        "celular" => $request->perfil->celular,
+                        "tipo_documento_id" => $request->perfil->tipo_documento_id
+                    ] );*/
+                }
+
+                if($request->isIngresoConVehiculo){
+                    if($request->isNewVehiculo){
+                        if($request->vehiculo_id == 0){
+                            $vehiculo = Vehiculo::create($request->vehiculo);
+                            $idVehiculo = $vehiculo->id;
+                        }else{
+                            $vehiculoID = $request->vehiculo->id;
+                            $vehiculo = Vehiculo::findOrFail($vehiculoID);
+                            $vehiculo->update($request->vehiculo);
+                            $idVehiculo = $vehiculoID;
+                        }
+                    }else{
+                        $idVehiculo = $request->vehiculo_id;
+                    }
+                }else{
+                    $idVehiculo = null;
+                }
             $responsse = $appingreso->update([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
@@ -202,7 +233,7 @@ class IngresoController extends Controller
                 'visitante_id' => $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
                 'autoriza_habitante_id'=> $request->autoriza_habitante_id,
-                'vehiculo_id'=> $request->vehiculo_id == 0 ? null : $request->vehiculo_id, ///FK
+                'vehiculo_id'=> $idVehiculo, ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id,///FK
             ]);

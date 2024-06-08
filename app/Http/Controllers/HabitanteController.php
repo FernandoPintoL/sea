@@ -9,7 +9,7 @@ use App\Http\Requests\UpdateHabitanteRequest;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-
+use Illuminate\Support\Facades\DB;
 class HabitanteController extends Controller
 {
     /**
@@ -149,6 +149,35 @@ class HabitanteController extends Controller
                 "messageError" => false,
                 "message" => "Consulta Habitante realizada correctamente...",
                 "data" => $habitante->perfil
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
+
+    public function getResidente($idresidente)
+    {
+        try{
+            $responsse = DB::table('habitantes as h')
+                        ->select('h.*','p.*','td.*')
+                        ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
+                        ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
+                        ->where('h.id','=',$idresidente)
+                        ->first();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta Residente realizada correctamente...",
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
