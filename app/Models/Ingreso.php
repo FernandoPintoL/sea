@@ -21,7 +21,7 @@ class Ingreso extends Model
         'detalle',
         'isAutorizado',
         'visitante_id', ///FK
-        'vivienda_id', ///FK
+        'residente_habitante_id', ///FK
         'autoriza_habitante_id', ///FK
         'ingresa_habitante_id', ///FK
         'vehiculo_id', ///FK
@@ -31,8 +31,8 @@ class Ingreso extends Model
     public function visitante(){
         return $this->belongsTo(Visitante::class, 'visitante_id','id');
     }
-    public function vivienda(){
-        return $this->belongsTo(Vivienda::class, 'vivienda_id','id');
+    public function residente(){
+        return $this->belongsTo(Habitante::class, 'residente_habitante_id','id');
     }
     public function autoriza(){
         return $this->belongsTo(Habitante::class, 'autoriza_habitante_id','id');

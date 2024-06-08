@@ -17,7 +17,9 @@ class HabitanteController extends Controller
      */
     public function query(Request $request){
         try{
-            $habitantes = Habitante::with('perfil')->with('responsable')->with('vivienda')->get();
+            $habitantes = Habitante::with('perfil')
+                        ->with('responsable')
+                        ->with('vivienda')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
@@ -32,7 +34,7 @@ class HabitanteController extends Controller
                 "isRequest"=> true,
                 "success" => false,
                 "messageError" => true,
-                "message" => $message." Code: ".$code,
+                "message" => "Consulta habitante/ ".$message." Code: ".$code,
                 "data" => []
             ]);
         }

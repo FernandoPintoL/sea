@@ -17,11 +17,10 @@ class IngresoController extends Controller
         try{
             $queryStr    = $request->get('query');
             $response = Ingreso::where('id','LIKE',"%".$queryStr."%")
-                        ->with('vivienda')
+                        ->with('residente')
                         ->with('autoriza')
                         ->with('vehiculo')
                         ->with('tipoVisita')
-                        ->with('vivienda')
                         ->with('visitante')->get();
             return response()->json([
                 "isRequest"=> true,
@@ -37,7 +36,7 @@ class IngresoController extends Controller
                 "isRequest"=> true,
                 "success" => false,
                 "messageError" => true,
-                "message" => $message." Code: ".$code,
+                "message" => "Consulta ingreso/ ".$message." Code: ".$code,
                 "data" => []
             ]);
         }
@@ -100,7 +99,7 @@ class IngresoController extends Controller
                     'detalle'=> $request->detalle,
                     'isAutorizado' => $request->isAutorizado,
                     'visitante_id' => $request->isNewVisitante ? $visitante->id : $request->visitante_id, ///FK
-                    'vivienda_id' => $request->vivienda_id, ///FK
+                    'residente_habitante_id' => $request->residente_habitante_id, ///FK
                     'autoriza_habitante_id'=> $request->autoriza_habitante_id,
                     'vehiculo_id'=> $idVehiculo, ///FK
                     'tipo_visita_id' => $request->tipo_visita_id, ///FK
@@ -201,7 +200,7 @@ class IngresoController extends Controller
                 'detalle'=> $request->detalle,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id, ///FK
-                'vivienda_id' => $request->vivienda_id, ///FK
+                'residente_habitante_id' => $request->residente_habitante_id, ///FK
                 'autoriza_habitante_id'=> $request->autoriza_habitante_id,
                 'vehiculo_id'=> $request->vehiculo_id == 0 ? null : $request->vehiculo_id, ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK

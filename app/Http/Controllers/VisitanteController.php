@@ -16,8 +16,9 @@ class VisitanteController extends Controller
         try{
             $queryStr    = $request->get('query');
             $response = DB::table('visitantes as v')
-                        ->select('v.*','p.*')
+                        ->select('v.*','p.*', 'td.*')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
+                        ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
                         ->where('p.name','LIKE',"%".$queryStr."%")
                         ->orWhere('v.id','LIKE',"%".$queryStr."%")
                         ->get();
@@ -35,7 +36,7 @@ class VisitanteController extends Controller
                 "isRequest"=> true,
                 "success" => false,
                 "messageError" => true,
-                "message" => $message." Code: ".$code,
+                "message" => "Consulta visitante/ ".$message." Code: ".$code,
                 "data" => []
             ]);
         }

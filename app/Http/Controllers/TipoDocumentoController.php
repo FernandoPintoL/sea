@@ -30,7 +30,7 @@ class TipoDocumentoController extends Controller
                 "isRequest"=> true,
                 "success" => false,
                 "messageError" => true,
-                "message" => $message." Code: ".$code,
+                "message" => "Consulta TipoDocumento/ ".$message." Code: ".$code,
                 "data" => []
             ]);
         }

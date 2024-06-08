@@ -28,7 +28,7 @@ class ViviendaController extends Controller
                 "isRequest"=> true,
                 "success" => false,
                 "messageError" => true,
-                "message" => $message." Code: ".$code,
+                "message" => "Consulta vivienda/ ".$message." Code: ".$code,
                 "data" => []
             ]);
         }
