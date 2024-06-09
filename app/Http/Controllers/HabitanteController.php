@@ -17,15 +17,26 @@ class HabitanteController extends Controller
      */
     public function query(Request $request){
         try{
-            $habitantes = Habitante::with('perfil')
-                        ->with('responsable')
-                        ->with('vivienda')->get();
+            $responsse = Habitante::with('perfil')
+                         ->with('vivienda')
+                         ->get();
+            /**$queryStr  = $request->get( 'query' );
+            $responsse = DB::table('habitantes as h')
+                        ->select('h.*','p.*','td.*','vd.*')
+                        ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
+                        ->join('viviendas as vd', 'h.vivienda_id', '=', 'h.id')
+                        ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
+                        ->where('h.id','LIKE','%'.$queryStr.'%')
+                        ->orWhere('p.nroDocumento','LIKE','%'.$queryStr.'%')
+                        ->orWhere('p.name','LIKE','%'.$queryStr.'%')
+                        ->orWhere('vd.nroVivienda','LIKE','%'.$queryStr.'%')
+                        ->get();**/
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Session cerrada conrrectamente..",
-                "data" => $habitantes
+                "message" => "Consulta de habitantes conrrectamente..",
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
@@ -167,8 +178,9 @@ class HabitanteController extends Controller
     {
         try{
             $responsse = DB::table('habitantes as h')
-                        ->select('h.*','p.*','td.*')
+                        ->select('h.*','p.*','td.*','vd.*')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
+                        ->join('viviendas as vd', 'h.vivienda_id', '=', 'h.id')
                         ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
                         ->where('h.id','=',$idresidente)
                         ->first();

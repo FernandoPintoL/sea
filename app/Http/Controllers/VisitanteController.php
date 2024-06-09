@@ -14,20 +14,21 @@ class VisitanteController extends Controller
 {
     public function query(Request $request){
         try{
-            $queryStr    = $request->get('query');
+            $responsse = Visitante::with( 'perfil' )->get();
+            /*$queryStr    = $request->get('query');
             $response = DB::table('visitantes as v')
                         ->select('v.*','p.*', 'td.*')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
                         ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
                         ->where('p.name','LIKE',"%".$queryStr."%")
                         ->orWhere('v.id','LIKE',"%".$queryStr."%")
-                        ->get();
+                        ->get();*/
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
                 "message" => "Consulta visitante realizada correctamente...",
-                "data" => $response
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
@@ -111,9 +112,34 @@ class VisitanteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Visitante $visitante)
+    public function show($appvisitante)
     {
-        //
+        try{
+            $responsse = Visitante::with( 'perfil' )->get();
+            /*$responsse = DB::table('visitantes as m')
+                        ->select('m.*','p.*','td.*')
+                        ->join('perfils as p', 'm.perfil_id', '=', 'p.id')
+                        ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
+                        ->where('m.id','=',$appvisitante)
+                        ->first();*/
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Show Visitante realizada correctamente...",
+                "data" => $responsse
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 
     /**

@@ -18,10 +18,10 @@ class IngresoController extends Controller
             $queryStr    = $request->get('query');
             $response = Ingreso::where('id','LIKE',"%".$queryStr."%")
                         ->with('residente')
-                        ->with('autoriza')
+                        ->with('visitante')
                         ->with('vehiculo')
                         ->with('tipoVisita')
-                        ->with('visitante')->get();
+                        ->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
@@ -189,26 +189,19 @@ class IngresoController extends Controller
     public function update(UpdateIngresoRequest $request, Ingreso $appingreso)
     {
         try{
-            /* return response()->json([
+            /*return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
                 "message" => "Llegando de la api..",
                 "data" => $request->all()
-            ]); */ 
+            ]); */
             //creamos perfil
-                if($request->isNewVisitante){
+                /*if($request->isNewVisitante){
                     $profileId     = $request->perfil->id;
                     $perfil = Perfil::findOrFail($profileId);
                     $response  = $perfil->update( $request->perfil );
-                    /*$response = $perfil->update( [
-                        "name" => $request->perfil->name,
-                        "nroDocumento" => $request->perfil->nroDocumento,
-                        "celular" => $request->perfil->celular,
-                        "tipo_documento_id" => $request->perfil->tipo_documento_id
-                    ] );*/
                 }
-
                 if($request->isIngresoConVehiculo){
                     if($request->isNewVehiculo){
                         if($request->vehiculo_id == 0){
@@ -225,7 +218,7 @@ class IngresoController extends Controller
                     }
                 }else{
                     $idVehiculo = null;
-                }
+                }*/
             $responsse = $appingreso->update([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
@@ -233,7 +226,7 @@ class IngresoController extends Controller
                 'visitante_id' => $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
                 'autoriza_habitante_id'=> $request->autoriza_habitante_id,
-                'vehiculo_id'=> $idVehiculo, ///FK
+                'vehiculo_id'=> $request->vehiculo_id != 0 ? $request->vehiculo_id : null,  ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id,///FK
             ]);
