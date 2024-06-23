@@ -12,8 +12,7 @@ class VehiculoController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Vehiculo::where('placa','LIKE',"%".$queryStr."%")
-                        ->orWhere('id','LIKE',"%".$queryStr."%")->get();
+            $response = Vehiculo::where('placa','LIKE',"%".$queryStr."%")->orderBy('id', 'DESC')->get();
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
@@ -32,7 +31,31 @@ class VehiculoController extends Controller
                 "data" => []
             ]);
         }
-    } 
+    }
+    
+    public function queryId(Request $request){
+        try{
+            $queryStr    = $request->get('query');
+            $response = Vehiculo::where('id','=',$queryStr)->get();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta Vehiculo realizada correctamente...",
+                "data" => $response
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Consulta vehiculo/ ".$message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */

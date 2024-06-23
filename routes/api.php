@@ -10,6 +10,8 @@ use App\Http\Controllers\IngresoController;
 use App\Http\Controllers\TipoVisitaController;
 use App\Http\Controllers\VehiculoController;
 use App\Http\Controllers\ViviendaController;
+use App\Http\Controllers\GaleriaVisitanteController;
+use App\Http\Controllers\GaleriaVehiculoController;
 
 Route::get('/appuser', function (Request $request) {
     return $request->user();
@@ -36,15 +38,26 @@ Route::get('/apphabitante/residente/{idresidente}',[HabitanteController::class, 
 /* VISITANTES RUTAS */
 Route::apiResource('appvisitante', VisitanteController::class);
 Route::post('/appvisitante/query',[VisitanteController::class, 'query'])->name('appvisitante.query');
+Route::post('/appvisitante/queryId',[VisitanteController::class, 'queryId'])->name('appvisitante.queryId');
 /* VIVIENDAS RUTAS */
 Route::apiResource('appvivienda', ViviendaController::class);
 Route::post('/appvivienda/query',[ViviendaController::class, 'query'])->name('appvivienda.query');
 /* INGRESOS RUTAS */
 Route::apiResource('appingreso', IngresoController::class);
 Route::post('/appingreso/query',[IngresoController::class, 'query'])->name('appingreso.query');
+
+/** GALERIA DE VISITANTES **/
+Route::apiResource('appgaleriavisitante', GaleriaVisitanteController::class);
+Route::post('/appgaleriavisitante/uploadimage', [GaleriaVisitanteController::class,'uploadimage'])->name('appgaleriavisitante.uploadimage');
+Route::post('/appgaleriavisitante/visitanteid',[GaleriaVisitanteController::class, 'getGaleriaVisitante'])->name('appgaleriavisitante.visitanteid');
+/** GALERIA DE VEHICULOS **/
+Route::apiResource('appgaleriavehiculo', GaleriaVehiculoController::class);
+Route::post('/appgaleriavehiculo/uploadimage', [GaleriaVehiculoController::class,'uploadimage'])->name('appgaleriavehiculo.uploadimage');
+Route::post('/appgaleriavehiculo/vehiculoid',[GaleriaVehiculoController::class, 'getGaleriaVehiculo'])->name('appgaleriavehiculo.vehiculoid');
 /* TIPOVISITA RUTAS */
 Route::apiResource('apptipovisita', TipoVisitaController::class);
 Route::post('/apptipovisita/query',[TipoVisitaController::class, 'query'])->name('apptipovisita.query');
 /* VEHICULOS RUTAS */
 Route::apiResource('appvehiculo', VehiculoController::class);
 Route::post('/appvehiculo/query',[VehiculoController::class, 'query'])->name('appvehiculo.query');
+Route::post('/appvehiculo/queryId',[VehiculoController::class, 'queryId'])->name('appvehiculo.queryId');

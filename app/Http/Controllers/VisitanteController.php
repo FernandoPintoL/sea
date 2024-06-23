@@ -14,14 +14,53 @@ class VisitanteController extends Controller
 {
     public function query(Request $request){
         try{
-            $responsse = Visitante::with( 'perfil' )->get();
-            /*$queryStr    = $request->get('query');
-            $response = DB::table('visitantes as v')
-                        ->select('v.*','p.*', 'td.*')
+            /*$responsse = Visitante::with( 'perfil' )
+                        ->where('id', '=', $request->get('query'))
+                        ->orderBy('id', 'DESC')
+                        ->get();*/
+            $queryStr    = $request->get('query');
+            $responsse = DB::table('visitantes as v')
+                        ->select('v.*','p.name','p.nroDocumento', 'p.celular', 'td.sigla', 'td.detalle')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
                         ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
                         ->where('p.name','LIKE',"%".$queryStr."%")
-                        ->orWhere('v.id','LIKE',"%".$queryStr."%")
+                        ->orWhere('p.nroDocumento','LIKE',"%".$queryStr."%")
+                        ->orderBy('v.created_at', 'DESC')
+                        ->get();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta visitante realizada correctamente...",
+                "data" => $responsse
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Consulta visitante/ ".$message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
+
+    public function queryId(Request $request){
+        try{
+            $responsse = Visitante::with( 'perfil' )
+                        ->where('id', '=', $request->get('query'))
+                        ->orderBy('id', 'DESC')
+                        ->get();
+            /*$queryStr    = $request->get('query');
+            $responsse = DB::table('visitantes as v')
+                        ->select('v.*','p.name','p.nroDocumento', 'p.celular', 'td.sigla', 'td.detalle')
+                        ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
+                        ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
+                        ->where('p.name','LIKE',"%".$queryStr."%")
+                        ->orWhere('p.nroDocumento','LIKE',"%".$queryStr."%")
+                        ->orderBy('v.created_at', 'DESC')
                         ->get();*/
             return response()->json([
                 "isRequest"=> true,
@@ -69,8 +108,7 @@ class VisitanteController extends Controller
                 $perfil    = $request->perfil;
                 $validator = Validator::make($perfil, [
                     'name' => ['required', 'string', 'max:255', 'min:5'],
-                    'email' => ['required', 'string', 'email', 'max:255', 'unique:perfils'],
-                    'nroDocumento' => ['required','min:5'],
+                    'nroDocumento' => ['required','min:5', 'unique:perfils'],
                     'tipo_documento_id' => ['required', 'numeric']
                 ]);
                 if ($validator->fails()) {
@@ -89,12 +127,16 @@ class VisitanteController extends Controller
             $responsse = Visitante::create([
                 'perfil_id' => $perfil->id
             ]);
+            $datas         = $responsse;
+            $datas->perfil = $responsse->perfil;
+            // $model     = Visitante::findOrFail( $responsse->id )->with('perfil');
+
             return response()->json([
                 "isRequest"=> true,
                 "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "messageError" => $responsse == null,
                 "message" => $responsse != null ? "Registro completo" : "Error!!!",
-                "data" => $responsse
+                "data" => $datas
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

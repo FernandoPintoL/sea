@@ -19,6 +19,7 @@ class HabitanteController extends Controller
         try{
             $responsse = Habitante::with('perfil')
                          ->with('vivienda')
+                         ->orderBy('id', 'DESC')
                          ->get();
             /**$queryStr  = $request->get( 'query' );
             $responsse = DB::table('habitantes as h')

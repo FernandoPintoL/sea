@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('perfils', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('')->nullable();
-            $table->string('email')->default('')->nullable();
+            $table->string('email')->default('')->nullable()->unique();
+            $table->string('nroDocumento')->default('')->nullable()->unique();
             $table->string('direccion')->default('')->nullable();
             $table->string('celular')->default('')->nullable();
-            $table->string('nroDocumento')->default('')->nullable();
             $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->timestamps();
             $table->foreign( 'tipo_documento_id' )->references( 'id' )->on( 'tipo_documentos' )->noActionOnDelete()->noActionOnUpdate();

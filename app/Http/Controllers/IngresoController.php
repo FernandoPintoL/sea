@@ -16,11 +16,11 @@ class IngresoController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Ingreso::where('id','LIKE',"%".$queryStr."%")
-                        ->with('residente')
+            $response = Ingreso::where('id','LIKE',"%".$queryStr."%")->with('residente')
                         ->with('visitante')
                         ->with('vehiculo')
                         ->with('tipoVisita')
+                        ->orderBy('id', 'DESC')
                         ->get();
             return response()->json([
                 "isRequest"=> true,
@@ -70,8 +70,8 @@ class IngresoController extends Controller
                 "message" => "Llegando de la api..",
                 "data" => $request->perfil
             ]); */
-            if($request->isMobile){
-                $perfilrequest = $request->perfil;
+            // if($request->isMobile){
+                /*$perfilrequest = $request->perfil;
                 $vehiculorequest = $request->vehiculo;
 
                 //creamos perfil
@@ -92,23 +92,24 @@ class IngresoController extends Controller
                     }
                 }else{
                     $idVehiculo = null;
-                }
+                }*/
 
-                $responsse = Ingreso::create([
-                    'tipo_ingreso' => $request->tipo_ingreso,
-                    'detalle'=> $request->detalle,
-                    'isAutorizado' => $request->isAutorizado,
-                    'visitante_id' => $request->isNewVisitante ? $visitante->id : $request->visitante_id, ///FK
-                    'residente_habitante_id' => $request->residente_habitante_id, ///FK
-                    'autoriza_habitante_id'=> $request->autoriza_habitante_id,
-                    'vehiculo_id'=> $idVehiculo, ///FK
-                    'tipo_visita_id' => $request->tipo_visita_id, ///FK
-                    'user_id' => $request->user_id,///FK
-                ]);
-            }else{
+                
+            // }else{
                 // $perfil = Perfil::create($request->all());
                 //TODAVIA NO CREA DESDE LA WEB
-            }
+            // }
+            $responsse = Ingreso::create([
+                'tipo_ingreso' => $request->tipo_ingreso,
+                'detalle'=> $request->detalle,
+                'isAutorizado' => $request->isAutorizado,
+                'visitante_id' => $request->visitante_id,// ? $visitante->id : $request->visitante_id, ///FK
+                'residente_habitante_id' => $request->residente_habitante_id, ///FK
+                'autoriza_habitante_id'=> $request->autoriza_habitante_id,
+                'vehiculo_id'=> $request->vehiculo_id == 0 ? null : $request->vehiculo_id, ///FK
+                'tipo_visita_id' => $request->tipo_visita_id, ///FK
+                'user_id' => $request->user_id,///FK
+            ]);
             return response()->json([
                 "isRequest"=> true,
                 "success" => $responsse != null,

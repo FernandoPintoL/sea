@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Contracts\Validation\Validator;
 
 class StoreVehiculoRequest extends FormRequest
 {
@@ -22,7 +24,26 @@ class StoreVehiculoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'placa' => ['required', 'string', 'max:50', 'min:4', 'unique:vehiculos'],
+            'tipo_vehiculo' => ['required'],
         ];
+    }
+    public function messages(){
+        return [
+            'tipo_vehiculo.required' => 'el :attribute es obligatorio.',
+            'placa.required' => 'La :attribute es obligatorio.',
+            'placa.max' => 'La :attribute tiene un maximo de 50 caracteres.',
+            'placa.min' => 'La :attribute tiene un minimo de 4 caracteres.',
+            'placa.unique' => 'La :attribute ya esta siendo usado.'
+        ];
+    }
+    protected function failedValidation(Validator $validator){
+        throw new HttpResponseException(response()->json([
+            "isRequest"=> true,
+            "success" => false,
+            "messageError" => true,
+            "message" => $validator->errors(),
+            "data" => []
+        ], 422));
     }
 }
