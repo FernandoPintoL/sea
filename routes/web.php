@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\TipoDocumentoController;
 use App\Http\Controllers\HabitanteController;
+use App\Http\Controllers\GaleriaVisitanteController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -29,4 +30,7 @@ Route::middleware([
     /* HABITANTES RUTAS */
     Route::resource('habitante', HabitanteController::class);
     Route::post('/habitante/query',[HabitanteController::class, 'query'])->name('habitante.query');
+
+    Route::post('/galeriavisitante/uploadimage', [GaleriaVisitanteController::class,'uploadimage'])->name('galeriavisitante.uploadimage');
+
 });
