@@ -16,7 +16,7 @@ class GaleriaVisitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Mensaje",
+                "message" => $request->hasFile('file'),
                 "data" => $request->all()
             ]);*/
             $model = GaleriaVisitante::create(["visitante_id" => $request->get("id")]);
