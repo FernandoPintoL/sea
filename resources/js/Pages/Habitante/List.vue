@@ -26,15 +26,24 @@ const datas = reactive({
 onMounted(() => {
   // datas.list = props.datas
   queryList('')
+  // getTipoDocumento(1)
 })
 const queryList = async (consulta) => {
   datas.isLoad = true
   const url = route('habitante.query', { query: consulta })
   await axios
     .post(url)
-    .then((response) => {
-      console.log(response)
-      datas.list = response.data
+    .then(async (response) => {
+      if (response.data.success) {
+        datas.list = response.data.data
+        for (const element of datas.list) {
+          element.detalle = await getTipoDocumento(
+            element.perfil.tipo_documento_id,
+          )
+        }
+      } else {
+        datas.list = []
+      }
     })
     .catch((error) => {
       console.log('respuesta error')
@@ -75,6 +84,27 @@ const destroyData = async (id) => {
 
 const fecha = (fechaData) => {
   return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+}
+
+const getTipoDocumento = async (tipoDocumento_id) => {
+  datas.isLoad = true
+  var tipoDocumento
+  const url = route('tipodocumento.show', { tipodocumento: tipoDocumento_id })
+  await axios
+    .get(url)
+    .then((response) => {
+      if (response.data.success) {
+        tipoDocumento = response.data.data
+      } else {
+        tipoDocumento = 'Error en la consulta!..'
+      }
+    })
+    .catch((error) => {
+      console.log('respuesta error')
+      console.log(error)
+    })
+  datas.isLoad = false
+  return tipoDocumento.detalle
 }
 </script>
 <template>
@@ -237,12 +267,12 @@ const fecha = (fechaData) => {
               placeholder="Search for items"
             />
           </div>
-          <Link
+          <!-- <Link
             :href="route('tipodocumento.create')"
             class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           >
             Crear
-          </Link>
+          </Link> -->
 
           <button
             type="button"
@@ -268,6 +298,12 @@ const fecha = (fechaData) => {
               </th>
               <th scope="col" class="px-6 py-3">
                 email
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Documento
+              </th>
+              <th scope="col" class="px-6 py-3">
+                Nro vivienda
               </th>
               <th scope="col" class="px-6 py-3">
                 Creado
@@ -297,6 +333,14 @@ const fecha = (fechaData) => {
               </td>
               <td class="px-6 py-4">
                 {{ habitante.perfil.email }}
+              </td>
+              <td class="px-6 py-4">
+                {{ habitante.perfil.nroDocumento }}
+                <br />
+                {{ habitante.detalle }}
+              </td>
+              <td class="px-6 py-4">
+                Nro: {{ habitante.vivienda.nroVivienda }}
               </td>
               <td class="px-6 py-4">
                 {{
@@ -360,7 +404,7 @@ const fecha = (fechaData) => {
       <span class="sr-only">Info</span>
       <div>
         <span class="font-medium">INFORMACION!</span>
-        LISTA DE HABITANTES VACIOS...
+        LISTA DE RESIDENTES VACIOS...
       </div>
     </div>
   </div>

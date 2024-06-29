@@ -1,7 +1,5 @@
 <script setup>
 import { Head, Link, useForm } from '@inertiajs/vue3'
-import AuthenticationCard from '@/Components/AuthenticationCard.vue'
-import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue'
 import Checkbox from '@/Components/Checkbox.vue'
 import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
@@ -53,7 +51,12 @@ const submit = () => {
             class="wrap-input100 validate-input m-b-26"
             data-validate="Username is required"
           >
-            <span class="label-input100">Username o Email</span>
+            <!-- <InputLabel class="label-input100">Username o Email</InputLabel> -->
+            <InputLabel
+              for="email"
+              value="Usernick o Email"
+              class="label-input100"
+            />
             <TextInput
               id="email"
               v-model="form.email"
@@ -61,7 +64,7 @@ const submit = () => {
               class="mt-1 block w-full"
               required
               autofocus
-              autocomplete="username"
+              autocomplete="email"
             />
             <span class="focus-input100"></span>
             <InputError class="mt-2" :message="form.errors.email" />
@@ -70,7 +73,12 @@ const submit = () => {
             class="wrap-input100 validate-input m-b-18"
             data-validate="Password is required"
           >
-            <span class="label-input100">Password</span>
+            <!-- <span class="label-input100">Password</span> -->
+            <InputLabel
+              for="password"
+              value="Password"
+              class="label-input100"
+            />
             <TextInput
               id="password"
               v-model="form.password"
@@ -79,15 +87,15 @@ const submit = () => {
               required
               autocomplete="current-password"
             />
-            <InputError class="mt-2" :message="form.errors.password" />
             <span class="focus-input100"></span>
+            <InputError class="mt-2" :message="form.errors.password" />
           </div>
 
-          <div class="flex-sb-m w-full p-b-30">
+          <!-- <div class="flex-sb-m w-full p-b-30">
             <div class="contact100-form-checkbox">
               <label class="flex items-center">
                 <Checkbox v-model:checked="form.remember" name="remember" />
-                <span class="ms-2 text-sm text-gray-600">Remember me</span>
+                <span class="ms-2 text-sm text-gray-600">Recuerdame</span>
               </label>
             </div>
 
@@ -97,19 +105,21 @@ const submit = () => {
                 :href="route('password.request')"
                 class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                Forgot your password?
+                Olvdidaste tu contraseña?
               </Link>
             </div>
-          </div>
+          </div> -->
 
           <div class="container-login100-form-btn">
-            <PrimaryButton
-              class="ms-4 login100-form-btn"
-              :class="{ 'opacity-25': form.processing }"
-              :disabled="form.processing"
-            >
-              Log in
-            </PrimaryButton>
+            <div class="flex items-center justify-end mt-4">
+              <PrimaryButton
+                class="ms-4 login100-form-btn"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+              >
+                Iniciar
+              </PrimaryButton>
+            </div>
           </div>
         </form>
       </div>

@@ -22,6 +22,13 @@ class DatabaseSeeder extends Seeder
             'usernick' => 'administrador',
             'password' => Hash::make('123456789'),
         ]);
+
+        User::create([
+            'name' => 'Condominio Sevilla',
+            'email' => 'sevilla@gmail.com',
+            'usernick' => 'sevilla',
+            'password' => Hash::make('123456789'),
+        ]);
         $this->call([
             TipoDocumentoSeeder::class,
             TipoViviendaSeeder::class,

@@ -19,14 +19,15 @@ class CondominioSeeder extends Seeder
             'direccion' => 'B/Conavi, 15',
             'celular' => '3936031',
             'nroDocumento' => '109623235',
-            'tipo_documento_id' => 3,
+            'tipo_documento_id' => 3
         ]);
         Condominio::create([
             'propietario'=> 'SEVILLA',
             'razonSocial'=> 'SEVILLA CONDOMINIOS',
             'nit' => '109623235',
             'cantidad_viviendas' => 20,
-            'perfil_id' => $perfil->id
+            'perfil_id' => $perfil->id,
+            'user_id' => 2,
         ]);
     }
 }

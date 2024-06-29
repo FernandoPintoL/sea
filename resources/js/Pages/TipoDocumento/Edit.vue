@@ -14,13 +14,13 @@ const props = defineProps({
   tipodocumento: Object,
 })
 
-const swal = inject('$swal')
-
 const tipodocumento = useForm({
   id: props.tipodocumento.id,
   sigla: props.tipodocumento.sigla,
   detalle: props.tipodocumento.detalle,
 })
+
+const swal = inject('$swal')
 
 const messages = reactive({
   eSigla: [],

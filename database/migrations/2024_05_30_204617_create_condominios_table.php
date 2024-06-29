@@ -18,8 +18,10 @@ return new class extends Migration
             $table->string('nit')->default('')->nullable();
             $table->unsignedBigInteger('cantidad_viviendas')->default(0)->nullable();
             $table->unsignedBigInteger('perfil_id')->nullable();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
             $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->noActionOnDelete()->noActionOnUpdate();
+            $table->foreign( 'user_id' )->references( 'id' )->on('users')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

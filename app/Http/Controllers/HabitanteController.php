@@ -147,7 +147,7 @@ class HabitanteController extends Controller
      */
     public function show(Habitante $apphabitante)
     {
-        //
+           
     }
 
     public function getVivienda($idvivienda)

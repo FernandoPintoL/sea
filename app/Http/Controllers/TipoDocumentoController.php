@@ -81,9 +81,29 @@ class TipoDocumentoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TipoDocumento $tipoDocumento)
+    public function show(TipoDocumento $tipodocumento)
     {
-        //
+        try{
+            // $habitante = Habitante::where('vivienda_id','=',$idvivienda)->first();
+            // $perfil    = Perfil::findOrFail( $habitante->perfil_id );
+            return response()->json([
+                "isRequest"=> true,
+                "success" => true,
+                "messageError" => false,
+                "message" => "Consulta Habitante realizada correctamente...",
+                "data" => $tipodocumento
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 
     /**
