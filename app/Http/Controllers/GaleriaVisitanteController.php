@@ -33,7 +33,7 @@ class GaleriaVisitanteController extends Controller
                 $file = $request->file( 'file' );
                 $extension = $file->getClientOriginalExtension();
                 $filename= "cod".$model->id."-visitanteid".$request->get("id").'.'.$extension;
-                $path = $file->storeAs('/visitantes', $filename, 'public');
+                $path = $file->storeAs('visitantes', $filename, 'public');
                 //$path = Storage::putFileAs('/visitantes', $request->file('file'), $filename);
                 //$path = Storage::disk('s3')->put('visitantes', $file);
                 
