@@ -29,8 +29,8 @@ class GaleriaVehiculoController extends Controller
 
             if($request->hasFile('file')){
                 $extension = $request->file('file')->getClientOriginalExtension();
-                $filename= "cod".$model->id."vehiculoid".$request->get("id").'.'.$extension;
-                $path = $request->file('file')->storeAs('galeriavehiculos', $filename);
+                $filename= "cod".$model->id."-vehiculoid".$request->get("id").'.'.$extension;
+                $path = $request->file('file')->storeAs('vehiculos', $filename, 'public');
                 //$path = Storage::putFileAs('images', $request->file('file'), $filename);
                 $url = Storage::url($path);
                 //$item = Item::find($request->get("id"))->first();
