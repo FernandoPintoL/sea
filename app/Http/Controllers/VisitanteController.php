@@ -15,12 +15,17 @@ class VisitanteController extends Controller
 {
     public function query(Request $request){
         try{
-            /*$responsse = Visitante::with( 'perfil' )
-                        ->where('id', '=', $request->get('query'))
-                        ->orderBy('id', 'DESC')
-                        ->get();*/
             $queryStr    = $request->get('query');
-            $responsse = DB::table('visitantes as v')
+            if($request->get('black_list')){
+                $responsse = DB::table('visitantes as v')
+                        ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
+                        ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
+                        // ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
+                        ->where('v.is_permitido','=', false)
+                        ->orderBy('v.created_at', 'DESC')
+                        ->get();
+            }else{
+                $responsse = DB::table('visitantes as v')
                         ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
                         // ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
@@ -28,6 +33,8 @@ class VisitanteController extends Controller
                         ->orWhere('p.nroDocumento','LIKE',"%".$queryStr."%")
                         ->orderBy('v.created_at', 'DESC')
                         ->get();
+            }
+            
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
@@ -137,6 +144,8 @@ class VisitanteController extends Controller
                 ]); 
             }
             $responsse = Visitante::create([
+                'is_permitido' => $request->is_permitido,
+                'descripition_is_no_permitido' => $request->descripition_is_no_permitido,
                 'perfil_id' => $perfil->id,
                 'created_at' => $request->created_at,
                 'updated_at' => $request->updated_at,
@@ -229,6 +238,33 @@ class VisitanteController extends Controller
                     'updated_at' => toDay(),
                 ]);
             }
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $responsse != null,
+                "messageError" => $responsse != null,
+                "message" => $responsse != null ? "Registro completo" : "Error!!!",
+                "data" => $responsse
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => $message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
+
+    public function updateIsPermitido(Request $request, Visitante $visitante){
+        try{
+            // $visitante = Visitante::findOrFail( $request->get('id'));
+            $responsse = $visitante->update( [
+                    'is_permitido' => $request->get('is_permitido'),
+                    'description_is_no_permitido' => $request->get('description_is_no_permitido')
+            ] );
             return response()->json([
                 "isRequest"=> true,
                 "success" => $responsse != null,
