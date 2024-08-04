@@ -1,6 +1,5 @@
 import './bootstrap';
 import '../css/app.css';
-import 'flowbite';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
@@ -9,6 +8,7 @@ import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import VueSweetalert2 from 'vue-sweetalert2';
 import moment from 'moment';
 import $ from "jquery";
+import 'flowbite';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

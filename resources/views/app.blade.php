@@ -21,30 +21,35 @@
     <link rel="stylesheet" href="{{ asset('assets/css/fontawesome/css/solid.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/fontawesome/css/regular.css') }}">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
-
-    {{-- <script src="{{ asset('assets/js/flowbite.min.js') }}"></script> --}}
+    <script src="{{ asset('assets/js/flowbite.min.js') }}"></script>
 
     <!-- Scripts -->
     @routes
     {{-- @vite(['resources/css/app.css','resources/js/app.js']) --}}
     @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
     @inertiaHead
+    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
+    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 </head>
 <body class="font-sans antialiased">
     @inertia
-    <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
+
     <script src="{{ asset('assets/js/dataTables.js') }}"></script>
-    <script src="{{ asset('assets/js/select2.min.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#select-residente').select2();
-            $('.select-custom').select2();
+            // $('#select-residente').select2();
+            $('select').select2();
         });
-        (function() {
+        /*(function() {
             $('#select-residente').select2();
             $('.select-custom').select2();
-        })(jQuery)
+        })(jQuery)*/
 
     </script>
 

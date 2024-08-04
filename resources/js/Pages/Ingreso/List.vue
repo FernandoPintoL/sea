@@ -111,6 +111,7 @@ const fecha = (fechaData) => {
       </button>
       <!-- Dropdown menu -->
     </div>
+    <!-- BUTTON BUSQUEDA -->
     <label for="table-search" class="sr-only">Buscar</label>
     <div class="relative">
       <div
@@ -182,25 +183,13 @@ const fecha = (fechaData) => {
                 ID
               </th>
               <th scope="col" class="px-3 py-2">
-                Autorizado
+                Residente
               </th>
               <th scope="col" class="px-3 py-2">
-                Tipo Ingreso
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Tipo Visita
+                Visitante
               </th>
               <th scope="col" class="px-3 py-2">
                 Detalle
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Vehiculo
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Creado
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Accion
               </th>
             </tr>
           </thead>
@@ -210,71 +199,83 @@ const fecha = (fechaData) => {
               :key="item.id"
               class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
             >
+              <!-- ID'S Y DATOS DE INGRESOS -->
               <th
                 scope="row"
                 class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
               >
-                {{ item.id }}
-              </th>
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {{ item.isAutorizado ? 'AUTORIZADO' : 'NO AUTORIZADO' }}
-              </td>
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {{ item.tipo_ingreso.toUpperCase() }}
-              </td>
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {{ item.detalle != null ? item.detalle : '' }}
-              </td>
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                {{ item.detalle }}
-              </td>
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <!-- {{ item.vehiculo_id != null ? item.vehiculo.placa : '' }} -->
-                placa
-              </td>
-              <td class="px-3 py-3">
-                {{ item.created_at != null ? fecha(item.created_at) : '' }}
-              </td>
-              <!-- <td class="px-6 py-4">
-                {{
-                  tipodocumento.updated_at != null
-                    ? fecha(tipodocumento.updated_at)
-                    : ''
-                }}
-              </td> -->
-              <td class="px-3 py-3">
-                <Link
-                  :href="route('ingreso.edit', item.id)"
-                  class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+                <span>#{{ item.id }}</span>
+                <br />
+                <span
+                  :class="item.isAutorizado ? 'text-green-600' : 'text-red-600'"
                 >
-                  Editar
-                  <i class="fa-solid fa-pencil"></i>
-                </Link>
-                <!-- <button
-                  type="submit"
-                  class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                  {{ item.isAutorizado ? 'AUTORIZADO' : 'NO AUTORIZADO' }}
+                </span>
+                <br />
+                <span
+                  :class="
+                    item.vehiculo_id != null
+                      ? 'text-teal-600'
+                      : 'text-slate-800'
+                  "
                 >
-                  Delete
-                </button> -->
-                <!-- <input type="hidden" name="_method" value="DELETE" /> -->
-                <!-- <form @submit.prevent="destroyData(tipodocumento.id)">
-                  <button
-                    type="submit"
-                    class="font-medium text-red-600 dark:text-red-500 hover:underline"
+                  {{
+                    item.vehiculo_id != null
+                      ? 'INGRESO CON VEHICULO'
+                      : 'INGRESO SIN VEHICULO'
+                  }}
+                </span>
+                <br />
+                <span>
+                  Registrado:
+                  {{ item.created_at != null ? item.created_at : '' }}
+                </span>
+                <br />
+                <span class="mb-2">
+                  {{
+                    item.salida_created_at != null
+                      ? 'Salida registrada: ' + item.salida_created_at
+                      : 'SIN REGISTRO DE SALIDA'
+                  }}
+                </span>
+                <br />
+                <div>
+                  <Link
+                    :href="route('ingreso.edit', item.id)"
+                    class="mt-2 px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   >
-                    Delete
-                  </button>
-                </form> -->
+                    Editar
+                    <i class="fa-solid fa-pencil"></i>
+                  </Link>
+                </div>
+              </th>
+              <!-- RESIDENTE -->
+              <td
+                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                <span>{{ item.name_residente.toUpperCase() }}</span>
+                <br />
+                <span class="text-teal-600">
+                  Nro Doc: {{ item.nroDocumento_residente }}
+                </span>
+              </td>
+              <!-- VISITANTE -->
+              <td
+                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                <span>{{ item.name_visitante.toUpperCase() }}</span>
+                <br />
+                <span class="text-teal-600">
+                  Nro Doc: {{ item.nroDocumento_visitante }}
+                </span>
+              </td>
+              <!-- DETALLE -->
+              <td
+                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+              >
+                <p>
+                  {{ item.detalle.toUpperCase() }}
+                </p>
               </td>
             </tr>
           </tbody>

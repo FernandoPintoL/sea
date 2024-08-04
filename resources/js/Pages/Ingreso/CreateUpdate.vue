@@ -11,6 +11,7 @@ import TextInput from '@/Components/TextInput.vue'
 import moment from 'moment'
 import '../../../../public/assets/js/select2.min.js'
 import '../../../../public/assets/css/select2.min.css'
+import Select2 from 'vue3-select2-component'
 
 const Swal = inject('$swal')
 
@@ -36,10 +37,10 @@ const form = useForm({
 })
 
 onBeforeMount(() => {
-  queryResidentes('')
+  /*queryResidentes('')
   queryVisitantes('')
   queryVehiculos('')
-  queryTipoVisitas('')
+  queryTipoVisitas('')*/
   /*$(document).ready(function () {
     console.log('montado')
     $('#select-residente').select2()
@@ -47,11 +48,14 @@ onBeforeMount(() => {
 })
 
 onMounted(() => {
-  /*queryResidentes('')
+  console.log(props.model)
+  changeLoad(true)
+  queryResidentes('')
   queryVisitantes('')
   queryVehiculos('')
   queryTipoVisitas('')
-  $(document).ready(function () {
+  changeLoad(false)
+  /*$(document).ready(function () {
     console.log('montado')
     $('#select-residente').select2()
   })*/
@@ -215,7 +219,6 @@ const updateInformation = async () => {
 }
 
 const queryResidentes = async (consulta) => {
-  changeLoad(true)
   const url = route('habitante.query', { query: consulta })
   await axios
     .post(url)
@@ -235,11 +238,9 @@ const queryResidentes = async (consulta) => {
       console.log('respuesta error')
       console.log(error)
     })
-  changeLoad(false)
 }
 
 const queryVisitantes = async (consulta) => {
-  changeLoad(true)
   const url = route('visitante.query', { query: consulta })
   await axios
     .post(url)
@@ -259,22 +260,22 @@ const queryVisitantes = async (consulta) => {
       console.log('respuesta error')
       console.log(error)
     })
-  changeLoad(false)
 }
 
 const queryVehiculos = async (consulta) => {
-  changeLoad(true)
   const url = route('vehiculo.query', { query: consulta })
   await axios
     .post(url)
     .then((response) => {
       if (response.data.success) {
         reactives.list_vehiculos = response.data.data
+        console.log('vehiculos')
+        console.log(reactives.list_vehiculos)
         if (reactives.list_vehiculos.length > 0) {
           if (props.model != null) {
             form.vehiculo_id = props.model.vehiculo_id
           } else {
-            // form.vehiculo_id = reactives.list_vehiculos[0].id
+            form.vehiculo_id = reactives.list_vehiculos[0].id
           }
         }
       }
@@ -283,11 +284,9 @@ const queryVehiculos = async (consulta) => {
       console.log('respuesta error')
       console.log(error)
     })
-  changeLoad(false)
 }
 
 const queryTipoVisitas = async (consulta) => {
-  changeLoad(true)
   const url = route('tipovisita.query', { query: consulta })
   await axios
     .post(url)
@@ -307,7 +306,6 @@ const queryTipoVisitas = async (consulta) => {
       console.log('respuesta error')
       console.log(error)
     })
-  changeLoad(false)
 }
 
 const fecha = (fechaData) => {
@@ -362,19 +360,53 @@ const fecha = (fechaData) => {
         </template>
 
         <template #description>
-          <p v-if="props.model != null">
-            <span class="font-semibold text-gray-800 leading-tight">
-              Creado:
+          <div v-if="props.model != null">
+            <span
+              :class="
+                props.model.isAutorizado ? 'text-green-700' : 'text-red-500'
+              "
+            >
+              {{
+                props.model.isAutorizado
+                  ? 'INGRESO AUTORIZADO'
+                  : 'INGRESO NO AUTORIZADO'
+              }}
             </span>
-            {{ fecha(props.model.created_at) }}
-          </p>
-          <p v-if="props.model != null">
-            <span class="font-semibold text-gray-800 leading-tight">
-              Actualizado:
+            <p>
+              <span class="font-semibold text-gray-800 leading-tight">
+                Creado:
+              </span>
+              {{ fecha(props.model.created_at) }}
+            </p>
+            <p>
+              <span class="font-semibold text-gray-800 leading-tight">
+                {{
+                  props.model.salida_created_at == null
+                    ? 'SALIDA NO REGISTRADA'
+                    : 'Salida registrada: '
+                }}
+              </span>
+              {{
+                props.model.salida_created_at == null
+                  ? ''
+                  : props.model.salida_created_at
+              }}
+            </p>
+            <span
+              :class="
+                props.model.vehiculo_id == null
+                  ? 'text-red-700'
+                  : 'text-green-500'
+              "
+            >
+              {{
+                props.model.vehiculo_id == null
+                  ? 'INGRESO SIN VEHICULO'
+                  : 'INGRESO CON VEHICULO'
+              }}
             </span>
-            {{ fecha(props.model.updated_at) }}
-          </p>
-          <p>
+          </div>
+          <p v-if="props.model == null">
             Complete correctamente los datos personales
           </p>
         </template>
@@ -392,7 +424,7 @@ const fecha = (fechaData) => {
             <select
               id="select-residente"
               required
-              class="select-custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               v-model="form.residente_habitante_id"
             >
               <option
@@ -400,23 +432,23 @@ const fecha = (fechaData) => {
                 :key="item.id"
                 :value="item.id"
               >
-                Cod: {{ item.id }} / nombre: {{ item.perfil.name }}
+                Cod: {{ item.id }} / nombre: {{ item.name }}
               </option>
             </select>
           </div>
           <!-- VISITANTES -->
           <div class="col-span-12 sm:col-span-12">
             <label
-              for="visitante"
+              for="select-visitante"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Seleccione un Visitante
             </label>
 
             <select
-              id="visitante"
+              id="select-visitante"
               required
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               v-model="form.visitante_id"
             >
               <option
@@ -453,16 +485,16 @@ const fecha = (fechaData) => {
             class="col-span-12 sm:col-span-12"
           >
             <label
-              for="visitante"
+              for="select-vehiculo"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Seleccione un vehiculo
             </label>
 
             <select
-              id="visitante"
+              id="select-vehiculo"
               required
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               v-model="form.vehiculo_id"
             >
               <option
@@ -486,7 +518,7 @@ const fecha = (fechaData) => {
             <select
               id="visitante"
               required
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               v-model="form.tipo_visita_id"
             >
               <option
@@ -519,14 +551,19 @@ const fecha = (fechaData) => {
           </div>
           <!-- Detalle -->
           <div class="col-span-12 sm:col-span-12">
-            <InputLabel for="detalle" value="Detalle" />
-            <TextInput
+            <label
+              for="visitante"
+              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+            >
+              Detalle
+            </label>
+            <textarea
               id="detalle"
-              v-model="form.detalle"
-              type="text"
-              class="mt-1 block w-full"
               autocomplete="detalle"
-            />
+              v-model="form.detalle"
+              rows="4"
+              class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            ></textarea>
             <!-- <InputError
               class="mt-2"
               :message="reactives.detalleError.toUpperCase()"
@@ -557,10 +594,3 @@ const fecha = (fechaData) => {
     </div>
   </AppLayout>
 </template>
-<script>
-/*$(document).ready(function () {
-  console.log('montado a lo ultimo')
-  $('#select-residente').select2()
-  $('.select-custom').select2()
-})*/
-</script>
