@@ -12,7 +12,7 @@ export default {
         './resources/js/**/*.vue',
         './resources/**/*.js',
         './resources/**/*.vue',
-        "./node_modules/flowbite/**/*.js"
+        './node_modules/preline/dist/*.js',
     ],
 
     theme: {
@@ -23,5 +23,10 @@ export default {
         },
     },
 
-    plugins: [forms, typography, require('flowbite/plugin')],
+    plugins: [
+        // forms,
+        typography,
+        // require('flowbite/plugin')
+        require('preline/plugin'),
+    ],
 };

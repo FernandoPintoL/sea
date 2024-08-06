@@ -9,8 +9,6 @@ import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import moment from 'moment'
-import '../../../../public/assets/js/select2.min.js'
-import '../../../../public/assets/css/select2.min.css'
 import Select2 from 'vue3-select2-component'
 
 const Swal = inject('$swal')
@@ -49,6 +47,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   console.log(props.model)
+  reactives.ingreso_vehiculo = props.model.vehiculo_id != null
   changeLoad(true)
   queryResidentes('')
   queryVisitantes('')

@@ -283,14 +283,6 @@ const getTipoDocumento = async (tipoDocumento_id) => {
                     : item.perfil.nroDocumento
                 }}
               </td>
-              <!-- <td class="px-3">
-                Nro:
-                {{
-                  habitante.nroVivienda != null
-                    ? habitante.nroVivienda
-                    : habitante.vivienda.nroVivienda
-                }}
-              </td> -->
               <td class="px-3">
                 {{ item.created_at != null ? fecha(item.created_at) : '' }}
               </td>
@@ -307,22 +299,6 @@ const getTipoDocumento = async (tipoDocumento_id) => {
                   Editar
                   <i class="fa-solid fa-pencil"></i>
                 </Link>
-                <!-- <button
-                   type="submit"
-                   class="font-medium text-red-600 dark:text-red-500 hover:underline"
-                 >
-                   Delete
-                 </button> -->
-                <!-- <input type="hidden" name="_method" value="DELETE" /> -->
-                <!-- <form @submit.prevent="destroyData(habitante.id)">
-                  <button
-                    type="submit"
-                    class="font-medium text-red-600 dark:text-red-500 hover:underline"
-                  >
-                    Eliminar
-                    <i class="fa-solid fa-trash"></i>
-                  </button>
-                </form> -->
               </td>
             </tr>
           </tbody>

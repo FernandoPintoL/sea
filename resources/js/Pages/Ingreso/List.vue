@@ -24,8 +24,26 @@ const datas = reactive({
   isLoad: false,
 })
 onMounted(() => {
+  addInputEventListeners()
   queryList('')
 })
+
+const addInputEventListeners = () => {
+  const inputs = document.querySelectorAll('.dt-container thead input')
+
+  inputs.forEach((input) => {
+    const handleKeyDown = (evt) => {
+      if ((evt.metaKey || evt.ctrlKey) && evt.key === 'a') input.select()
+    }
+
+    input.addEventListener('keydown', handleKeyDown)
+
+    // Asegurarse de eliminar los event listeners cuando se desmonte el componente
+    input._cleanup = () => {
+      input.removeEventListener('keydown', handleKeyDown)
+    }
+  })
+}
 
 const query = ref('')
 
@@ -96,220 +114,271 @@ const fecha = (fechaData) => {
 }
 </script>
 <template>
-  <div
-    class="flex items-center justify-between flex-column flex-wrap md:flex-row space-y-4 md:space-y-0 bg-white dark:bg-gray-900"
-  >
-    <div>
-      <button
-        id="recargarTipoDocumentos"
-        class="inline-flex items-center text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-        type="button"
-        @click="recargarPagina"
-      >
-        <i class="fas fa-sync-alt mr-3"></i>
-        Recargar Pagina
-      </button>
-      <!-- Dropdown menu -->
-    </div>
-    <!-- BUTTON BUSQUEDA -->
-    <label for="table-search" class="sr-only">Buscar</label>
-    <div class="relative">
-      <div
-        class="absolute inset-y-0 rtl:inset-r-0 start-0 flex items-center ps-3 pointer-events-none"
-      >
-        <svg
-          class="w-4 h-4 text-gray-500 dark:text-gray-400"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 20 20"
+  <div class="flex flex-col">
+    <div class="-m-1.5 overflow-x-auto">
+      <div class="p-1.5 min-w-full inline-block align-middle">
+        <div
+          class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-800 dark:border-neutral-700"
         >
-          <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-          />
-        </svg>
-      </div>
-      <input
-        v-model="query"
-        type="text"
-        id="table-search-users"
-        class="block p-2 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-        placeholder="Buscar"
-        @input="onSearchQuery"
-      />
-    </div>
-  </div>
-  <div v-if="datas.isLoad" class="w-full p-6">
-    <div class="text-center">
-      <div role="status">
-        <svg
-          aria-hidden="true"
-          class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-          viewBox="0 0 100 101"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-            fill="currentColor"
-          />
-          <path
-            d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-            fill="currentFill"
-          />
-        </svg>
-        <span class="sr-only">Cargando...</span>
-        <div class="mb-1 text-base font-medium dark:text-white">
-          Cargando Lista...
-        </div>
-      </div>
-    </div>
-  </div>
-  <div v-else class="w-full mt-6">
-    <div v-if="datas.list.length > 0" class="w-full">
-      <div class="relative overflow-x-auto shadow-md sm:rounded-lg">
-        <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
-        >
-          <thead
-            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          <!-- Header -->
+          <div
+            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700"
           >
-            <tr>
-              <th scope="col" class="px-3 py-2">
-                ID
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Residente
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Visitante
-              </th>
-              <th scope="col" class="px-3 py-2">
-                Detalle
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="item in datas.list"
-              :key="item.id"
-              class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-            >
-              <!-- ID'S Y DATOS DE INGRESOS -->
-              <th
-                scope="row"
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+            <div>
+              <h2
+                class="text-xl font-semibold text-gray-800 dark:text-neutral-200"
               >
-                <span>#{{ item.id }}</span>
-                <br />
-                <span
-                  :class="item.isAutorizado ? 'text-green-600' : 'text-red-600'"
+                INGRESOS AL CONDOMINIO
+              </h2>
+              <p class="text-sm text-gray-600 dark:text-neutral-400">
+                Agrega ingresos, edita alguno.
+              </p>
+            </div>
+
+            <div>
+              <div class="inline-flex gap-x-2">
+                <a
+                  class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                  :href="route('ingreso.index')"
                 >
-                  {{ item.isAutorizado ? 'AUTORIZADO' : 'NO AUTORIZADO' }}
-                </span>
-                <br />
-                <span
-                  :class="
-                    item.vehiculo_id != null
-                      ? 'text-teal-600'
-                      : 'text-slate-800'
-                  "
+                  Ver pagina principal
+                </a>
+
+                <a
+                  class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                  href="#"
                 >
-                  {{
-                    item.vehiculo_id != null
-                      ? 'INGRESO CON VEHICULO'
-                      : 'INGRESO SIN VEHICULO'
-                  }}
-                </span>
-                <br />
-                <span>
-                  Registrado:
-                  {{ item.created_at != null ? item.created_at : '' }}
-                </span>
-                <br />
-                <span class="mb-2">
-                  {{
-                    item.salida_created_at != null
-                      ? 'Salida registrada: ' + item.salida_created_at
-                      : 'SIN REGISTRO DE SALIDA'
-                  }}
-                </span>
-                <br />
-                <div>
-                  <Link
-                    :href="route('ingreso.edit', item.id)"
-                    class="mt-2 px-3 py-2 text-xs font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  <svg
+                    class="shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
                   >
-                    Editar
-                    <i class="fa-solid fa-pencil"></i>
-                  </Link>
-                </div>
-              </th>
-              <!-- RESIDENTE -->
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <span>{{ item.name_residente.toUpperCase() }}</span>
-                <br />
-                <span class="text-teal-600">
-                  Nro Doc: {{ item.nroDocumento_residente }}
+                    <path d="M5 12h14" />
+                    <path d="M12 5v14" />
+                  </svg>
+                  Add user
+                </a>
+              </div>
+            </div>
+          </div>
+          <!-- End Header -->
+
+          <!-- Table -->
+          <table class="min-w-full">
+            <thead class="bg-gray-50 dark:bg-neutral-800">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-start">
+                  <div class="flex items-center gap-x-2">
+                    <span
+                      class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
+                    >
+                      ID
+                    </span>
+                  </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                  <div class="flex items-center gap-x-2">
+                    <span
+                      class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
+                    >
+                      Residente
+                    </span>
+                  </div>
+                </th>
+
+                <th scope="col" class="px-6 py-3 text-start">
+                  <div class="flex items-center gap-x-2">
+                    <span
+                      class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
+                    >
+                      Visitante
+                    </span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+              <tr v-for="item in datas.list" :key="item.id">
+                <td class="size-px whitespace-nowrap">
+                  <div class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                    <div class="flex items-center gap-x-3">
+                      <p>
+                        <span>#{{ item.id }}</span>
+                      </p>
+                      <div class="grow">
+                        <div>
+                          <span
+                            :class="
+                              item.isAutorizado
+                                ? 'text-teal-800 bg-teal-100 dark:text-teal-500'
+                                : 'text-red-800 bg-red-100 dark:text-red-500'
+                            "
+                            class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium rounded-full dark:bg-teal-500/10"
+                          >
+                            <svg
+                              class="size-2.5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="16"
+                              height="16"
+                              fill="currentColor"
+                              viewBox="0 0 16 16"
+                            >
+                              <path
+                                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"
+                              />
+                            </svg>
+                            {{
+                              item.isAutorizado ? 'AUTORIZADO' : 'NO AUTORIZADO'
+                            }}
+                          </span>
+                        </div>
+                        <p>
+                          <span
+                            :class="
+                              item.isAutorizado
+                                ? 'text-teal-800 bg-teal-100 dark:text-teal-500'
+                                : 'text-red-800 bg-red-100 dark:text-red-500'
+                            "
+                            class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium rounded-full dark:bg-teal-500/10"
+                          >
+                            {{
+                              item.vehiculo_id != null
+                                ? 'INGRESO CON VEHICULO'
+                                : 'INGRESO SIN VEHICULO'
+                            }}
+                          </span>
+                        </p>
+                        <span
+                          class="block text-sm text-gray-500 dark:text-neutral-500"
+                        >
+                          Registrado:
+                          {{ item.created_at != null ? item.created_at : '' }}
+                        </span>
+                        <span
+                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
+                        >
+                          {{
+                            item.salida_created_at != null
+                              ? 'Salida registrada: ' + item.salida_created_at
+                              : 'SIN REGISTRO DE SALIDA'
+                          }}
+                        </span>
+                        <div class="px-6 py-1.5">
+                          <a
+                            class="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500"
+                            :href="route('ingreso.edit', item.id)"
+                          >
+                            Editar
+                            <i class="fa-solid fa-pencil"></i>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+                <td class="h-px w-72 whitespace-nowrap">
+                  <div class="px-6 py-3">
+                    <span
+                      class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
+                    >
+                      {{ item.name_residente.toUpperCase() }}
+                    </span>
+                    <span
+                      class="block text-sm text-gray-500 dark:text-neutral-500"
+                    >
+                      Nro Doc: {{ item.nroDocumento_residente }}
+                    </span>
+                  </div>
+                </td>
+                <td class="size-px whitespace-nowrap">
+                  <div class="px-6 py-3">
+                    <span
+                      class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
+                    >
+                      {{ item.name_visitante.toUpperCase() }}
+                    </span>
+                    <span
+                      class="block text-sm text-gray-500 dark:text-neutral-500"
+                    >
+                      Nro Doc: {{ item.nroDocumento_visitante }}
+                    </span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <!-- End Table -->
+
+          <!-- Footer -->
+          <div
+            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700"
+          >
+            <div>
+              <p class="text-sm text-gray-600 dark:text-neutral-400">
+                <span class="font-semibold text-gray-800 dark:text-neutral-200">
+                  {{ datas.list.length }}
                 </span>
-              </td>
-              <!-- VISITANTE -->
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <span>{{ item.name_visitante.toUpperCase() }}</span>
-                <br />
-                <span class="text-teal-600">
-                  Nro Doc: {{ item.nroDocumento_visitante }}
-                </span>
-              </td>
-              <!-- DETALLE -->
-              <td
-                class="px-3 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-              >
-                <p>
-                  {{ item.detalle.toUpperCase() }}
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-    <!-- CUANDO LA LISTA ESTA VACIA -->
-    <div
-      v-else
-      class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
-      role="alert"
-    >
-      <svg
-        class="flex-shrink-0 inline w-4 h-4 me-3"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="currentColor"
-        viewBox="0 0 20 20"
-      >
-        <path
-          d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z"
-        />
-      </svg>
-      <span class="sr-only">Info</span>
-      <div>
-        <span class="font-medium">INFORMACION!</span>
-        <p>LISTADO VACIA...</p>
-        <p v-if="query.length != 0">
-          Consulta con:
-          <span class="font-semibold text-blue-800 leading-tight">
-            {{ query.toUpperCase() }}
-          </span>
-          no encontrada
-        </p>
+                results
+              </p>
+            </div>
+            <!-- NEXT -->
+            <div>
+              <div class="inline-flex gap-x-2">
+                <button
+                  type="button"
+                  class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                >
+                  <svg
+                    class="shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m15 18-6-6 6-6" />
+                  </svg>
+                  Prev
+                </button>
+
+                <button
+                  type="button"
+                  class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
+                >
+                  Next
+                  <svg
+                    class="shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- End Footer -->
+        </div>
       </div>
     </div>
   </div>

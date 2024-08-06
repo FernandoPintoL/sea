@@ -21,15 +21,16 @@ class GaleriaVisitanteController extends Controller
                 "messagesValue" => $request->hasFile('imageValue'),
                 "data" => $request->all()
             ]);*/
-            $model = GaleriaVisitante::create([
-                "visitante_id" => $request->get("id"), 
-                'created_at' => $request->get("created_at"),
-                'updated_at' => $request->get("updated_at")
-            ]);
-            $response = "";
+            
+            $response = null;
             $path     = null;
 
             if($request->hasFile('file')){
+                $model = GaleriaVisitante::create([
+                    "visitante_id" => $request->get("id"), 
+                    'created_at' => $request->get("created_at"),
+                    'updated_at' => $request->get("updated_at")
+                ]);
                 $file = $request->file( 'file' );
                 $extension = $file->getClientOriginalExtension();
                 $filename= "cod".$model->id."-visitanteid".$request->get("id").'.'.$extension;
@@ -46,10 +47,10 @@ class GaleriaVisitanteController extends Controller
             }
             return response()->json([
                 "isRequest"=> true,
-                "success" => $response,
-                "messageError" => !$response && !$request->hasFile('file'),
+                "success" => $request->hasFile('file'),
+                "messageError" => !$request->hasFile('file'),
                 "message" => isset($path) ? "Archivos subidos" : "Archivos no subidos",
-                "data" => $model
+                "data" => $response
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
