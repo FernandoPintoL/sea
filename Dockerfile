@@ -26,7 +26,7 @@ COPY . .
 
 RUN composer install
 RUN composer require laravel/octane spiral/roadrunner
-COPY .envDev .env
+COPY .env.example .env
 RUN mkdir -p /app/storage/logs
 
 RUN php artisan octane:install --server="swoole"
