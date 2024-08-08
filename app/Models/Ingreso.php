@@ -16,6 +16,7 @@ class Ingreso extends Model
     use HasFactory;
     protected $table = "ingresos";
     protected $primaryKey = "id";
+    public $timestamps = false;
     protected $fillable = [
         'tipo_ingreso',
         'detalle',
