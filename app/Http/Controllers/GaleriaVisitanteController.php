@@ -34,9 +34,9 @@ class GaleriaVisitanteController extends Controller
                 $file = $request->file( 'file' );
                 $extension = $file->getClientOriginalExtension();
                 $filename= "cod".$model->id."-visitanteid".$request->get("id").'.'.$extension;
-                // $path = $file->storeAs('visitantes', $filename, 'public');
-                //$path = Storage::putFileAs('/visitantes', $request->file('file'), $filename);
-                $path = Storage::disk('s3')->put('visitantes', $file);
+                $path = $file->storeAs('visitantes', $filename, 'public');
+                // $path = Storage::putFileAs('/visitantes', $request->file('file'), $filename);
+                // $path = Storage::disk('s3')->put('visitantes', $file);
                 
                 /*ACTUALIZA LA TABLA CON LA RUTA*/
                 $url = Storage::url($path);
@@ -70,11 +70,13 @@ class GaleriaVisitanteController extends Controller
             $responsse = GaleriaVisitante::where('visitante_id','=',$request->get('visitante_id'))
                         ->with('visitante')
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta de galeria visitantes conrrectamente..",
+                "message" => "Consultados: $str ,Galeria Visitantes",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
