@@ -35,11 +35,13 @@ class VisitanteController extends Controller
                         ->get();
             }
             
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta visitante realizada correctamente...",
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){

@@ -10,6 +10,8 @@ class GaleriaVehiculo extends Model
     use HasFactory;
     protected $table = "galeria_vehiculos";
     protected $primaryKey = "id";
+    public $timestamps = false;
+
     protected $fillable = [
         'photo_path',
         'detalle',

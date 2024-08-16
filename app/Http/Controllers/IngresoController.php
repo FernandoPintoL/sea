@@ -57,11 +57,13 @@ class IngresoController extends Controller
                         ->orderBy('id', 'DESC')
                         ->get();
 
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta Ingreso realizada correctamente...",
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -81,7 +83,7 @@ class IngresoController extends Controller
         try{
             $start    = $request->get('start');
             $end    = $request->get('end');
-            $response = DB::table('ingresos as i')
+            $responsse = DB::table('ingresos as i')
                         ->select('i.id as id','i.*','h.id as id_residente','p.name as name_residente','v.id as id_visitante','pv.name as name_visitante')
                         ->join('habitantes as h', 'h.id', '=', 'i.residente_habitante_id')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
@@ -90,12 +92,14 @@ class IngresoController extends Controller
                         ->whereBetween('i.created_at',[$start, $end])
                         ->orderBy('id', 'DESC')
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta Ingreso realizada correctamente...",
-                "data" => $response
+                "message" => "$str datos consultados",
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
@@ -142,7 +146,7 @@ class IngresoController extends Controller
             $responsse = Ingreso::create([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
-                'detalle_salida'=> $request->detalle_salida,
+                // 'detalle_salida'=> $request->detalle_salida,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id,// ? $visitante->id : $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
@@ -250,7 +254,7 @@ class IngresoController extends Controller
             $responsse = $appingreso->update([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
-                // 'detalle_salida'=> $request->detalle_salida,
+                'detalle_salida'=> $request->detalle_salida,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
@@ -286,7 +290,7 @@ class IngresoController extends Controller
             $responsse = $ingreso->update([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
-                // 'detalle_salida'=> $request->detalle_salida,
+                'detalle_salida'=> $request->detalle_salida,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK

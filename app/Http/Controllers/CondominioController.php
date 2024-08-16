@@ -23,11 +23,13 @@ class CondominioController extends Controller
                         ->where('propietario', 'LIKE', "%".$queryStr."%")
                         ->orWhere('razonSocial', 'LIKE', "%".$queryStr."%")
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Solicitud realizada correctamente...",
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){

@@ -14,13 +14,15 @@ class VehiculoController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Vehiculo::where('placa','LIKE',"%".$queryStr."%")->orderBy('id', 'DESC')->get();
+            $responsse = Vehiculo::where('placa','LIKE',"%".$queryStr."%")->orderBy('id', 'DESC')->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta Vehiculo realizada correctamente...",
-                "data" => $response
+                "message" => "$str datos consultados",
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

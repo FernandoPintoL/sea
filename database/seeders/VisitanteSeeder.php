@@ -15,7 +15,7 @@ class VisitanteSeeder extends Seeder
     public function run(): void
     {
         $perfil = Perfil::create([
-            'name' => "Fernando Pinto Lino",
+            'name' => "FERNANDO PINTO LINO",
             'email' => 'pintolinofernando@gmail.com',
             'direccion' => 'B/Conavi, 25',
             'celular' => '73682145',

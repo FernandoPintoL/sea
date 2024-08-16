@@ -76,7 +76,7 @@ class GaleriaVisitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consultados: $str ,Galeria Visitantes",
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){

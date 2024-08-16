@@ -14,14 +14,16 @@ class TipoDocumentoController extends Controller
     public function query(Request $request){
         try{
             $queryStr = $request->get('query');
-            $response = TipoDocumento::where('sigla','LIKE','%'.$queryStr.'%')
+            $responsse = TipoDocumento::where('sigla','LIKE','%'.$queryStr.'%')
                         ->orWhere('detalle','LIKE','%'.$queryStr.'%')->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta TipoDocumento realizada correctamente...",
-                "data" => $response
+                "message" => "$str datos consultados",
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

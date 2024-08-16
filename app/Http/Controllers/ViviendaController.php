@@ -14,16 +14,18 @@ class ViviendaController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Vivienda::where('nroVivienda','LIKE',"%".$queryStr."%")
+            $responsse = Vivienda::where('nroVivienda','LIKE',"%".$queryStr."%")
                         ->with('tipoVivienda')
                         ->with('condominio')
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta vivienda realizada correctamente...",
-                "data" => $response
+                "message" => "$str datos consultados",
+                "data" => $responsse
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

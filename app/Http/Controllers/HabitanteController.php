@@ -43,11 +43,13 @@ class HabitanteController extends Controller
                         // ->orWhere('vd.nroVivienda','LIKE','%'.$queryStr.'%')
                          ->orderBy('hid', 'DESC')
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta QuerySearchWeb de habitantes conrrectamente..".$queryStr,
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -80,11 +82,13 @@ class HabitanteController extends Controller
                         ->orWhere('p.name','LIKE','%'.$queryStr.'%')
                         ->orWhere('vd.nroVivienda','LIKE','%'.$queryStr.'%')
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta de habitantes conrrectamente..",
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){

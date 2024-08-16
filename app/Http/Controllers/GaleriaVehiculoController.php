@@ -84,11 +84,13 @@ class GaleriaVehiculoController extends Controller
         try{
             $responsse = GaleriaVehiculo::with('vehiculo')
                          ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta de galeria vehiculos conrrectamente..",
+                "message" => "$str datos consultados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
