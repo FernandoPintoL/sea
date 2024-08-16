@@ -29,7 +29,9 @@ class Ingreso extends Model
         'ingresa_habitante_id', ///FK
         'vehiculo_id', ///FK
         'tipo_visita_id', ///FK
-        'user_id' ///FK
+        'user_id', ///FK
+        'created_at',
+        'updated_at'
     ];
     public function visitante(){
         return $this->belongsTo(Visitante::class, 'visitante_id','id');

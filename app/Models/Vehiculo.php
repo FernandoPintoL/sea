@@ -15,5 +15,7 @@ class Vehiculo extends Model
         'detalle',
         'photo_path',
         'tipo_vehiculo',
+        'created_at',
+        'updated_at'
     ];
 }

@@ -12,6 +12,8 @@ class TipoVisita extends Model
     protected $primaryKey = "id";
     protected $fillable = [
         'sigla',
-        'detalle'
+        'detalle',
+        'created_at',
+        'updated_at'
     ];
 }

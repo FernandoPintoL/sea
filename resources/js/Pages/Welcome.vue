@@ -86,6 +86,6 @@ const submit = () => {
 
 <style scoped>
 .backimage {
-  background-image: url('assets/images/bg-01.jpg');
+  background-image: url('/assets/images/bg-01.jpg');
 }
 </style>

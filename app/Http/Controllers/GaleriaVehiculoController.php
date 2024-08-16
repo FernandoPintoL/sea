@@ -19,30 +19,28 @@ class GaleriaVehiculoController extends Controller
                 "message" => "Mensaje",
                 "data" => $request->all()
             ]);*/
-            $model = GaleriaVehiculo::create([
-                "vehiculo_id" => $request->get("id"),
-                'created_at' => $request->get("created_at"),
-                'updated_at' => $request->get("updated_at"),
-            ]);
+            
             $response = "";
             $path     = null;
 
             if($request->hasFile('file')){
+                $model = GaleriaVehiculo::create([
+                    "vehiculo_id" => $request->get("id"),
+                    'created_at' => $request->get("created_at"),
+                    'updated_at' => $request->get("updated_at"),
+                ]);
                 $extension = $request->file('file')->getClientOriginalExtension();
                 $filename= "cod".$model->id."-vehiculoid".$request->get("id").'.'.$extension;
                 $path = $request->file('file')->storeAs('vehiculos', $filename, 'public');
-                //$path = Storage::putFileAs('images', $request->file('file'), $filename);
                 $url = Storage::url($path);
-                //$item = Item::find($request->get("id"))->first();
                 $response = $model->update(['photo_path'=> $url,'detalle'=>$filename]);
-                //Storage::disk( 'public' )->delete($path);
             }
             return response()->json([
                 "isRequest"=> true,
-                "success" => $response,
-                "messageError" => !$response && !$request->hasFile('file'),
+                "success" => $request->hasFile('file'),
+                "messageError" => !$request->hasFile('file'),
                 "message" => isset($path) ? "Archivos subidos" : "Archivos no subidos",
-                "data" => $model
+                "data" => $response
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();

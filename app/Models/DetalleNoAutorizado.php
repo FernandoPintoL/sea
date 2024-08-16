@@ -13,7 +13,9 @@ class DetalleNoAutorizado extends Model
     protected $primaryKey = "id";
     protected $fillable = [
         'ingreso_id',
-        'detalle_no_autorizado'
+        'detalle_no_autorizado',
+        'created_at',
+        'updated_at'
     ];
     public function ingreso(){
         return $this->belongsTo(Ingreso::class, 'ingreso_id', 'id');

@@ -124,29 +124,23 @@ const fecha = (fechaData) => {
           <div
             class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700"
           >
-            <div>
-              <h2
-                class="text-xl font-semibold text-gray-800 dark:text-neutral-200"
-              >
-                INGRESOS AL CONDOMINIO
-              </h2>
-              <p class="text-sm text-gray-600 dark:text-neutral-400">
-                Agrega ingresos, edita alguno.
-              </p>
-            </div>
-
-            <div>
-              <div class="inline-flex gap-x-2">
-                <a
-                  class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                  :href="route('ingreso.index')"
-                >
-                  Ver pagina principal
-                </a>
-
+            <div class="grid grid-cols-6 gap-4">
+              <div class="col-start-1 col-end-3 ...">
+                <div>
+                  <h2
+                    class="text-xl font-semibold text-gray-800 dark:text-neutral-200"
+                  >
+                    INGRESOS REGISTRADOS AL CONDOMINIO
+                  </h2>
+                  <p class="text-sm text-gray-600 dark:text-neutral-400">
+                    Agrega ingresos, edita alguno.
+                  </p>
+                </div>
+              </div>
+              <div class="col-end-7 col-span-2 ...">
                 <a
                   class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                  href="#"
+                  :href="route('ingreso.create')"
                 >
                   <svg
                     class="shrink-0 size-4"
@@ -163,8 +157,41 @@ const fecha = (fechaData) => {
                     <path d="M5 12h14" />
                     <path d="M12 5v14" />
                   </svg>
-                  Add user
+                  Nuevo
                 </a>
+              </div>
+              <div class="col-start-1 col-end-7">
+                <div class="py-3 px-4">
+                  <div class="relative max-w-xs">
+                    <label class="sr-only">Buscar Ingresos</label>
+                    <input
+                      type="text"
+                      name="hs-table-with-pagination-search"
+                      id="hs-table-with-pagination-search"
+                      class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                      placeholder="Buscar Ingresos"
+                    />
+                    <div
+                      class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
+                    >
+                      <svg
+                        class="size-4 text-gray-400 dark:text-neutral-500"
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.3-4.3"></path>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -319,7 +346,7 @@ const fecha = (fechaData) => {
           <!-- End Table -->
 
           <!-- Footer -->
-          <div
+          <!-- <div
             class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700"
           >
             <div>
@@ -330,7 +357,6 @@ const fecha = (fechaData) => {
                 results
               </p>
             </div>
-            <!-- NEXT -->
             <div>
               <div class="inline-flex gap-x-2">
                 <button
@@ -376,7 +402,7 @@ const fecha = (fechaData) => {
                 </button>
               </div>
             </div>
-          </div>
+          </div> -->
           <!-- End Footer -->
         </div>
       </div>

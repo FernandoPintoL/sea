@@ -13,7 +13,9 @@ class GaleriaVehiculo extends Model
     protected $fillable = [
         'photo_path',
         'detalle',
-        'vehiculo_id'
+        'vehiculo_id',
+        'created_at',
+        'updated_at'
     ];
     public function vehiculo(){
         return $this->belongsTo(Vehiculo::class,'vehiculo_id','id');

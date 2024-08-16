@@ -15,6 +15,8 @@ class GaleriaVivienda extends Model
         'photo_path' => '',
         'detalle' => '',
         'vivienda_id'=> 0,
+        'created_at',
+        'updated_at'
     ];
     public function vivienda(){
         return $this->belongsTo(Vivienda::class,'vivienda_id', 'id');

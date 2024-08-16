@@ -14,7 +14,7 @@ class CondominioSeeder extends Seeder
     public function run(): void
     {
         $perfil = Perfil::create([
-            'name' => "SEVILLA",
+            'name' => "SEVILLA II",
             'email' => 'sevilla@gmail.com',
             'direccion' => 'B/Conavi, 15',
             'celular' => '3936031',
@@ -22,8 +22,8 @@ class CondominioSeeder extends Seeder
             'tipo_documento_id' => 3
         ]);
         Condominio::create([
-            'propietario'=> 'SEVILLA',
-            'razonSocial'=> 'SEVILLA CONDOMINIOS',
+            'propietario'=> 'SEVILLA II',
+            'razonSocial'=> 'SEVILLA II',
             'nit' => '109623235',
             'cantidad_viviendas' => 20,
             'perfil_id' => $perfil->id,

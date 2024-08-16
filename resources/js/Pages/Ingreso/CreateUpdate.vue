@@ -34,20 +34,11 @@ const form = useForm({
   user_id: props.model != null ? props.model.user_id : 0,
 })
 
-onBeforeMount(() => {
-  /*queryResidentes('')
-  queryVisitantes('')
-  queryVehiculos('')
-  queryTipoVisitas('')*/
-  /*$(document).ready(function () {
-    console.log('montado')
-    $('#select-residente').select2()
-  })*/
-})
-
 onMounted(() => {
   console.log(props.model)
-  reactives.ingreso_vehiculo = props.model.vehiculo_id != null
+  if (props.model != null) {
+    reactives.ingreso_vehiculo = props.model.vehiculo_id != null
+  }
   changeLoad(true)
   queryResidentes('')
   queryVisitantes('')
@@ -413,12 +404,24 @@ const fecha = (fechaData) => {
         <template #form>
           <!-- RESIDENTES -->
           <div class="col-span-12 sm:col-span-12">
-            <label
-              for="select-residente"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un Residente
-            </label>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="col-start-1 col-end-3">
+                <label
+                  for="select-residente"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Seleccione un Residente
+                </label>
+              </div>
+              <div class="col-end-7 col-span-2">
+                <a
+                  :href="route('habitante.create')"
+                  class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-blue-800 hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+                >
+                  Nuevo
+                </a>
+              </div>
+            </div>
 
             <select
               id="select-residente"
@@ -437,12 +440,24 @@ const fecha = (fechaData) => {
           </div>
           <!-- VISITANTES -->
           <div class="col-span-12 sm:col-span-12">
-            <label
-              for="select-visitante"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un Visitante
-            </label>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="col-start-1 col-end-3">
+                <label
+                  for="select-visitante"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Seleccione un Visitante
+                </label>
+              </div>
+              <div class="col-end-7 col-span-2">
+                <a
+                  :href="route('visitante.create')"
+                  class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-blue-800 hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+                >
+                  Nuevo
+                </a>
+              </div>
+            </div>
 
             <select
               id="select-visitante"
@@ -461,34 +476,47 @@ const fecha = (fechaData) => {
           </div>
           <!-- INGRESO CON VEHICULO -->
           <div class="col-span-12 sm:col-span-12">
-            <label class="inline-flex items-center cursor-pointer">
+            <!-- Switch/Toggle -->
+            <div class="flex items-center">
               <input
                 type="checkbox"
+                id="ingreso-vehiculo"
+                class="relative shrink-0 w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-green-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-green-600 checked:border-green-600 focus:checked:border-green-600 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-green-500 dark:checked:border-green-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-6 before:bg-white checked:before:bg-green-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-neutral-400 dark:checked:before:bg-green-200"
                 v-model="reactives.ingreso_vehiculo"
                 :value="reactives.ingreso_vehiculo"
-                class="sr-only peer"
               />
-              <div
-                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              <label
+                for="ingreso-vehiculo"
+                class="text-sm text-gray-500 ms-3 dark:text-neutral-400"
               >
-                Ingreso con vehiculo
-              </span>
-            </label>
+                Ingreso con Vehiculo
+              </label>
+            </div>
+            <!-- End Switch/Toggle -->
           </div>
           <!-- VEHICULOS -->
           <div
             v-if="reactives.ingreso_vehiculo"
             class="col-span-12 sm:col-span-12"
           >
-            <label
-              for="select-vehiculo"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un vehiculo
-            </label>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="col-start-1 col-end-3">
+                <label
+                  for="select-vehiculo"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Seleccione un vehiculo
+                </label>
+              </div>
+              <div class="col-end-7 col-span-2">
+                <a
+                  :href="route('vehiculo.create')"
+                  class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-blue-800 hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+                >
+                  Nuevo
+                </a>
+              </div>
+            </div>
 
             <select
               id="select-vehiculo"
@@ -507,12 +535,24 @@ const fecha = (fechaData) => {
           </div>
           <!-- TIPO DE VISITAS -->
           <div class="col-span-12 sm:col-span-12">
-            <label
-              for="visitante"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un tipo visita
-            </label>
+            <div class="grid grid-cols-3 gap-4">
+              <div class="col-start-1 col-end-3">
+                <label
+                  for="visitante"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Seleccione un tipo visita
+                </label>
+              </div>
+              <div class="col-end-7 col-span-2">
+                <a
+                  :href="route('vehiculo.create')"
+                  class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-blue-800 hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none dark:text-white dark:hover:text-white/70 dark:focus:text-white/70"
+                >
+                  Nuevo
+                </a>
+              </div>
+            </div>
 
             <select
               id="visitante"
@@ -531,22 +571,23 @@ const fecha = (fechaData) => {
           </div>
           <!-- Es AUTORIZADO -->
           <div class="col-span-12 sm:col-span-12">
-            <label class="inline-flex items-center cursor-pointer">
+            <!-- Switch/Toggle -->
+            <div class="flex items-center">
               <input
                 type="checkbox"
+                id="ingreso-autorizado"
+                class="relative shrink-0 w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-green-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-green-600 checked:border-green-600 focus:checked:border-green-600 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-green-500 dark:checked:border-green-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-6 before:bg-white checked:before:bg-green-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-neutral-400 dark:checked:before:bg-green-200"
                 v-model="form.isAutorizado"
                 :value="form.isAutorizado"
-                class="sr-only peer"
               />
-              <div
-                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              <label
+                for="ingreso-autorizado"
+                class="text-sm text-gray-500 ms-3 dark:text-neutral-400"
               >
                 Ingreso Autorizado
-              </span>
-            </label>
+              </label>
+            </div>
+            <!-- End Switch/Toggle -->
           </div>
           <!-- Detalle -->
           <div class="col-span-12 sm:col-span-12">
@@ -593,3 +634,10 @@ const fecha = (fechaData) => {
     </div>
   </AppLayout>
 </template>
+<script>
+$(document).ready(function () {
+  // $('#select-residente').select2();
+  $('select').select2()
+  $('.custom').select2()
+})
+</script>

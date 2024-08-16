@@ -92,10 +92,7 @@
 
     {{-- <script src="{{ asset('assets/js/dataTables.js') }}"></script> --}}
     <script>
-        $(document).ready(function() {
-            // $('#select-residente').select2();
-            $('select').select2();
-        });
+
 
     </script>
 

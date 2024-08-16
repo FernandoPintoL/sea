@@ -18,7 +18,9 @@ class Habitante extends Model
         'responsable_id',
         'perfil_id',
         'vivienda_id',
-        'profile_photo_path'
+        'profile_photo_path',
+        'created_at',
+        'updated_at'
     ];
     public function perfil(){
         return $this->belongsTo(Perfil::class, 'perfil_id','id');

@@ -18,7 +18,9 @@ class Condominio extends Model
         'nit',
         'cantidad_viviendas',
         'perfil_id',
-        'user_id'
+        'user_id',
+        'created_at',
+        'updated_at'
     ];
     public function perfil(): BelongsTo {
         return $this->belongsTo(Perfil::class, 'perfil_id', 'id');

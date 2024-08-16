@@ -15,7 +15,9 @@ class GaleriaVisitante extends Model
     protected $fillable = [
         'photo_path',
         'detalle',
-        'visitante_id'
+        'visitante_id',
+        'created_at',
+        'updated_at'
     ];
     public function visitante(){
         return $this->belongsTo(Visitante::class,'visitante_id','id');

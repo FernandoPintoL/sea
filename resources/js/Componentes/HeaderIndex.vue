@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue'
 const props = defineProps({
   title: {
     type: String,
-    default: 'Componente',
+    default: '',
   },
 })
 </script>

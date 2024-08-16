@@ -167,8 +167,8 @@ class HabitanteController extends Controller
                 'vivienda_id' => $request->vivienda_id,
                 'perfil_id' => $perfil->id,
                 'profile_photo_path' => '',
-                'created_at' => toDay(),
-                'updated_at' => toDay(),
+                'created_at' => $request->created_at,
+                'updated_at' => $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,

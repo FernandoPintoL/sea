@@ -55,7 +55,7 @@ const logout = () => {
             <span
               class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
             >
-              SEA
+              SEA (SEGURIDAD ELECTRONICA AUTOMATIZADA TECNOLOGICA)
             </span>
           </a>
           <!-- End Logo -->
@@ -246,7 +246,7 @@ const logout = () => {
                   </a>
                   <a
                     class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
-                    href="#"
+                    :href="route('profile.show')"
                   >
                     <svg
                       class="shrink-0 mt-0.5 size-4"
@@ -275,7 +275,9 @@ const logout = () => {
                     Perfil
                   </a>
                   <form @submit.prevent="logout">
-                    <DropdownLink as="button">
+                    <div
+                      class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                    >
                       <svg
                         class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         aria-hidden="true"
@@ -293,8 +295,12 @@ const logout = () => {
                           d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"
                         />
                       </svg>
-                      Cerrar Sessión
-                    </DropdownLink>
+                      <button type="submit">
+                        <span class="flex-1 ms-3 whitespace-nowrap">
+                          Cerrar Sessión
+                        </span>
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -347,7 +353,7 @@ const logout = () => {
           <li
             class="flex items-center text-sm text-gray-800 dark:text-neutral-400"
           >
-            Application Layout
+            SEA
             <svg
               class="shrink-0 mx-3 overflow-visible size-2.5 text-gray-400 dark:text-neutral-500"
               width="16"
@@ -368,7 +374,7 @@ const logout = () => {
             class="text-sm font-semibold text-gray-800 truncate dark:text-neutral-400"
             aria-current="page"
           >
-            Dashboard
+            {{ title }}
           </li>
         </ol>
         <!-- End Breadcrumb -->
@@ -433,383 +439,6 @@ const logout = () => {
                   Dashboard
                 </a>
               </li>
-
-              <!-- <li class="hs-accordion" id="users-accordion">
-                <button
-                  type="button"
-                  class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
-                  aria-expanded="true"
-                  aria-controls="users-accordion-child"
-                >
-                  <i class="fas fa-building"></i>
-                  CONDOMINIOS
-
-                  <svg
-                    class="hs-accordion-active:block ms-auto hidden size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m18 15-6-6-6 6" />
-                  </svg>
-
-                  <svg
-                    class="hs-accordion-active:hidden ms-auto block size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                <div
-                  id="users-accordion-child"
-                  class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
-                  role="region"
-                  aria-labelledby="users-accordion"
-                >
-                  <ul
-                    class="hs-accordion-group ps-8 pt-1 space-y-1"
-                    data-hs-accordion-always-open
-                  >
-                    <li class="hs-accordion" id="users-accordion-sub-1">
-                      <button
-                        type="button"
-                        class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
-                        aria-expanded="true"
-                        aria-controls="users-accordion-sub-1-child"
-                      >
-                        Sub Menu 1
-
-                        <svg
-                          class="hs-accordion-active:block ms-auto hidden size-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="m18 15-6-6-6 6" />
-                        </svg>
-
-                        <svg
-                          class="hs-accordion-active:hidden ms-auto block size-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </button>
-
-                      <div
-                        id="users-accordion-sub-1-child"
-                        class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
-                        role="region"
-                        aria-labelledby="users-accordion-sub-1"
-                      >
-                        <ul class="pt-1 space-y-1">
-                          <li>
-                            <a
-                              class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                              href="#"
-                            >
-                              Link 1
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                              href="#"
-                            >
-                              Link 2
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                              href="#"
-                            >
-                              Link 3
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                    <li class="hs-accordion" id="users-accordion-sub-2">
-                      <button
-                        type="button"
-                        class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
-                        aria-expanded="true"
-                        aria-controls="users-accordion-sub-2-child"
-                      >
-                        Sub Menu 2
-
-                        <svg
-                          class="hs-accordion-active:block ms-auto hidden size-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="m18 15-6-6-6 6" />
-                        </svg>
-
-                        <svg
-                          class="hs-accordion-active:hidden ms-auto block size-4"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <path d="m6 9 6 6 6-6" />
-                        </svg>
-                      </button>
-
-                      <div
-                        id="users-accordion-sub-2-child"
-                        class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
-                        role="region"
-                        aria-labelledby="users-accordion-sub-2"
-                      >
-                        <ul class="pt-1 space-y-1">
-                          <li>
-                            <a
-                              class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                              href="#"
-                            >
-                              Link 1
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                              href="#"
-                            >
-                              Link 2
-                            </a>
-                          </li>
-                          <li>
-                            <a
-                              class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                              href="#"
-                            >
-                              Link 3
-                            </a>
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                  </ul>
-                </div>
-              </li> -->
-
-              <!-- <li class="hs-accordion" id="account-accordion">
-                <button
-                  type="button"
-                  class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
-                  aria-expanded="true"
-                  aria-controls="account-accordion-child"
-                >
-                  <svg
-                    class="shrink-0 mt-0.5 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <circle cx="18" cy="15" r="3" />
-                    <circle cx="9" cy="7" r="4" />
-                    <path d="M10 15H6a4 4 0 0 0-4 4v2" />
-                    <path d="m21.7 16.4-.9-.3" />
-                    <path d="m15.2 13.9-.9-.3" />
-                    <path d="m16.6 18.7.3-.9" />
-                    <path d="m19.1 12.2.3-.9" />
-                    <path d="m19.6 18.7-.4-1" />
-                    <path d="m16.8 12.3-.4-1" />
-                    <path d="m14.3 16.6 1-.4" />
-                    <path d="m20.7 13.8 1-.4" />
-                  </svg>
-                  Condominio
-
-                  <svg
-                    class="hs-accordion-active:block ms-auto hidden size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m18 15-6-6-6 6" />
-                  </svg>
-
-                  <svg
-                    class="hs-accordion-active:hidden ms-auto block size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                <div
-                  id="account-accordion-child"
-                  class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
-                  role="region"
-                  aria-labelledby="account-accordion"
-                >
-                  <ul class="ps-8 pt-1 space-y-1">
-                    <li>
-                      <a
-                        class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                        :href="route('condominio.index')"
-                      >
-                        Listado
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li>
-
-              <li class="hs-accordion" id="projects-accordion">
-                <button
-                  type="button"
-                  class="hs-accordion-toggle w-full text-start flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:hover:bg-neutral-700 dark:text-neutral-200"
-                  aria-expanded="true"
-                  aria-controls="projects-accordion-child"
-                >
-                  <svg
-                    class="shrink-0 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <rect width="20" height="14" x="2" y="7" rx="2" ry="2" />
-                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
-                  </svg>
-                  Projects
-
-                  <svg
-                    class="hs-accordion-active:block ms-auto hidden size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m18 15-6-6-6 6" />
-                  </svg>
-
-                  <svg
-                    class="hs-accordion-active:hidden ms-auto block size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m6 9 6 6 6-6" />
-                  </svg>
-                </button>
-
-                <div
-                  id="projects-accordion-child"
-                  class="hs-accordion-content w-full overflow-hidden transition-[height] duration-300 hidden"
-                  role="region"
-                  aria-labelledby="projects-accordion"
-                >
-                  <ul class="ps-8 pt-1 space-y-1">
-                    <li>
-                      <a
-                        class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                        href="#"
-                      >
-                        Link 1
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                        href="#"
-                      >
-                        Link 2
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-800 dark:text-neutral-200"
-                        href="#"
-                      >
-                        Link 3
-                      </a>
-                    </li>
-                  </ul>
-                </div>
-              </li> -->
-
               <li>
                 <a
                   class="w-full flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-200 dark:hover:text-neutral-300"

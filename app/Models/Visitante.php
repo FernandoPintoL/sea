@@ -15,7 +15,9 @@ class Visitante extends Model
         'profile_photo_path',
         'is_permitido',
         'description_is_no_permitido',
-        'perfil_id'
+        'perfil_id',
+        'created_at',
+        'updated_at'
     ];
     public function perfil(): BelongsTo{
         return $this->belongsTo(Perfil::class, 'perfil_id','id');

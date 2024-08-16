@@ -108,6 +108,8 @@ class CondominioController extends Controller
                 'email' => $userRequest['email'],
                 'usernick' => $userRequest['usernick'],
                 'password' => Hash::make($userRequest['password']),
+                'created_at' => $request->created_at,
+                'updated_at' => $request->updated_at
             ]);
             $responsse = Condominio::create([
                 'propietario' => $condominio['propietario'],
@@ -115,7 +117,9 @@ class CondominioController extends Controller
                 'nit' => $condominio['nit'],
                 'perfil_id' => $perfil['id'],
                 'user_id' => $user['id'],
-                'cantidad_viviendas' => 0
+                'cantidad_viviendas' => 0,
+                'created_at' => $request->created_at,
+                'updated_at' => $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
@@ -164,9 +168,22 @@ class CondominioController extends Controller
     {
         try{
             $datas     = $request->all();
-            if($datas['razonSocial'] != $condominio->razonSocial || $datas['nit'] != $condominio->nit){
+            if($datas['razonSocial'] != $condominio->razonSocial){
                 $validator = Validator::make($datas, [
-                                'razonSocial' => ['unique:condominios'],
+                                'razonSocial' => ['unique:condominios']
+                            ]);
+                if ($validator->fails()) {
+                    return response()->json( [ 
+                        "isRequest" => true,
+                        "success" => false,
+                        "messageError" => true,
+                        "message" => $validator->errors(),
+                        "data" => []
+                    ], 422 );
+                }
+            }
+            if($datas['nit'] != $condominio->nit){
+                $validator = Validator::make($datas, [
                                 'nit' => ['unique:condominios']
                             ]);
                 if ($validator->fails()) {
@@ -194,12 +211,13 @@ class CondominioController extends Controller
             }
             $perfilToUpdate = $condominio->perfil;
             $userToUpdate = $condominio->user;
+            $propietario    = strtoupper( $datas['propietario'] ); 
             $perfilToUpdate->update([
-                'name' => $datas['propietario'],
+                'name' => $propietario,
                 'nroDocumento' => $datas['nit']
             ]);
             $userToUpdate->update( [
-                'name' => $datas['propietario']
+                'name' => $propietario
             ] );
             $responsse = $condominio->update( $datas );
             return response()->json([

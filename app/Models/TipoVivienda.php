@@ -13,5 +13,7 @@ class TipoVivienda extends Model
     protected $fillable = [
         'sigla',
         'detalle',
+        'created_at',
+        'updated_at'
     ];
 }

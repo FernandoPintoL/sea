@@ -150,7 +150,7 @@ class IngresoController extends Controller
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id == 0 ? auth()->user()->id : $request->user_id,///FK
                 'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at,
+                'updated_at' => $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
@@ -275,7 +275,7 @@ class IngresoController extends Controller
                 'vehiculo_id'=> $request->vehiculo_id != 0 ? $request->vehiculo_id : null,  ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id,
-                'updated_at' => toDay(),
+                'updated_at' => $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
@@ -309,6 +309,7 @@ class IngresoController extends Controller
                 'autoriza_habitante_id'=> $request->autoriza_habitante_id,
                 'vehiculo_id'=> $request->vehiculo_id != 0 ? $request->vehiculo_id : null,  ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
+                'updated_at' => $request->updated_at
                 //'user_id' => $request->user_id == 0 ? auth()->user()->id : $request->user_id,
             ]);
             return response()->json([

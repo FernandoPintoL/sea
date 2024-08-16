@@ -116,6 +116,7 @@ const onValidatePropietario = (e) => {
 }
 
 const onValidateRazonSocial = (e) => {
+  console.log(e.target.value)
   if (!/^[A-Za-z\s]{5,}$/.test(e.target.value)) {
     reactives.razonSocialError =
       'El campo debe tener al menos 5 caracteres y solo pueden ser letras.'
@@ -429,31 +430,6 @@ const fecha = (fechaData) => {
             </div>
             <InputError class="mt-2" :message="reactives.razonSocialError" />
           </div>
-          <!-- TIPO DE DOCUMENTO  DEBERIA SER NIT-->
-          <!-- <div class="col-span-12 sm:col-span-12">
-            <label
-              for="countries"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un tipo de documento
-            </label>
-
-            <select
-              id="countries"
-              required
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              v-model="form.perfil.tipo_documento_id"
-            >
-              <option
-                v-for="item in reactives.list_typedocument"
-                :key="item.id"
-                :value="item.id"
-              >
-                {{ item.id }} : {{ item.sigla }} : {{ item.detalle }}
-              </option>
-            </select>
-          </div> -->
-          <!-- NRO DOCUMENTO NIT -->
           <div class="col-span-12 sm:col-span-12">
             <label
               for="nroDocumento"

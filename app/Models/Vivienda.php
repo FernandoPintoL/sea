@@ -18,6 +18,8 @@ class Vivienda extends Model
         "vivienda_ocupada",
         "tipo_vivienda_id", ///FK
         "condominio_id", ///FK
+        'created_at',
+        'updated_at'
     ];
 
     public function tipoVivienda(){

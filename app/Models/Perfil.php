@@ -20,6 +20,8 @@ class Perfil extends Model
         'celular',
         'nroDocumento',
         'tipo_documento_id',
+        'created_at',
+        'updated_at'
     ];
     
     public function tipoDocumento() : BelongsTo{
