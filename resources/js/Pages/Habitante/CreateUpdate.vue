@@ -60,7 +60,7 @@ const changeLoad = (value) => {
 }
 
 const onValidateName = (e) => {
-  if (!/^[A-Za-z\s]{5,}$/.test(e.target.value)) {
+  if (!/^[a-zA-ZáéíóúÁÉÍÓÚ ]{5,}$/.test(e.target.value)) {
     reactives.nameError =
       'El campo debe tener al menos 5 caracteres y solo pueden ser letras.'
   } else {
