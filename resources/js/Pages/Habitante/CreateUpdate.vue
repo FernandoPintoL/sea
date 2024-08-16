@@ -10,6 +10,7 @@ import InputLabel from '@/Components/InputLabel.vue'
 import SecondaryButton from '@/Components/SecondaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import moment from 'moment'
+import Select2 from 'vue3-select2-component'
 
 const Swal = inject('$swal')
 
@@ -109,6 +110,9 @@ const sendModel = async () => {
       timer: 1500,
     })
     return
+  }
+  if (form.isDuenho) {
+    form.responsable_id = 0
   }
   Swal.fire({
     title: 'Estas seguro de registrar esta información?',
@@ -238,6 +242,7 @@ const queryHabitante = async (consulta) => {
   await axios
     .post(url)
     .then((response) => {
+      console.log(response)
       if (response.data.success) {
         reactives.list_habitante = response.data.data
         if (reactives.list_habitante.length > 0) {
@@ -440,15 +445,15 @@ const fecha = (fechaData) => {
           <!-- TIPO DE DOCUMENTO -->
           <div class="col-span-12 sm:col-span-12">
             <label
-              for="countries"
+              for="tipo-doc"
               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
             >
               Seleccione un tipo de documento
             </label>
 
             <select
-              id="countries"
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              id="tipo-doc"
+              class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               v-model="form.perfil.tipo_documento_id"
             >
               <option
@@ -493,7 +498,6 @@ const fecha = (fechaData) => {
                 id="ingreso-is-duenho"
                 class="relative shrink-0 w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-green-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-green-600 checked:border-green-600 focus:checked:border-green-600 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-green-500 dark:checked:border-green-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-6 before:bg-white checked:before:bg-green-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-neutral-400 dark:checked:before:bg-green-200"
                 v-model="form.isDuenho"
-                :value="form.isDuenho"
               />
               <label
                 for="ingreso-is-duenho"
@@ -511,52 +515,21 @@ const fecha = (fechaData) => {
               Seleccione un residente
             </label>
             <div class="flex justify-start">
-              <div class="col-span-6 mr-3">
-                <div class="relative mt-3">
-                  <div
-                    class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-                  >
-                    <svg
-                      class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                      aria-hidden="true"
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 20 20"
-                    >
-                      <path
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                      />
-                    </svg>
-                  </div>
-                  <input
-                    type="search"
-                    id="default-search"
-                    class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    placeholder="Buscar residentes..."
-                  />
-                </div>
-              </div>
-              <div class="col-span-6">
-                <select
-                  id="residentes"
-                  class="block w-full mt-3 col-span-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  v-model="form.responsable_id"
+              <select
+                id="residentes"
+                class="block w-full mt-3 col-span-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                v-model="form.responsable_id"
+              >
+                <option
+                  class="w-full"
+                  v-for="item in reactives.list_habitante"
+                  :key="item.id"
+                  :value="item.id"
                 >
-                  <option
-                    class="w-full"
-                    v-for="item in reactives.list_habitante"
-                    :key="item.id"
-                    :value="item.id"
-                  >
-                    CI: {{ item.perfil.nroDocumento }} / Nombre:
-                    {{ item.perfil.name }}
-                  </option>
-                </select>
-              </div>
+                  CI: {{ item.nroDocumento }} / Nombre:
+                  {{ item.name }}
+                </option>
+              </select>
             </div>
           </div>
 
@@ -566,51 +539,20 @@ const fecha = (fechaData) => {
               <i class="fa-solid fa-house"></i>
               Seleccione una vivienda
             </label>
-            <div class="flex items-center">
-              <div class="relative mr-3">
-                <div
-                  class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none"
-                >
-                  <svg
-                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
-                    />
-                  </svg>
-                </div>
-                <input
-                  type="search"
-                  id="default-search"
-                  class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="Buscar residentes..."
-                />
-              </div>
-              <div class="mr-3">
-                <select
-                  id="viviendas"
-                  class="col-span-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  v-model="form.vivienda_id"
-                >
-                  <option
-                    v-for="item in reactives.list_vivienda"
-                    :key="item.id"
-                    :value="item.id"
-                  >
-                    ID: {{ item.id }} / Vivienda:
-                    {{ item.nroVivienda }}
-                  </option>
-                </select>
-              </div>
-            </div>
+            <select
+              id="viviendas"
+              class="custom col-span-6 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              v-model="form.vivienda_id"
+            >
+              <option
+                v-for="item in reactives.list_vivienda"
+                :key="item.id"
+                :value="item.id"
+              >
+                ID: {{ item.id }} / Vivienda:
+                {{ item.nroVivienda }}
+              </option>
+            </select>
           </div>
         </template>
 
@@ -627,3 +569,10 @@ const fecha = (fechaData) => {
     </div>
   </AppLayout>
 </template>
+<script>
+$(document).ready(function () {
+  // $('#select-residente').select2();
+  $('select').select2()
+  $('.custom').select2()
+})
+</script>
