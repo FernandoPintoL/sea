@@ -142,8 +142,21 @@ class HabitanteController extends Controller
             $perfil = [];
             if($request->isMobile){
                 $perfil    = $request->perfil;
+                if($perfil->email != null){
+                    $validator = Validator::make($perfil, [
+                        'email' => ['unique:perfils']
+                    ]);
+                    if ($validator->fails()) {
+                        return response()->json( [ 
+                            "isRequest" => true,
+                            "success" => false,
+                            "messageError" => true,
+                            "message" => $validator->errors(),
+                            "data" => []
+                        ], 422 );
+                    }    
+                }
                 $validator = Validator::make($perfil, [
-                    'email' => ['unique:perfils'],
                     'nroDocumento' => ['unique:perfils']
                 ]);
                 if ($validator->fails()) {
@@ -301,7 +314,7 @@ class HabitanteController extends Controller
         try{
             if($request->isMobile){
                 $perfil    = $request->perfil;
-                if($perfil['email'] != $habitante->perfil->email){
+                if($perfil['email'] != null && $perfil['email'] != $habitante->perfil->email){
                     $validator = Validator::make($perfil, [
                         'email' => ['unique:perfils']
                     ]);
@@ -316,7 +329,7 @@ class HabitanteController extends Controller
                     }
                 }
 
-                if($perfil['nroDocumento'] != $habitante->perfil->nroDocumento){
+                if($perfil['nroDocumento'] != null && $perfil['nroDocumento'] != $habitante->perfil->nroDocumento){
                     $validator = Validator::make($perfil, [
                         'nroDocumento' => ['unique:perfils']
                     ]);

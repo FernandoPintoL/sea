@@ -249,7 +249,6 @@ const onSearchQuery = (e) => {
         </div>
       </div>
     </div>
-
     <!-- table -->
   </AppLayout>
 </template>

@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('perfils', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('')->nullable();
-            $table->string('email')->nullable()->unique();
-            $table->string('nroDocumento')->default('')->nullable()->unique();
+            $table->string('email')->default('')->nullable();
+            $table->string('nroDocumento')->default('')->nullable();
             $table->string('direccion')->nullable();
             $table->string('celular')->default('')->nullable();
             $table->unsignedBigInteger('tipo_documento_id')->nullable();
@@ -32,3 +32,6 @@ return new class extends Migration
         Schema::dropIfExists('perfils');
     }
 };
+
+// "id","condominio_id","vivienda_ocupada","nroVivienda","detalle","nroEspacios","tipo_vivienda_id","created_at","updated_at"
+// "1","1",False,"A-18",NULL,5,"1","2024-08-07 14:59:07","2024-08-15 18:22:42"

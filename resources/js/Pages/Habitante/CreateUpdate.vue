@@ -68,9 +68,8 @@ const onValidateName = (e) => {
 }
 
 const onValidateCelular = (e) => {
-  if (!/^[\d+]+$/.test(e.target.value)) {
-    reactives.celularError =
-      'El campo debe tener al menos 7 caracteres y solo pueden ser números y (+).'
+  if (!/^(?:[678]\d{7})?$/.test(e.target.value)) {
+    reactives.celularError = 'Número de celular incorrecto'
   } else {
     reactives.celularError = ''
   }
@@ -490,22 +489,21 @@ const fecha = (fechaData) => {
           </div>
           <!-- Es dueño -->
           <div class="col-span-12 sm:col-span-12">
-            <label class="inline-flex items-center cursor-pointer">
+            <div class="flex items-center">
               <input
                 type="checkbox"
+                id="ingreso-is-duenho"
+                class="relative shrink-0 w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-green-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-green-600 checked:border-green-600 focus:checked:border-green-600 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-green-500 dark:checked:border-green-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-6 before:bg-white checked:before:bg-green-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-neutral-400 dark:checked:before:bg-green-200"
                 v-model="form.isDuenho"
                 :value="form.isDuenho"
-                class="sr-only peer"
               />
-              <div
-                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
+              <label
+                for="ingreso-is-duenho"
+                class="text-sm text-gray-500 ms-3 dark:text-neutral-400"
               >
-                Es dueño o propietario?
-              </span>
-            </label>
+                Es Dueño?
+              </label>
+            </div>
           </div>
           <!-- <p>{{ react.list_habitante }}</p> -->
           <!-- Responsable a cargo si no es dueño -->
