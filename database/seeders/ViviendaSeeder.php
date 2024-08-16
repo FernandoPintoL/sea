@@ -14,7 +14,7 @@ class ViviendaSeeder extends Seeder
     public function run(): void
     {
         Vivienda::create([
-            'nroVivienda' => 'C5',
+            'nroVivienda' => 'A-18',
             'detalle' => "",
             'nroEspacios' => 5,
             'vivienda_ocupada' => true,

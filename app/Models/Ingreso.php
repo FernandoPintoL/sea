@@ -20,6 +20,7 @@ class Ingreso extends Model
     protected $fillable = [
         'tipo_ingreso',
         'detalle',
+        'detalle_salida',
         'isAutorizado',
         'salida_created_at',
         'salida_updated_at',

@@ -142,6 +142,7 @@ class IngresoController extends Controller
             $responsse = Ingreso::create([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
+                'detalle_salida'=> $request->detalle_salida,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id,// ? $visitante->id : $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
@@ -175,6 +176,7 @@ class IngresoController extends Controller
     public function registerSalida(Request $request, Ingreso $appingreso){
         try{
             $responsse = $appingreso->update([
+                'detalle_salida'=> $request->detalle_salida,
                 'salida_created_at' => $request->salida_created_at,
                 'salida_updated_at' => $request->salida_updated_at,
             ]);
@@ -204,26 +206,6 @@ class IngresoController extends Controller
     public function show(Ingreso $appingreso)
     {
         try{
-            /*return response()->json([
-                "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
-                "message" => "Llegando de la api..",
-                "data" => $appingreso->perfil
-            ]);*/
-            $responsse = $appingreso;
-            /*$responsse = $appingreso->update([
-                'tipo_ingreso' => $request->tipo_ingreso,
-                'detalle'=> $request->detalle,
-                'isAutorizado' => $request->isAutorizado,
-                'visitante_id' => $request->visitante_id, ///FK
-                'vivienda_id' => $request->vivienda_id, ///FK
-                'autoriza_habitante_id'=> $request->autoriza_habitante_id,
-                'vehiculo_id'=> $request->vehiculo_id == 0 ? null : $request->vehiculo_id, ///FK
-                'tipo_visita_id' => $request->tipo_visita_id, ///FK
-                'user_id' => $request->user_id,///FK
-            ]);*/
-            
             return response()->json([
                 "isRequest"=> true,
                 "success" => $appingreso != null,
@@ -268,6 +250,7 @@ class IngresoController extends Controller
             $responsse = $appingreso->update([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
+                // 'detalle_salida'=> $request->detalle_salida,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
@@ -303,6 +286,7 @@ class IngresoController extends Controller
             $responsse = $ingreso->update([
                 'tipo_ingreso' => $request->tipo_ingreso,
                 'detalle'=> $request->detalle,
+                // 'detalle_salida'=> $request->detalle_salida,
                 'isAutorizado' => $request->isAutorizado,
                 'visitante_id' => $request->visitante_id, ///FK
                 'residente_habitante_id' => $request->residente_habitante_id, ///FK
