@@ -19,7 +19,9 @@ class CondominioSeeder extends Seeder
             'direccion' => 'B/Conavi, 15',
             'celular' => '3936031',
             'nroDocumento' => '109623235',
-            'tipo_documento_id' => 3
+            'tipo_documento_id' => 3,
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
         Condominio::create([
             'propietario'=> 'SEVILLA II',
@@ -28,6 +30,8 @@ class CondominioSeeder extends Seeder
             'cantidad_viviendas' => 20,
             'perfil_id' => $perfil->id,
             'user_id' => 2,
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
     }
 }

@@ -15,19 +15,23 @@ class HabitanteSeeder extends Seeder
     public function run(): void
     {
         $perfil = Perfil::create([
-            'name' => "Jorge Perez",
-            'email' => 'jorgeperez@gmail.com',
-            'direccion' => 'B/Conavi, 5',
-            'celular' => '73682145',
-            'nroDocumento' => '8956887',
+            'name' => "GLADYS ALBA FRANCO",
+            'email' => '',
+            'direccion' => '',
+            'celular' => '',
+            'nroDocumento' => '',
             'tipo_documento_id' => 1,
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
         Habitante::create([
             'isDuenho' => true,
             'isDependiente' => false,
             'perfil_id' => $perfil->id,
             'vivienda_id' => 1,
-            'profile_photo_path' => ""
+            'profile_photo_path' => "",
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
     }
 }
