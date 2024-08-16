@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('viviendas', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('condominio_id')->nullable();
+            $table->unsignedBigInteger('condominio_id')->default(1)->nullable();
             $table->boolean('vivienda_ocupada')->default(true)->nullable();
             $table->string('nroVivienda')->default("A-18")->nullable();
             $table->string('detalle')->default("")->nullable();
