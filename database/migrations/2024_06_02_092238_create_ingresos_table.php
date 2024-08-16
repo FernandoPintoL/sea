@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->enum('tipo_ingreso', ['vehiculo','caminando'])->default('vehiculo')->nullable();
             $table->string('detalle')->default("")->nullable();
+            $table->string('detalle_salida')->default("")->nullable();
             $table->boolean('isAutorizado')->default(false)->nullable();
             $table->unsignedBigInteger('visitante_id')->nullable();
             //$table->unsignedBigInteger('vivienda_id')->nullable();
