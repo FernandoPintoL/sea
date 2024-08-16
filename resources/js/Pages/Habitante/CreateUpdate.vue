@@ -33,7 +33,7 @@ const form = useForm({
     celular: props.model != null ? props.model.perfil.celular : '',
     nroDocumento: props.model != null ? props.model.perfil.nroDocumento : '',
     tipo_documento_id:
-      props.model != null ? props.model.perfil.tipo_documento_id : 0,
+      props.model != null ? props.model.perfil.tipo_documento_id : 1,
   },
   /* datos de habitante */
   isDuenho: props.model != null ? props.model.isDuenho : true,
