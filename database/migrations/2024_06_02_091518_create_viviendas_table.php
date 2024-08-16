@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('viviendas', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('condominio_id')->nullable();
-            $table->boolean('vivienda_ocupada')->default(false)->nullable();
-            $table->string('nroVivienda')->default("C1")->nullable();
+            $table->boolean('vivienda_ocupada')->default(true)->nullable();
+            $table->string('nroVivienda')->default("A-18")->nullable();
             $table->string('detalle')->default("")->nullable();
             $table->unsignedInteger('nroEspacios')->default(1)->nullable();
-            $table->unsignedBigInteger('tipo_vivienda_id')->default(0)->nullable();
+            $table->unsignedBigInteger('tipo_vivienda_id')->default(1)->nullable();
             $table->timestamps();
             $table->foreign( 'condominio_id' )->references( 'id' )->on('condominios')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'tipo_vivienda_id' )->references( 'id' )->on('tipo_viviendas')->noActionOnDelete()->noActionOnUpdate();

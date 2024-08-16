@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name')->default('')->nullable();
             $table->string('email')->default('')->nullable();
             $table->string('nroDocumento')->default('')->nullable();
-            $table->string('direccion')->nullable();
+            $table->string('direccion')->default('')->nullable();
             $table->string('celular')->default('')->nullable();
             $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->timestamps();
