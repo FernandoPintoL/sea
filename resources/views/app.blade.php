@@ -19,10 +19,6 @@
 
     <link href="{{ asset('/assets/fonts/font-bunny.css') }}" rel="stylesheet">
     <link href="{{ asset('/assets/css/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
-    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-regular-400.ttf') }}" rel="stylesheet">
-    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-regular-400.woff2') }}" rel="stylesheet">
-    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-solid-900.ttf') }}" rel="stylesheet">
-    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-solid-900.woff2') }}" rel="stylesheet">
     <link href="{{ asset('/assets/css/fontawesome/css/v5-font-face.min.css') }}" rel="stylesheet">
     <link href="{{ asset('/assets/css/fontawesome/css/brands.css') }}" rel="stylesheet">
     <link href="{{ asset('/assets/css/fontawesome/css/solid.css') }}" rel="stylesheet">
