@@ -20,16 +20,6 @@ class IngresoController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $start    = $request->get('start');
-            $end    = $request->get('end');
-            /*$response = Ingreso::where('id','LIKE',"%".$queryStr."%")
-                        ->with('residente')
-                        ->with('visitante')
-                        ->with('vehiculo')
-                        ->with('tipoVisita')
-                        ->orderBy('id', 'DESC')
-                        ->get();*/
-            $queryStr  = $request->get( 'query' );
             $responsse = DB::table('ingresos as i')
                         ->select('i.id as id',
                                 'i.*',
@@ -63,7 +53,7 @@ class IngresoController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -84,11 +74,26 @@ class IngresoController extends Controller
             $start    = $request->get('start');
             $end    = $request->get('end');
             $responsse = DB::table('ingresos as i')
-                        ->select('i.id as id','i.*','h.id as id_residente','p.name as name_residente','v.id as id_visitante','pv.name as name_visitante')
+                        ->select('i.id as id',
+                                'i.*',
+                                'h.id as id_residente',
+                                'p.name as name_residente',
+                                'p.nroDocumento as nroDocumento_residente',
+                                'vvd.nroVivienda',
+                                'v.id as id_visitante',
+                                'v.is_permitido',
+                                'v.description_is_no_permitido',
+                                'pv.nroDocumento as nroDocumento_visitante',
+                                'pv.name as name_visitante',
+                                'tv.id as tv_id',
+                                'tv.sigla as tv_sigla',
+                                'tv.detalle as tv_detalle')
                         ->join('habitantes as h', 'h.id', '=', 'i.residente_habitante_id')
+                        ->join('viviendas as vvd', 'vvd.id', '=', 'h.id')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
                         ->join('visitantes as v', 'v.id', '=', 'i.visitante_id')
                         ->join('perfils as pv', 'v.perfil_id', '=', 'pv.id')
+                        ->join('tipo_visitas as tv', 'i.tipo_visita_id', '=', 'tv.id')
                         ->whereBetween('i.created_at',[$start, $end])
                         ->orderBy('id', 'DESC')
                         ->get();
@@ -98,7 +103,7 @@ class IngresoController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -154,8 +159,8 @@ class IngresoController extends Controller
                 'vehiculo_id'=> $request->vehiculo_id == 0 ? null : $request->vehiculo_id, ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id == 0 ? auth()->user()->id : $request->user_id,///FK
-                'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at
+                'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
@@ -181,8 +186,8 @@ class IngresoController extends Controller
         try{
             $responsse = $appingreso->update([
                 'detalle_salida'=> $request->detalle_salida,
-                'salida_created_at' => $request->salida_created_at,
-                'salida_updated_at' => $request->salida_updated_at,
+                'salida_created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->salida_created_at,
+                'salida_updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->salida_updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
@@ -235,7 +240,7 @@ class IngresoController extends Controller
      */
     public function edit(Ingreso $ingreso)
     {
-        return Inertia::render("Ingreso/CreateUpdate",['model'=>$ingreso]);
+        return Inertia::render("Ingreso/CreateUpdate",['model'=>$ingreso, 'isRegister' => false]);
     }
 
     /**
@@ -262,7 +267,7 @@ class IngresoController extends Controller
                 'vehiculo_id'=> $request->vehiculo_id != 0 ? $request->vehiculo_id : null,  ///FK
                 'tipo_visita_id' => $request->tipo_visita_id, ///FK
                 'user_id' => $request->user_id,
-                'updated_at' => $request->updated_at
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,

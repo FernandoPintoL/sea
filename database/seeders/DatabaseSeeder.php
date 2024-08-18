@@ -21,6 +21,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'administrador@gmail.com',
             'usernick' => 'administrador',
             'password' => Hash::make('123456789'),
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
 
         User::create([
@@ -28,6 +30,8 @@ class DatabaseSeeder extends Seeder
             'email' => 'sevilla@gmail.com',
             'usernick' => 'sevilla',
             'password' => Hash::make('123456789'),
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
         $this->call([
             TipoDocumentoSeeder::class,

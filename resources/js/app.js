@@ -1,15 +1,10 @@
 import './bootstrap';
-import './../../node_modules/preline/dist/preline.js';
-import './../../node_modules/jquery/dist/jquery.min.js';
-import './../../node_modules/datatables.net/js/dataTables.min.js';
 import 'sweetalert2/dist/sweetalert2.min.css';
 import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy';
 import VueSweetalert2 from 'vue-sweetalert2';
-import moment from 'moment';
-import $ from "jquery";
 
 const appName = import.meta.env.VITE_APP_NAME || 'SEA';
 
@@ -20,7 +15,7 @@ createInertiaApp({
         return createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue)
-            .use($)
+            // .use($)
             .use(VueSweetalert2)
             .mount(el);
     },

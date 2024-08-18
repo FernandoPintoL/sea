@@ -18,10 +18,11 @@ class CondominioController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
+            $queryUpper = strtoupper($queryStr);
             $responsse = Condominio::with('perfil')
                         ->with('user')
-                        ->where('propietario', 'LIKE', "%".$queryStr."%")
-                        ->orWhere('razonSocial', 'LIKE', "%".$queryStr."%")
+                        ->where('propietario', 'LIKE', "%".$queryUpper."%")
+                        ->orWhere('razonSocial', 'LIKE', "%".$queryUpper."%")
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
@@ -29,7 +30,7 @@ class CondominioController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -120,8 +121,8 @@ class CondominioController extends Controller
                 'perfil_id' => $perfil['id'],
                 'user_id' => $user['id'],
                 'cantidad_viviendas' => 0,
-                'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at
+                'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,

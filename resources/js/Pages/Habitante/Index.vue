@@ -1,92 +1,74 @@
 <script setup>
 import { ref, onMounted, inject, reactive } from 'vue'
-import { Link } from '@inertiajs/vue3'
+import { Link, router } from '@inertiajs/vue3'
 import AppLayout from '@/Layouts/AppLayout.vue'
-import List from './List.vue'
-import SectionBorder from '@/Components/SectionBorder.vue'
 import HeaderIndex from '@/Componentes/HeaderIndex.vue'
+import Loader from '@/Componentes/Loader.vue'
 import TableGrl from '@/Componentes/Tbl-General.vue'
 import moment from 'moment'
-import VueDatePicker from '@vuepic/vue-datepicker'
-import '@vuepic/vue-datepicker/dist/main.css'
-// import { initFlowbite } from 'flowbite'
+import FormSearch from '@/Componentes/FormSearch.vue'
 
 const props = defineProps({
-  habitantes: {
+  listado: {
     type: Array,
     default: [],
   },
 })
 
-const swal = inject('$swal')
+const Swal = inject('$swal')
+
+onMounted(() => {
+  console.log(props.listado)
+  datas.list = props.listado
+})
 
 const datas = reactive({
   list: [],
   isLoad: false,
-  query: '',
   dateStart: '',
   dateEnd: '',
+  messageList: '',
+  metodoList: '',
 })
 
 const query = ref('')
 
-const changeLoad = (value) => {
-  datas.isLoad = value
-}
-
-const recargarPagina = () => {
-  query.value = ''
-  queryList('')
-}
-
 const onSearchQuery = (e) => {
-  queryListSearchWeb(e.target.value)
+  queryList(e.target.value)
 }
 
-onMounted(() => {
-  // datas.list = props.datas
-  queryList('')
-  // getTipoDocumento(1)
-})
+const onSearchDate = () => {
+  console.log(datas.dateStart)
+  console.log(datas.dateEnd)
+  if (datas.dateStart.length > 0 && datas.dateEnd.length > 0) {
+    var start = fecha(datas.dateStart)
+    var end = fecha(datas.dateEnd)
+    console.log(start)
+    console.log(end)
+    queryDateList(start, end)
+  } else {
+    queryList('')
+  }
+}
 
-const queryListSearchWeb = async (consulta) => {
+const queryDateList = async (date_start, date_end) => {
   datas.isLoad = true
-  console.log(consulta)
-  const url = route('apphabitante.querySearchWeb', { query: consulta })
+  const url = route('appingreso.queryDate', {
+    start: date_start,
+    end: date_end,
+  })
   await axios
     .post(url)
     .then((response) => {
       console.log(response.data)
       if (response.data.success) {
         datas.list = response.data.data
-        /*for (const element of datas.list) {
-          element.detalle = await getTipoDocumento(
-            element.perfil.tipo_documento_id,
-          )
-        }*/
-      }
-    })
-    .catch((error) => {
-      console.log('respuesta error')
-      console.log(error)
-    })
-  datas.isLoad = false
-}
-
-const queryList = async (consulta) => {
-  datas.isLoad = true
-  const url = route('habitante.query', { query: consulta })
-  await axios
-    .post(url)
-    .then(async (response) => {
-      console.log(response)
-      if (response.data.success) {
-        datas.list = response.data.data
-        /*for (const element of datas.list) {
-          element.detalle = await getTipoDocumento(
-            element.perfil.tipo_documento_id,
-          )
-        }*/
+        datas.messageList = response.data.message
+        datas.metodoList =
+          datas.list.length > 0
+            ? ' con: Inicio' + date_start + ' | Fin' + date_end
+            : ''
+        console.log(datas.list.length)
       } else {
         datas.list = []
       }
@@ -98,12 +80,37 @@ const queryList = async (consulta) => {
   datas.isLoad = false
 }
 
+const queryList = async (consulta) => {
+  datas.isLoad = true
+  const url = route('habitante.query', { query: consulta.toUpperCase() })
+  await axios
+    .post(url)
+    .then((response) => {
+      if (response.data.success) {
+        datas.list = response.data.data
+        datas.messageList = response.data.message
+        datas.metodoList = consulta.length > 0 ? ' con: ' + consulta : ''
+      } else {
+        datas.list = []
+      }
+    })
+    .catch((error) => {
+      console.log('respuesta error')
+      console.log(error)
+    })
+  datas.isLoad = false
+}
+
+const fecha = (fechaData) => {
+  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+}
+
 const destroyData = async (id) => {
   const url = route('habitante.destroy', id)
   await axios
     .delete(url)
     .then((response) => {
-      swal.fire({
+      Swal.fire({
         title: response.data.success ? 'Buen Trabajo!' : 'Error!',
         text: response.data.success
           ? 'Dato creado exitosamente'
@@ -114,7 +121,7 @@ const destroyData = async (id) => {
     .catch((error) => {
       if (error.messageError) {
         console.log(error.message)
-        swal.fire({
+        Swal.fire({
           title: error.messageError
             ? 'Error desde el micro servicio!'
             : 'Algun otro error esta sucediendo!',
@@ -127,47 +134,62 @@ const destroyData = async (id) => {
     })
   queryList('')
 }
-
-const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
-}
-
-const getTipoDocumento = async (tipoDocumento_id) => {
-  datas.isLoad = true
-  var tipoDocumento
-  const url = route('tipodocumento.show', { tipodocumento: tipoDocumento_id })
-  await axios
-    .get(url)
-    .then((response) => {
-      if (response.data.success) {
-        tipoDocumento = response.data.data
-      } else {
-        tipoDocumento = 'Error en la consulta!..'
-      }
-    })
-    .catch((error) => {
-      console.log('respuesta error')
-      console.log(error)
-    })
-  datas.isLoad = false
-  return tipoDocumento.detalle
-}
 </script>
 
 <template>
   <AppLayout title="Residentes">
-    <div class="flex flex-col">
-      <div class="-m-1.5">
-        <div class="p-1.5 min-w-full inline-block align-middle">
-          <div
-            class="bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-neutral-800 dark:border-neutral-700"
+    <div
+      class="p-4 md:p-2 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700"
+    >
+      <!-- Header -->
+      <HeaderIndex :title="'Residentes'">
+        <template #link>
+          <a
+            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+            :href="route('habitante.create')"
           >
-            <!-- Header -->
-            <HeaderIndex :title="'Residentes'">
-              <template #link>
-                <a
-                  class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                  :href="route('habitante.create')"
+            <svg
+              class="shrink-0 size-4"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+            Nuevo
+          </a>
+        </template>
+      </HeaderIndex>
+      <!-- End Header -->
+      <!-- Search Table -->
+      <FormSearch>
+        <template #search-table>
+          <div class="grid lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="w-full flex flex-col">
+              <span
+                class="text-sm font-bold text-gray-900 dark:text-neutral-400"
+              >
+                Busqueda
+              </span>
+              <div class="relative">
+                <input
+                  id="hs-table-with-pagination-search"
+                  type="text"
+                  v-model="query"
+                  @input="onSearchQuery"
+                  name="hs-table-with-pagination-search"
+                  class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                  placeholder="Buscar"
+                />
+                <div
+                  class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
                 >
                   <svg
                     class="shrink-0 size-4"
@@ -181,61 +203,33 @@ const getTipoDocumento = async (tipoDocumento_id) => {
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   >
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <path d="m21 21-4.3-4.3"></path>
                   </svg>
-                  Nuevo
-                </a>
-              </template>
-            </HeaderIndex>
-            <!-- End Header -->
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="pt-2 dark:bg-neutral-800 dark:border-neutral-700">
+            <span>{{ datas.messageList }} {{ datas.metodoList }}</span>
+          </div>
+        </template>
+      </FormSearch>
+      <!-- End Search table -->
+    </div>
+
+    <div class="flex flex-col">
+      <div class="-m-1.5 overflow-x-auto">
+        <div class="p-1.5 min-w-full inline-block align-middle">
+          <div v-show="datas.isLoad">
+            <Loader />
+          </div>
+          <div
+            v-if="datas.list.length > 0"
+            class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-800 dark:border-neutral-700"
+          >
             <!-- Table -->
             <TableGrl>
-              <template #header-table>
-                <div class="grid grid-cols-3 gap-4">
-                  <div class="col-start-1 col-end-3">
-                    <label class="text-sm text-gray-600 dark:text-neutral-400">
-                      Rango de fechas
-                    </label>
-                    <VueDatePicker
-                      v-model="datas.dateStart"
-                      :range="{ partialRange: false }"
-                    />
-                  </div>
-                  <div class="col-end-7 col-span-2">
-                    <div class="relative">
-                      <label class="sr-only">Busqueda</label>
-                      <input
-                        v-model="datas.query"
-                        type="text"
-                        name="hs-table-with-pagination-search"
-                        id="hs-table-with-pagination-search"
-                        class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                        placeholder="Buscar"
-                      />
-                      <div
-                        class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
-                      >
-                        <svg
-                          class="size-4 text-gray-400 dark:text-neutral-500"
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                        >
-                          <circle cx="11" cy="11" r="8"></circle>
-                          <path d="m21 21-4.3-4.3"></path>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
               <template #tbl-header>
                 <tr>
                   <th
@@ -309,15 +303,6 @@ const getTipoDocumento = async (tipoDocumento_id) => {
                       >
                         {{ item.name }}
                       </span>
-                    </div>
-                  </td>
-                  <td class="h-px w-72 whitespace-nowrap">
-                    <div class="px-6 py-3">
-                      <span
-                        class="block text-sm text-gray-500 dark:text-neutral-500"
-                      >
-                        {{ fecha(item.created_at) }}
-                      </span>
                       <span
                         :class="
                           item.isDuenho
@@ -344,6 +329,15 @@ const getTipoDocumento = async (tipoDocumento_id) => {
                   </td>
                   <td class="h-px w-72 whitespace-nowrap">
                     <div class="px-6 py-3">
+                      <span
+                        class="block text-sm text-gray-500 dark:text-neutral-500"
+                      >
+                        {{ fecha(item.created_at) }}
+                      </span>
+                    </div>
+                  </td>
+                  <td class="h-px w-72 whitespace-nowrap">
+                    <div class="px-6 py-3">
                       <Link
                         :href="route('habitante.edit', item.id)"
                         class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
@@ -358,9 +352,19 @@ const getTipoDocumento = async (tipoDocumento_id) => {
             </TableGrl>
             <!-- End Table -->
           </div>
+          <div
+            v-else
+            class="mt-2 bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500"
+            role="alert"
+            tabindex="-1"
+            aria-labelledby="hs-solid-color-info-label"
+          >
+            <span id="hs-solid-color-info-label" class="font-bold">
+              Lista vacía
+            </span>
+          </div>
         </div>
       </div>
     </div>
-    <!-- table -->
   </AppLayout>
 </template>

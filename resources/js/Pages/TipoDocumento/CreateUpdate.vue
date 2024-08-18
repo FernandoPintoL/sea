@@ -8,6 +8,7 @@ import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
+import Loader from '@/Componentes/Loader.vue'
 import moment from 'moment'
 
 const Swal = inject('$swal')
@@ -80,15 +81,12 @@ const onValidateSigla = (e) => {
       'El campo debe tener al menos 2 caracteres y solo pueden ser letras.'
   } else {
     reactives.siglaError = ''
+    form.sigla = e.target.value.toUpperCase()
   }
 }
 
 const onValidateDetalle = (e) => {
-  if (!/^[A-Za-z\s]{0,}$/.test(e.target.value)) {
-    reactives.detalleError = 'El campo solo pueden ser letras.'
-  } else {
-    reactives.detalleError = ''
-  }
+  form.detalle = e.target.value.toUpperCase()
 }
 
 const setErrorSigla = (value) => {
@@ -189,136 +187,94 @@ const fecha = (fechaData) => {
 
 <template>
   <AppLayout title="Tipo Documento">
-    <template #header>
-      <h2
-        v-if="props.model != null"
-        class="font-semibold text-xl text-gray-800 leading-tight"
-      >
-        ACTUALIZAR TIPO DOCUMENTO {{ props.model.sigla }}
-      </h2>
-      <h2 v-else class="font-semibold text-xl text-gray-800 leading-tight">
-        CREAR TIPO DOCUMENTO
-      </h2>
-    </template>
-    <div v-if="reactives.isLoad" class="w-full p-6">
-      <div class="text-center">
-        <div role="status">
-          <svg
-            aria-hidden="true"
-            class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-            viewBox="0 0 100 101"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-              fill="currentColor"
-            />
-            <path
-              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-              fill="currentFill"
-            />
-          </svg>
-          <span class="sr-only">Cargando Formulario...</span>
-          <div class="mb-1 text-base font-medium dark:text-white">
-            Cargando Formulario...
+    <div v-if="reactives.isLoad">
+      <Loader />
+    </div>
+    <FormSection v-else @submitted="sendModel">
+      <template #title>
+        <p v-if="props.model != null">
+          Tipo Documento COD #{{ props.model.id }}
+        </p>
+        <p v-else>Registrar Tipo Documento</p>
+      </template>
+
+      <template #description>
+        <p v-if="props.model != null">
+          <span class="font-semibold text-gray-800 leading-tight">
+            Creado:
+          </span>
+          {{ fecha(props.model.created_at) }}
+        </p>
+        <p v-if="props.model != null">
+          <span class="font-semibold text-gray-800 leading-tight">
+            Actualizado:
+          </span>
+          {{ fecha(props.model.updated_at) }}
+        </p>
+        <p>
+          Complete correctamente los datos personales
+        </p>
+      </template>
+
+      <template #form>
+        <!-- Sigla -->
+        <div class="col-span-12 sm:col-span-12">
+          <InputLabel for="sigla" value="Sigla" />
+          <TextInput
+            id="sigla"
+            v-model="form.sigla"
+            type="text"
+            class="mt-1 block w-full"
+            required
+            autocomplete="sigla"
+            @input="onValidateSigla"
+          />
+          <InputError
+            class="mt-2"
+            :message="reactives.siglaError.toUpperCase()"
+          />
+          <div v-if="messages.eSigla.length > 0">
+            <div v-for="(msg, index) in messages.eSigla" :key="index">
+              <InputError :message="msg.toUpperCase()" class="mt-2" />
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div v-else class="max-w-7xl py-6 mx-auto sm:px-6 lg:px-8">
-      <FormSection @submitted="sendModel">
-        <template #title>
-          <p v-if="props.model != null">
-            Tipo Documento COD #{{ props.model.id }}
-          </p>
-          <p v-else>Registrar Tipo Documento</p>
-        </template>
-
-        <template #description>
-          <p v-if="props.model != null">
-            <span class="font-semibold text-gray-800 leading-tight">
-              Creado:
-            </span>
-            {{ fecha(props.model.created_at) }}
-          </p>
-          <p v-if="props.model != null">
-            <span class="font-semibold text-gray-800 leading-tight">
-              Actualizado:
-            </span>
-            {{ fecha(props.model.updated_at) }}
-          </p>
-          <p>
-            Complete correctamente los datos personales
-          </p>
-        </template>
-
-        <template #form>
-          <!-- Sigla -->
-          <div class="col-span-12 sm:col-span-12">
-            <InputLabel for="sigla" value="Sigla" />
-            <TextInput
-              id="sigla"
-              v-model="form.sigla"
-              type="text"
-              class="mt-1 block w-full"
-              required
-              autocomplete="sigla"
-              @input="onValidateSigla"
-            />
-            <InputError
-              class="mt-2"
-              :message="reactives.siglaError.toUpperCase()"
-            />
-            <div v-if="messages.eSigla.length > 0">
-              <div v-for="(msg, index) in messages.eSigla" :key="index">
-                <InputError :message="msg.toUpperCase()" class="mt-2" />
-              </div>
+        <!-- Detalle -->
+        <div class="col-span-12 sm:col-span-12">
+          <InputLabel for="detalle" value="Detalle" />
+          <TextInput
+            id="detalle"
+            v-model="form.detalle"
+            type="text"
+            class="mt-1 block w-full"
+            required
+            autocomplete="detalle"
+            @input="onValidateDetalle"
+          />
+          <InputError
+            class="mt-2"
+            :message="reactives.detalleError.toUpperCase()"
+          />
+          <div v-if="messages.eDetalle.length > 0">
+            <div v-for="(msg, index) in messages.eDetalle" :key="index">
+              <InputError :message="msg.toUpperCase()" class="mt-2" />
             </div>
           </div>
-          <!-- Detalle -->
-          <div class="col-span-12 sm:col-span-12">
-            <InputLabel for="detalle" value="Detalle" />
-            <TextInput
-              id="detalle"
-              v-model="form.detalle"
-              type="text"
-              class="mt-1 block w-full"
-              required
-              autocomplete="detalle"
-            />
-            <InputError
-              class="mt-2"
-              :message="reactives.detalleError.toUpperCase()"
-            />
-            <div v-if="messages.eDetalle.length > 0">
-              <div v-for="(msg, index) in messages.eDetalle" :key="index">
-                <InputError :message="msg.toUpperCase()" class="mt-2" />
-              </div>
-            </div>
-          </div>
-        </template>
+        </div>
+      </template>
 
-        <template #actions>
-          <ActionMessage :on="form.recentlySuccessful" class="me-3">
-            Saved.
-          </ActionMessage>
+      <template #actions>
+        <ActionMessage :on="form.recentlySuccessful" class="me-3">
+          Saved.
+        </ActionMessage>
 
-          <PrimaryButton
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-          >
-            Guardar
-          </PrimaryButton>
-        </template>
-      </FormSection>
-
-      <!-- <PrimaryButton
-        :class="{ 'opacity-25': form.processing }"
-        @click="showAlert"
-      >
-        Alert
-      </PrimaryButton> -->
-    </div>
+        <PrimaryButton
+          :class="{ 'opacity-25': form.processing }"
+          :disabled="form.processing"
+        >
+          Guardar
+        </PrimaryButton>
+      </template>
+    </FormSection>
   </AppLayout>
 </template>

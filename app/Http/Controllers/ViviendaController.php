@@ -14,7 +14,8 @@ class ViviendaController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $responsse = Vivienda::where('nroVivienda','LIKE',"%".$queryStr."%")
+            $queryUpper = strtoupper($queryStr);
+            $responsse = Vivienda::where('nroVivienda','LIKE',"%".$queryUpper."%")
                         ->with('tipoVivienda')
                         ->with('condominio')
                         ->get();
@@ -24,7 +25,7 @@ class ViviendaController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -44,7 +45,9 @@ class ViviendaController extends Controller
      */
     public function index()
     {
-        $listado = Vivienda::all();
+        $listado = Vivienda::with('tipoVivienda')
+                        ->with('condominio')
+                        ->get();
         return Inertia::render("Vivienda/Index", ['listado'=> $listado]);
     }
 

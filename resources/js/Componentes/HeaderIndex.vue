@@ -9,7 +9,7 @@ const props = defineProps({
 </script>
 <template>
   <div
-    class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700"
+    class="px-3 py-2 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700"
   >
     <div>
       <h2 class="text-xl font-semibold text-gray-800 dark:text-neutral-200">
@@ -20,10 +20,8 @@ const props = defineProps({
       </p>
     </div>
 
-    <div>
-      <div class="inline-flex gap-x-2">
-        <slot name="link" />
-      </div>
+    <div class="inline-flex gap-x-2">
+      <slot name="link" />
     </div>
   </div>
 </template>

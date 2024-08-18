@@ -26,8 +26,8 @@ class GaleriaVehiculoController extends Controller
             if($request->hasFile('file')){
                 $model = GaleriaVehiculo::create([
                     "vehiculo_id" => $request->get("id"),
-                    'created_at' => $request->get("created_at"),
-                    'updated_at' => $request->get("updated_at"),
+                    'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]);
                 $extension = $request->file('file')->getClientOriginalExtension();
                 $filename= "cod".$model->id."-vehiculoid".$request->get("id").'.'.$extension;
@@ -60,11 +60,13 @@ class GaleriaVehiculoController extends Controller
             $responsse = GaleriaVehiculo::where('vehiculo_id','=',$request->get('vehiculo_id'))
                         ->with('vehiculo')
                         ->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "Consulta de galeria visitantes conrrectamente..",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -90,7 +92,7 @@ class GaleriaVehiculoController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){

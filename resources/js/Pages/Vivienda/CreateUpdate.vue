@@ -9,6 +9,7 @@ import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
 import moment from 'moment'
+import Loader from '@/Componentes/Loader.vue'
 
 const Swal = inject('$swal')
 
@@ -238,191 +239,157 @@ const fecha = (fechaData) => {
 </script>
 
 <template>
-  <AppLayout title="Vivienda">
-    <template #header>
-      <h2
-        v-if="props.model != null"
-        class="font-semibold text-xl text-gray-800 leading-tight"
-      >
-        ACTUALIZAR VIVIENDA {{ props.model.nroVivienda }}
-      </h2>
-      <h2 v-else class="font-semibold text-xl text-gray-800 leading-tight">
-        CREAR VIVIENDA
-      </h2>
-    </template>
-    <div v-if="reactives.isLoad" class="w-full p-6">
-      <div class="text-center">
-        <div role="status">
-          <svg
-            aria-hidden="true"
-            class="inline w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-            viewBox="0 0 100 101"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
+  <AppLayout title="Crear Viviendas">
+    <div v-if="reactives.isLoad">
+      <Loader />
+    </div>
+    <FormSection v-else @submitted="sendModel">
+      <template #title>
+        <p v-if="props.model != null">Vivienda COD #{{ props.model.id }}</p>
+        <p v-else>Registrar Vivienda</p>
+      </template>
+
+      <template #description>
+        <p v-if="props.model != null">
+          <span class="font-semibold text-gray-800 leading-tight">
+            Creado:
+          </span>
+          {{ fecha(props.model.created_at) }}
+        </p>
+        <p v-if="props.model != null">
+          <span class="font-semibold text-gray-800 leading-tight">
+            Actualizado:
+          </span>
+          {{ fecha(props.model.updated_at) }}
+        </p>
+        <p>
+          Complete correctamente los datos personales
+        </p>
+      </template>
+
+      <template #form>
+        <!-- NRO VIVIENDA -->
+        <div class="col-span-12 sm:col-span-12">
+          <InputLabel for="nroVivienda" value="NRO VIVIENDA" />
+          <TextInput
+            id="nroVivienda"
+            v-model="form.nroVivienda"
+            type="text"
+            class="mt-1 block w-full"
+            required
+            autocomplete="nroVivienda"
+          />
+          <InputError
+            class="mt-2"
+            :message="reactives.nroViviendaError.toUpperCase()"
+          />
+        </div>
+        <!-- TIPO DE VIVIENDA -->
+        <div class="col-span-12 sm:col-span-12">
+          <label
+            for="tp_vivienda"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
           >
-            <path
-              d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-              fill="currentColor"
+            Seleccione un tipo de vivienda
+          </label>
+
+          <select
+            id="tp_vivienda"
+            required
+            class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            v-model="form.tipo_vivienda_id"
+          >
+            <option
+              v-for="item in reactives.list_tipos_viviendas"
+              :key="item.id"
+              :value="item.id"
+            >
+              Cod: {{ item.id }} / Detalle: {{ item.detalle }}
+            </option>
+          </select>
+        </div>
+
+        <!-- CONDOMINIO -->
+        <div class="col-span-12 sm:col-span-12">
+          <label
+            for="selects-condominios"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Seleccione un Condominio
+          </label>
+
+          <select
+            id="selects-condominios"
+            required
+            class="custom bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+            v-model="form.condominio_id"
+          >
+            <option
+              v-for="item in reactives.list_condominios"
+              :key="item.id"
+              :value="item.id"
+            >
+              Cod: {{ item.id }} / Razon Social: {{ item.razonSocial }}
+            </option>
+          </select>
+        </div>
+        <!-- Es dueño -->
+        <div class="col-span-12 sm:col-span-12">
+          <div class="flex items-center">
+            <input
+              type="checkbox"
+              id="vvd-ocupada"
+              required
+              class="relative shrink-0 w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-green-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-green-600 checked:border-green-600 focus:checked:border-green-600 dark:bg-neutral-800 dark:border-neutral-700 dark:checked:bg-green-500 dark:checked:border-green-500 dark:focus:ring-offset-gray-600 before:inline-block before:size-6 before:bg-white checked:before:bg-green-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200 dark:before:bg-neutral-400 dark:checked:before:bg-green-200"
+              v-model="form.vivienda_ocupada"
             />
-            <path
-              d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-              fill="currentFill"
-            />
-          </svg>
-          <span class="sr-only">Cargando Formulario...</span>
-          <div class="mb-1 text-base font-medium dark:text-white">
-            Cargando Formulario...
+            <label
+              for="vvd-ocupada"
+              class="text-sm text-gray-500 ms-3 dark:text-neutral-400"
+            >
+              Vivienda Ocupada?
+            </label>
           </div>
         </div>
-      </div>
-    </div>
-    <div v-else class="max-w-7xl py-6 mx-auto sm:px-6 lg:px-8">
-      <FormSection @submitted="sendModel">
-        <template #title>
-          <p v-if="props.model != null">Vivienda COD #{{ props.model.id }}</p>
-          <p v-else>Registrar Vivienda</p>
-        </template>
-
-        <template #description>
-          <p v-if="props.model != null">
-            <span class="font-semibold text-gray-800 leading-tight">
-              Creado:
-            </span>
-            {{ fecha(props.model.created_at) }}
-          </p>
-          <p v-if="props.model != null">
-            <span class="font-semibold text-gray-800 leading-tight">
-              Actualizado:
-            </span>
-            {{ fecha(props.model.updated_at) }}
-          </p>
-          <p>
-            Complete correctamente los datos personales
-          </p>
-        </template>
-
-        <template #form>
-          <!-- NRO VIVIENDA -->
-          <div class="col-span-12 sm:col-span-12">
-            <InputLabel for="nroVivienda" value="NRO VIVIENDA" />
-            <TextInput
-              id="nroVivienda"
-              v-model="form.nroVivienda"
-              type="text"
-              class="mt-1 block w-full"
-              required
-              autocomplete="nroVivienda"
-            />
-            <InputError
-              class="mt-2"
-              :message="reactives.nroViviendaError.toUpperCase()"
-            />
-          </div>
-          <!-- TIPO DE VIVIENDA -->
-          <div class="col-span-12 sm:col-span-12">
-            <label
-              for="tipo_vivienda"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un tipo de vivienda
-            </label>
-
-            <select
-              id="tipo_vivienda"
-              required
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              v-model="form.tipo_vivienda_id"
-            >
-              <option
-                v-for="item in reactives.list_tipos_viviendas"
-                :key="item.id"
-                :value="item.id"
-              >
-                Cod: {{ item.id }} / Detalle: {{ item.detalle }}
-              </option>
-            </select>
-          </div>
-
-          <!-- CONDOMINIO -->
-          <div class="col-span-12 sm:col-span-12">
-            <label
-              for="condominio_id"
-              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Seleccione un Condominio
-            </label>
-
-            <select
-              id="condominio_id"
-              required
-              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              v-model="form.condominio_id"
-            >
-              <option
-                v-for="item in reactives.list_condominios"
-                :key="item.id"
-                :value="item.id"
-              >
-                Cod: {{ item.id }} / Razon Social: {{ item.razonSocial }}
-              </option>
-            </select>
-          </div>
-          <!-- Es dueño -->
-          <div class="col-span-12 sm:col-span-12">
-            <label class="inline-flex items-center cursor-pointer">
-              <input
-                type="checkbox"
-                v-model="form.vivienda_ocupada"
-                :value="form.vivienda_ocupada"
-                class="sr-only peer"
-              />
-              <div
-                class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:w-5 after:h-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"
-              ></div>
-              <span
-                class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300"
-              >
-                Vivienda Ocupada
-              </span>
-            </label>
-          </div>
-          <!-- Detalle -->
-          <div class="col-span-12 sm:col-span-12">
-            <InputLabel for="detalle" value="Detalle" />
-            <TextInput
-              id="detalle"
-              v-model="form.detalle"
-              type="text"
-              class="mt-1 block w-full"
-              autocomplete="detalle"
-            />
-            <!-- <InputError
+        <!-- Detalle -->
+        <div class="col-span-12 sm:col-span-12">
+          <label
+            for="vivienda-detalle"
+            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+          >
+            Detalle
+          </label>
+          <textarea
+            id="vivienda-detalle"
+            autocomplete="detalle"
+            v-model="form.detalle"
+            rows="4"
+            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          ></textarea>
+          <!-- <InputError
               class="mt-2"
               :message="reactives.detalleError.toUpperCase()"
             /> -->
-          </div>
-        </template>
+        </div>
+      </template>
 
-        <template #actions>
-          <ActionMessage :on="form.recentlySuccessful" class="me-3">
-            Saved.
-          </ActionMessage>
+      <template #actions>
+        <ActionMessage :on="form.recentlySuccessful" class="me-3">
+          Saved.
+        </ActionMessage>
 
-          <PrimaryButton
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-          >
-            Guardar
-          </PrimaryButton>
-        </template>
-      </FormSection>
-
-      <!-- <PrimaryButton
-        :class="{ 'opacity-25': form.processing }"
-        @click="showAlert"
-      >
-        Alert
-      </PrimaryButton> -->
-    </div>
+        <PrimaryButton
+          :class="{ 'opacity-25': form.processing }"
+          :disabled="form.processing"
+        >
+          Guardar
+        </PrimaryButton>
+      </template>
+    </FormSection>
   </AppLayout>
 </template>
+<script>
+$(document).ready(function () {
+  $('.custom').select2()
+})
+</script>

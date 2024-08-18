@@ -16,11 +16,11 @@ class VisitanteController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
+            $queryUpper = strtoupper($queryStr);
             if($request->get('black_list')){
                 $responsse = DB::table('visitantes as v')
                         ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
-                        // ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
                         ->where('v.is_permitido','=', false)
                         ->orderBy('v.created_at', 'DESC')
                         ->get();
@@ -28,9 +28,8 @@ class VisitanteController extends Controller
                 $responsse = DB::table('visitantes as v')
                         ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
-                        // ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
-                        ->where('p.name','LIKE',"%".$queryStr."%")
-                        ->orWhere('p.nroDocumento','LIKE',"%".$queryStr."%")
+                        ->where('p.name','LIKE',"%".$queryUpper."%")
+                        ->orWhere('p.nroDocumento','LIKE',"%".$queryUpper."%")
                         ->orderBy('v.created_at', 'DESC')
                         ->get();
             }
@@ -41,7 +40,7 @@ class VisitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -63,15 +62,6 @@ class VisitanteController extends Controller
                         ->where('id', '=', $request->get('query'))
                         ->orderBy('id', 'DESC')
                         ->get();
-            /*$queryStr    = $request->get('query');
-            $responsse = DB::table('visitantes as v')
-                        ->select('v.*','p.name','p.nroDocumento', 'p.celular', 'td.sigla', 'td.detalle')
-                        ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
-                        ->join('tipo_documentos as td', 'p.tipo_documento_id', '=', 'td.id')
-                        ->where('p.name','LIKE',"%".$queryStr."%")
-                        ->orWhere('p.nroDocumento','LIKE',"%".$queryStr."%")
-                        ->orderBy('v.created_at', 'DESC')
-                        ->get();*/
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
@@ -96,9 +86,9 @@ class VisitanteController extends Controller
      */
     public function index()
     {
-        $listado = Visitante::with( 'perfil' )
-                        ->orderBy('id', 'DESC')
-                        ->get();
+        $listado = DB::table( 'visitantes as v' )
+            ->select( 'v.id as id', 'v.*', 'p.name', 'p.nroDocumento', 'p.celular' )
+            ->join( 'perfils as p', 'v.perfil_id', '=', 'p.id' )->get();
         return Inertia::render("Visitante/Index", ['listado'=> $listado]);
     }
 
@@ -135,22 +125,22 @@ class VisitanteController extends Controller
                 }
                 $perfil = Perfil::create($perfil);
                 $perfil->update( [ 
-                    'created_at' => $request->created_at,
-                    'updated_at' => $request->updated_at,
+                    'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]); 
             }else{
                 $perfil = Perfil::create($request->all());
                 $perfil->update( [ 
-                    'created_at' => $request->created_at,
-                    'updated_at' => $request->updated_at,
+                    'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]); 
             }
             $responsse = Visitante::create([
                 'is_permitido' => $request->is_permitido,
                 'descripition_is_no_permitido' => $request->descripition_is_no_permitido,
                 'perfil_id' => $perfil->id,
-                'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at,
+                'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             $datas         = $responsse;
             $datas->perfil = $responsse->perfil;

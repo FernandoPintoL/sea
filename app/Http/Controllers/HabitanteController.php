@@ -27,60 +27,21 @@ class HabitanteController extends Controller
             ], 422 );
         }
     }
-    public function querySearchWeb(Request $request){
-        try{
-            /*$responsse = Habitante::with('perfil')
-                         ->with('vivienda')
-                         ->orderBy('id', 'DESC')
-                         ->get();*/
-            $queryStr  = $request->get( 'query' );
-            $responsse = DB::table('perfils as p')
-                        ->select('h.id as hid','h.created_at','p.name','p.email','p.nroDocumento')
-                        ->join('habitantes as h', 'h.perfil_id', '=', 'p.id')
-                        // ->join('viviendas as vd', 'h.vivienda_id', '=', 'h.id')
-                        ->where('p.name','LIKE','%'.$queryStr.'%')
-                        ->orWhere('p.nroDocumento','LIKE','%'.$queryStr.'%')
-                        // ->orWhere('vd.nroVivienda','LIKE','%'.$queryStr.'%')
-                         ->orderBy('hid', 'DESC')
-                        ->get();
-            $cantidad = count( $responsse );
-            $str = strval($cantidad);
-            return response()->json([
-                "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
-                "message" => "$str datos consultados",
-                "data" => $responsse
-            ]);
-        }catch(\Exception $e){
-            $message = $e->getMessage();
-            $code = $e->getCode();
-            return response()->json([
-                "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta habitante/ ".$message." Code: ".$code,
-                "data" => []
-            ]);
-        }
-    }
+    
     /**
      * Display a listing of the resource.
      */
     public function query(Request $request){
         try{
-            /*$responsse = Habitante::with('perfil')
-                         ->with('vivienda')
-                         ->orderBy('id', 'DESC')
-                         ->get();*/
             $queryStr  = $request->get( 'query' );
+            $queryUpper = strtoupper($queryStr);
             $responsse = DB::table('habitantes as h')
                         ->select('h.id as id','h.*','p.id as id_perfil','p.name','p.nroDocumento','vd.id as id_vivienda','vd.nroVivienda')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
                         ->join('viviendas as vd', 'h.vivienda_id', '=', 'vd.id')
-                        ->where('p.nroDocumento','LIKE','%'.$queryStr.'%')
-                        ->orWhere('p.name','LIKE','%'.$queryStr.'%')
-                        ->orWhere('vd.nroVivienda','LIKE','%'.$queryStr.'%')
+                        ->where('p.nroDocumento','LIKE','%'.$queryUpper.'%')
+                        ->orWhere('p.name','LIKE','%'.$queryUpper.'%')
+                        ->orWhere('vd.nroVivienda','LIKE','%'.$queryUpper.'%')
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
@@ -88,7 +49,7 @@ class HabitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -127,8 +88,12 @@ class HabitanteController extends Controller
     }    
     public function index()
     {
-        $habitantes = Habitante::all();
-        return Inertia::render("Habitante/Index", ['habitantes'=> $habitantes]);
+        $responsse = DB::table('habitantes as h')
+                        ->select('h.id as id','h.*','p.id as id_perfil','p.name','p.nroDocumento','vd.id as id_vivienda','vd.nroVivienda')
+                        ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
+                        ->join('viviendas as vd', 'h.vivienda_id', '=', 'vd.id')
+                        ->get();
+        return Inertia::render("Habitante/Index", ['listado'=> $responsse]);
     }
     /**
      * Show the form for creating a new resource.
@@ -183,12 +148,12 @@ class HabitanteController extends Controller
             $responsse = Habitante::create([
                 'isDuenho' => $request->isDuenho,
                 'isDependiente' => $request->isDependiente,
-                'responsable_id' => $request->responsable_id == 0 ? null : $request->responsable_id,
+                $request->responsable_id == 0 || $request->responsable_id == null ? null : $request->responsable_id,
                 'vivienda_id' => $request->vivienda_id,
                 'perfil_id' => $perfil->id,
                 'profile_photo_path' => '',
-                'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at
+                'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
@@ -290,34 +255,6 @@ class HabitanteController extends Controller
      */
     public function update(UpdateHabitanteRequest $request, Habitante $habitante)
     {
-        /*$validator = Validator::make($perfil, [
-                        'email' => ['unique:perfils']
-                    ]);
-                    if ($validator->fails()) {
-                        return response()->json( [ 
-                            "isRequest" => true,
-                            "success" => false,
-                            "messageError" => true,
-                            "message" => $validator->errors(),
-                            "data" => []
-                        ], 422 );
-                    }
-        return response()->json([
-            "isRequest"=> true,
-            "success" => false,
-            "messageError" => true,
-            "message" => "Verificación",
-            "data" => [
-                "email_modificado" => $request->email != $habitante->perfil->email,
-                // "email_request" => $request->perfil->email,
-                // "email_habitante" => $habitante->perfil->email,
-                "nroDocumento_modificado" => $request->nroDocumento != $habitante->perfil->nroDocumento,
-                "request" => $request->all(),
-                "habitante" => $habitante,
-                "habitante_perfil_email" => $habitante->perfil->email,
-                "request_perfil_email" => $perfil['email'],
-            ]
-        ]);*/
         try{
             if($request->isMobile){
                 $perfil    = $request->perfil;
@@ -356,10 +293,11 @@ class HabitanteController extends Controller
             $responsse = $habitante->update([
                 'isDuenho' => $request->isDuenho,
                 'isDependiente' => $request->isDependiente,
-                'responsable_id' => $request->responsable_id,
+                'responsable_id' => $request->responsable_id == 0 || $request->responsable_id == null ? null : $request->responsable_id,
                 'perfil_id' => $request->perfil_id,
                 'vivienda_id' => $request->vivienda_id,
                 'profile_photo_path' => '',
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,

@@ -28,8 +28,8 @@ class GaleriaVisitanteController extends Controller
             if($request->hasFile('file')){
                 $model = GaleriaVisitante::create([
                     "visitante_id" => $request->get("id"), 
-                    'created_at' => $request->get("created_at"),
-                    'updated_at' => $request->get("updated_at")
+                    'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]);
                 $file = $request->file( 'file' );
                 $extension = $file->getClientOriginalExtension();
@@ -76,7 +76,7 @@ class GaleriaVisitanteController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){

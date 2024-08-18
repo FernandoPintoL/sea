@@ -22,7 +22,7 @@ class TipoDocumentoController extends Controller
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -44,7 +44,7 @@ class TipoDocumentoController extends Controller
     public function index()
     {
         $tipoDocumento = TipoDocumento::all();
-        return Inertia::render("TipoDocumento/Index", ['tipodocumentos'=> $tipoDocumento]);
+        return Inertia::render("TipoDocumento/Index", ['listado' => $tipoDocumento]);
     }
 
     /**

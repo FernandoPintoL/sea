@@ -1,49 +1,27 @@
 <script setup>
 import { ref, onMounted, inject, reactive } from 'vue'
-import { Link, router, useForm } from '@inertiajs/vue3'
-import FormSection from '@/Components/FormSection.vue'
-import InputLabel from '@/Components/InputLabel.vue'
-import TextInput from '@/Components/TextInput.vue'
-import InputError from '@/Components/InputError.vue'
-import ActionMessage from '@/Components/ActionMessage.vue'
-import PrimaryButton from '@/Components/PrimaryButton.vue'
-import SecondaryButton from '@/Components/SecondaryButton.vue'
+import { Link, router } from '@inertiajs/vue3'
+import HeaderIndex from '@/Componentes/HeaderIndex.vue'
+import Loader from '@/Componentes/Loader.vue'
+import TableGrl from '@/Componentes/Tbl-General.vue'
 import moment from 'moment'
-
-/*const props = defineProps({
-  tipodocumentos: {
-    type: Array,
-    default: [],
-  },
-})*/
+import FormSearch from '@/Componentes/FormSearch.vue'
 
 const Swal = inject('$swal')
 
 const datas = reactive({
   list: [],
   isLoad: false,
+  dateStart: '',
+  dateEnd: '',
+  messageList: '',
+  metodoList: '',
 })
+
 onMounted(() => {
-  addInputEventListeners()
+  // addInputEventListeners()
   queryList('')
 })
-
-const addInputEventListeners = () => {
-  const inputs = document.querySelectorAll('.dt-container thead input')
-
-  inputs.forEach((input) => {
-    const handleKeyDown = (evt) => {
-      if ((evt.metaKey || evt.ctrlKey) && evt.key === 'a') input.select()
-    }
-
-    input.addEventListener('keydown', handleKeyDown)
-
-    // Asegurarse de eliminar los event listeners cuando se desmonte el componente
-    input._cleanup = () => {
-      input.removeEventListener('keydown', handleKeyDown)
-    }
-  })
-}
 
 const query = ref('')
 
@@ -58,15 +36,37 @@ const onSearchQuery = (e) => {
   queryList(e.target.value)
 }
 
-const queryList = async (consulta) => {
+const onSearchDate = () => {
+  console.log(datas.dateStart)
+  console.log(datas.dateEnd)
+  if (datas.dateStart.length > 0 && datas.dateEnd.length > 0) {
+    var start = fecha(datas.dateStart)
+    var end = fecha(datas.dateEnd)
+    console.log(start)
+    console.log(end)
+    queryDateList(start, end)
+  } else {
+    queryList('')
+  }
+}
+
+const queryDateList = async (date_start, date_end) => {
   datas.isLoad = true
-  const url = route('ingreso.query', { query: consulta })
+  const url = route('appingreso.queryDate', {
+    start: date_start,
+    end: date_end,
+  })
   await axios
     .post(url)
     .then((response) => {
       console.log(response.data)
       if (response.data.success) {
         datas.list = response.data.data
+        datas.messageList = response.data.message
+        datas.metodoList =
+          datas.list.length > 0
+            ? ' con: Inicio' + date_start + ' | Fin' + date_end
+            : ''
         console.log(datas.list.length)
       } else {
         datas.list = []
@@ -77,6 +77,33 @@ const queryList = async (consulta) => {
       console.log(error)
     })
   datas.isLoad = false
+}
+
+const queryList = async (consulta) => {
+  datas.isLoad = true
+  const url = route('ingreso.query', { query: consulta.toUpperCase() })
+  await axios
+    .post(url)
+    .then((response) => {
+      console.log(response.data)
+      if (response.data.success) {
+        datas.list = response.data.data
+        datas.messageList = response.data.message
+        datas.metodoList = consulta.length > 0 ? ' con: ' + consulta : ''
+        console.log(datas.list.length)
+      } else {
+        datas.list = []
+      }
+    })
+    .catch((error) => {
+      console.log('respuesta error')
+      console.log(error)
+    })
+  datas.isLoad = false
+}
+
+const fecha = (fechaData) => {
+  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
 }
 
 const destroyData = async (id) => {
@@ -108,100 +135,143 @@ const destroyData = async (id) => {
     })
   queryList('')
 }
-
-const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
-}
 </script>
 <template>
-  <div class="flex flex-col">
-    <div class="-m-1.5 overflow-x-auto">
-      <div class="p-1.5 min-w-full inline-block align-middle">
-        <div
-          class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-800 dark:border-neutral-700"
+  <div
+    class="p-4 md:p-2 flex flex-col bg-white border shadow-sm rounded-xl dark:bg-neutral-800 dark:border-neutral-700"
+  >
+    <!-- Header -->
+    <HeaderIndex :title="'Ingresos'">
+      <template #link>
+        <a
+          class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+          :href="route('ingreso.create')"
         >
-          <!-- Header -->
-          <div
-            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-b border-gray-200 dark:border-neutral-700"
+          <svg
+            class="shrink-0 size-4"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
           >
-            <div class="grid grid-cols-6 gap-4">
-              <div class="col-start-1 col-end-3 ...">
-                <div>
-                  <h2
-                    class="text-xl font-semibold text-gray-800 dark:text-neutral-200"
-                  >
-                    INGRESOS REGISTRADOS AL CONDOMINIO
-                  </h2>
-                  <p class="text-sm text-gray-600 dark:text-neutral-400">
-                    Agrega ingresos, edita alguno.
-                  </p>
-                </div>
-              </div>
-              <div class="col-end-7 col-span-2 ...">
-                <a
-                  class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                  :href="route('ingreso.create')"
+            <path d="M5 12h14" />
+            <path d="M12 5v14" />
+          </svg>
+          Nuevo
+        </a>
+      </template>
+    </HeaderIndex>
+    <!-- End Header -->
+    <!-- Search Table -->
+    <FormSearch>
+      <template #search-table>
+        <div class="grid lg:grid-cols-3 gap-4 sm:gap-6">
+          <div class="flex flex-col">
+            <span class="text-sm font-bold text-gray-900 dark:text-neutral-400">
+              Busqueda
+            </span>
+            <div class="relative">
+              <input
+                id="hs-table-with-pagination-search"
+                type="text"
+                v-model="query"
+                @input="onSearchQuery"
+                name="hs-table-with-pagination-search"
+                class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+                placeholder="Buscar"
+              />
+              <div
+                class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
+              >
+                <svg
+                  class="shrink-0 size-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
                 >
-                  <svg
-                    class="shrink-0 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="M5 12h14" />
-                    <path d="M12 5v14" />
-                  </svg>
-                  Nuevo
-                </a>
-              </div>
-              <div class="col-start-1 col-end-7">
-                <div class="py-3 px-4">
-                  <div class="relative max-w-xs">
-                    <label class="sr-only">Buscar Ingresos</label>
-                    <input
-                      type="text"
-                      name="hs-table-with-pagination-search"
-                      id="hs-table-with-pagination-search"
-                      class="py-2 px-3 ps-9 block w-full border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
-                      placeholder="Buscar Ingresos"
-                    />
-                    <div
-                      class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-3"
-                    >
-                      <svg
-                        class="size-4 text-gray-400 dark:text-neutral-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                      >
-                        <circle cx="11" cy="11" r="8"></circle>
-                        <path d="m21 21-4.3-4.3"></path>
-                      </svg>
-                    </div>
-                  </div>
-                </div>
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
               </div>
             </div>
           </div>
-          <!-- End Header -->
+          <div class="flex flex-col">
+            <span class="text-sm font-bold text-gray-900 dark:text-neutral-400">
+              Rango de fechas
+            </span>
+            <div class="sm:flex rounded-lg shadow-sm">
+              <input
+                type="datetime-local"
+                v-model="datas.dateStart"
+                placeholder="Inicio"
+                class="py-2 px-2 pe-11 block w-full border-gray-200 sm:shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+              />
+              <input
+                type="datetime-local"
+                v-model="datas.dateEnd"
+                class="py-2 px-2 pe-11 block w-full border-gray-200 shadow-sm -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg text-sm relative focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:placeholder-neutral-500 dark:focus:ring-neutral-600"
+              />
+              <button
+                type="button"
+                @click="onSearchDate"
+                class="py-2 px-2 inline-flex items-center min-w-fit w-full border border-gray-200 bg-gray-50 text-sm text-gray-500 -mt-px -ms-px first:rounded-t-lg last:rounded-b-lg sm:w-auto sm:first:rounded-s-lg sm:mt-0 sm:first:ms-0 sm:first:rounded-se-none sm:last:rounded-es-none sm:last:rounded-e-lg dark:bg-neutral-700 dark:border-neutral-700 dark:text-neutral-400"
+              >
+                <svg
+                  class="shrink-0 size-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="pt-2 dark:bg-neutral-800 dark:border-neutral-700">
+          <span>{{ datas.messageList }} {{ datas.metodoList }}</span>
+        </div>
+      </template>
+    </FormSearch>
+    <!-- End Search table -->
+  </div>
 
+  <div class="flex flex-col">
+    <div class="-m-1.5 overflow-x-auto">
+      <div class="p-1.5 min-w-full inline-block align-middle">
+        <div v-show="datas.isLoad">
+          <Loader />
+        </div>
+        <div
+          v-if="datas.list.length > 0"
+          class="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden dark:bg-neutral-800 dark:border-neutral-700"
+        >
           <!-- Table -->
-          <table class="min-w-full">
-            <thead class="bg-gray-50 dark:bg-neutral-800">
+          <TableGrl>
+            <template #tbl-header>
               <tr>
-                <th scope="col" class="px-6 py-3 text-start">
+                <th
+                  scope="col"
+                  class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start"
+                >
                   <div class="flex items-center gap-x-2">
                     <span
                       class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
@@ -210,46 +280,81 @@ const fecha = (fechaData) => {
                     </span>
                   </div>
                 </th>
-
-                <th scope="col" class="px-6 py-3 text-start">
+                <th
+                  scope="col"
+                  class="px-6 py-3 text-start text-xs font-semibold text-gray-800 uppercase dark:text-neutral-500"
+                >
+                  <span>RESIDENTE</span>
+                </th>
+                <!-- <th scope="col" class="px-6 py-3 text-start">
                   <div class="flex items-center gap-x-2">
                     <span
                       class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
                     >
-                      Residente
+                      RESIDENTE
                     </span>
                   </div>
-                </th>
+                </th> -->
 
                 <th scope="col" class="px-6 py-3 text-start">
                   <div class="flex items-center gap-x-2">
                     <span
                       class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
                     >
-                      Visitante
+                      VISITANTE
                     </span>
                   </div>
                 </th>
               </tr>
-            </thead>
+            </template>
 
-            <tbody class="divide-y divide-gray-200 dark:divide-neutral-700">
+            <template #tbl-body>
               <tr v-for="item in datas.list" :key="item.id">
-                <td class="size-px whitespace-nowrap">
+                <td class="h-px w-72 whitespace-nowrap">
                   <div class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
                     <div class="flex items-center gap-x-3">
-                      <p>
-                        <span>#{{ item.id }}</span>
-                      </p>
+                      <div
+                        class="relative w-2 h-2 bg-blue-200 rounded-full flex justify-center items-center text-center p-5 shadow-xl"
+                      >
+                        <span
+                          class="absolute text-3xl left-0 top-0 text-blue-800"
+                        >
+                          "
+                        </span>
+                        <span>{{ item.id }}</span>
+                      </div>
                       <div class="grow">
-                        <div>
+                        <p class="py-1">
                           <span
                             :class="
                               item.isAutorizado
                                 ? 'text-teal-800 bg-teal-100 dark:text-teal-500'
                                 : 'text-red-800 bg-red-100 dark:text-red-500'
                             "
-                            class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium rounded-full dark:bg-teal-500/10"
+                            class="px-2 py-1 inline-flex items-center gap-x-1 text-xs font-medium rounded-full dark:bg-teal-500/10"
+                          >
+                            {{
+                              item.vehiculo_id != null
+                                ? 'INGRESO CON VEHICULO'
+                                : 'INGRESO SIN VEHICULO'
+                            }}
+                            <i
+                              :class="
+                                item.vehiculo_id != null
+                                  ? 'fa-solid fa-car'
+                                  : 'fa-solid fa-person-walking'
+                              "
+                            ></i>
+                          </span>
+                        </p>
+                        <p class="py-1">
+                          <span
+                            :class="
+                              item.isAutorizado
+                                ? 'text-teal-800 bg-teal-100 dark:text-teal-500'
+                                : 'text-red-800 bg-red-100 dark:text-red-500'
+                            "
+                            class="py-1 px-2 inline-flex items-center gap-x-1 text-xs font-medium rounded-full dark:bg-teal-500/10"
                           >
                             <svg
                               class="size-2.5"
@@ -264,23 +369,9 @@ const fecha = (fechaData) => {
                               />
                             </svg>
                             {{
-                              item.isAutorizado ? 'AUTORIZADO' : 'NO AUTORIZADO'
-                            }}
-                          </span>
-                        </div>
-                        <p>
-                          <span
-                            :class="
                               item.isAutorizado
-                                ? 'text-teal-800 bg-teal-100 dark:text-teal-500'
-                                : 'text-red-800 bg-red-100 dark:text-red-500'
-                            "
-                            class="py-1 px-1.5 inline-flex items-center gap-x-1 text-xs font-medium rounded-full dark:bg-teal-500/10"
-                          >
-                            {{
-                              item.vehiculo_id != null
-                                ? 'INGRESO CON VEHICULO'
-                                : 'INGRESO SIN VEHICULO'
+                                ? 'INGRESO AUTORIZADO'
+                                : 'INGRESO NO AUTORIZADO'
                             }}
                           </span>
                         </p>
@@ -290,6 +381,12 @@ const fecha = (fechaData) => {
                           Registrado:
                           {{ item.created_at != null ? item.created_at : '' }}
                         </span>
+                        <p
+                          class="block text-sm text-gray-500 dark:text-neutral-500"
+                        >
+                          Detalle Registro:
+                          {{ item.detalle != null ? item.detalle : '' }}
+                        </p>
                         <span
                           class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
                         >
@@ -299,7 +396,17 @@ const fecha = (fechaData) => {
                               : 'SIN REGISTRO DE SALIDA'
                           }}
                         </span>
-                        <div class="px-6 py-1.5">
+                        <p
+                          class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
+                        >
+                          Detalle Salida:
+                          {{
+                            item.detalle_salida != null
+                              ? item.detalle_salida
+                              : ''
+                          }}
+                        </p>
+                        <div class="py-1.5">
                           <a
                             class="inline-flex items-center gap-x-1 text-sm text-blue-600 decoration-2 hover:underline focus:outline-none focus:underline font-medium dark:text-blue-500"
                             :href="route('ingreso.edit', item.id)"
@@ -312,7 +419,7 @@ const fecha = (fechaData) => {
                     </div>
                   </div>
                 </td>
-                <td class="h-px w-72 whitespace-nowrap">
+                <td class="size-px whitespace-nowrap">
                   <div class="px-6 py-3">
                     <span
                       class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
@@ -320,6 +427,7 @@ const fecha = (fechaData) => {
                       {{ item.name_residente.toUpperCase() }}
                     </span>
                     <span
+                      v-if="item.nroDocumento_residente.length > 0"
                       class="block text-sm text-gray-500 dark:text-neutral-500"
                     >
                       Nro Doc: {{ item.nroDocumento_residente }}
@@ -341,69 +449,20 @@ const fecha = (fechaData) => {
                   </div>
                 </td>
               </tr>
-            </tbody>
-          </table>
-          <!-- End Table -->
-
-          <!-- Footer -->
-          <!-- <div
-            class="px-6 py-4 grid gap-3 md:flex md:justify-between md:items-center border-t border-gray-200 dark:border-neutral-700"
-          >
-            <div>
-              <p class="text-sm text-gray-600 dark:text-neutral-400">
-                <span class="font-semibold text-gray-800 dark:text-neutral-200">
-                  {{ datas.list.length }}
-                </span>
-                results
-              </p>
-            </div>
-            <div>
-              <div class="inline-flex gap-x-2">
-                <button
-                  type="button"
-                  class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                >
-                  <svg
-                    class="shrink-0 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m15 18-6-6 6-6" />
-                  </svg>
-                  Prev
-                </button>
-
-                <button
-                  type="button"
-                  class="py-1.5 px-2 inline-flex items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none focus:outline-none focus:bg-gray-50 dark:bg-transparent dark:border-neutral-700 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-                >
-                  Next
-                  <svg
-                    class="shrink-0 size-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  >
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div> -->
-          <!-- End Footer -->
+            </template>
+          </TableGrl>
+          <!-- END TABLE -->
+        </div>
+        <div
+          v-else
+          class="mt-2 bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500"
+          role="alert"
+          tabindex="-1"
+          aria-labelledby="hs-solid-color-info-label"
+        >
+          <span id="hs-solid-color-info-label" class="font-bold">
+            Lista vacía
+          </span>
         </div>
       </div>
     </div>

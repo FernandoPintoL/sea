@@ -14,14 +14,15 @@ class VehiculoController extends Controller
     public function query(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $responsse = Vehiculo::where('placa','LIKE',"%".$queryStr."%")->orderBy('id', 'DESC')->get();
+            $queryUpper = strtoupper($queryStr);
+            $responsse = Vehiculo::where('placa','LIKE',"%".$queryUpper."%")->orderBy('id', 'DESC')->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "message" => "$str datos consultados",
+                "message" => "$str datos encontrados",
                 "data" => $responsse
             ]);
         }catch(\Exception $e){
@@ -84,6 +85,10 @@ class VehiculoController extends Controller
     {
         try{
             $responsse = Vehiculo::create($request->all());
+            $responsse->update([                
+                'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
+            ]);
             return response()->json([
                 "isRequest"=> true,
                 "success" => $responsse != null,
