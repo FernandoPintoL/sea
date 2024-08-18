@@ -8,6 +8,7 @@ use App\Http\Controllers\TipoVisitaController;
 use App\Http\Controllers\TipoViviendaController;
 use App\Http\Controllers\HabitanteController;
 use App\Http\Controllers\GaleriaVisitanteController;
+use App\Http\Controllers\GaleriaVehiculoController;
 use App\Http\Controllers\VisitanteController;
 use App\Http\Controllers\CondominioController;
 use App\Http\Controllers\UserController;
@@ -77,6 +78,9 @@ Route::middleware([
     Route::post('/galeriavisitante/query',[GaleriaVisitanteController::class, 'query'])->name('galeriavisitante.query');
     Route::post('/galeriavisitante/visitante',[GaleriaVisitanteController::class, 'getGaleriaVisitante'])->name('galeriavisitante.getGaleriaVisitante');
     Route::post('/galeriavisitante/uploadimage', [GaleriaVisitanteController::class,'uploadimage'])->name('galeriavisitante.uploadimage');
+
+    /* GALERIA VEHICULO */
+    Route::resource('/galeriavehiculo', GaleriaVehiculoController::class);
 
     /* ACTUALIZAR INFORMACION DE USUARIO*/
     Route::put('/user/updateinformacion/{user}',[UserController::class, 'updateInformacion'])->name('user.updateinformacion');

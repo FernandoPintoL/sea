@@ -19,7 +19,6 @@ class GaleriaVehiculoController extends Controller
                 "message" => "Mensaje",
                 "data" => $request->all()
             ]);*/
-            
             $response = "";
             $path     = null;
 
@@ -29,17 +28,26 @@ class GaleriaVehiculoController extends Controller
                     'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
                     'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]);
+                $file = $request->file( 'file' );
                 $extension = $request->file('file')->getClientOriginalExtension();
                 $filename= "cod".$model->id."-vehiculoid".$request->get("id").'.'.$extension;
-                $path = $request->file('file')->storeAs('vehiculos', $filename, 'public');
-                $url = Storage::url($path);
-                $response = $model->update(['photo_path'=> $url,'detalle'=>$filename]);
+                $path      = Storage::putFile( 'vehiculos', $file, 'public' );
+                // $path = $request->file('file')->storeAs('vehiculos', $filename, 'public');
+                if($path == null || $path == 0){
+                    $model->delete();
+                }else{
+                    $url = Storage::url($path);
+                    $response = $model->update([
+                                    'photo_path'=> $url,
+                                    'detalle'=> $path
+                                ]);
+                }
             }
             return response()->json([
                 "isRequest"=> true,
-                "success" => $request->hasFile('file'),
-                "messageError" => !$request->hasFile('file'),
-                "message" => isset($path) ? "Archivos subidos" : "Archivos no subidos",
+                "success" => $request->hasFile('file') && ($path != null || $path != 0),
+                "messageError" => !$request->hasFile('file') && ($path == null || $path == 0),
+                "message" => $path != null || $path != 0 ? "Archivos subidos" : "Archivos no subidos",
                 "data" => $response
             ]);
         }catch(\Exception $e){
@@ -158,8 +166,28 @@ class GaleriaVehiculoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GaleriaVehiculo $galeriaVehiculo)
+    public function destroy(GaleriaVehiculo $galeriavehiculo)
     {
-        //
+        try{
+            $responseFile = Storage::delete($galeriavehiculo->detalle);
+            $responseData = $galeriavehiculo->delete();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $responseData && $responseFile,
+                "messageError" => !$responseData && !$responseFile,
+                "message" => $responseData && $responseFile ? "TRANSACCION CORRECTA": "TRANSACCION INCORRECTA",
+                "data" => []
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Destroy galeria visitantes/ ".$message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 }

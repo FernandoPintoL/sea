@@ -6,6 +6,7 @@ use App\Models\Visitante;
 use App\Models\Perfil;
 use App\Http\Requests\StoreVisitanteRequest;
 use App\Http\Requests\UpdateVisitanteRequest;
+use App\Models\GaleriaVisitante;
 use Inertia\Inertia;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -206,7 +207,8 @@ class VisitanteController extends Controller
     {
         $perfil = $visitante->perfil;
         $visitante->perfil = $perfil;
-        return Inertia::render("Visitante/CreateUpdate", ['model'=> $visitante]);
+        $list_galeria = GaleriaVisitante::where('visitante_id','=',$visitante->id)->get();
+        return Inertia::render("Visitante/CreateUpdate", ['model'=> $visitante, 'listado' => $list_galeria ]);
     }
 
     /**
@@ -221,13 +223,13 @@ class VisitanteController extends Controller
                 //ACTUALIZACION DESDE EL MOVIL
                 $responsse = $perfil->update($request->perfil);
                 $perfil->update( [
-                    'updated_at' => toDay(),
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]); 
             }else{
                 //ACTUALIZAR DESDE LA WEB
                 $responsse = $perfil->update($request->all());
                 $perfil->update( [
-                    'updated_at' => toDay(),
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]);
             }
             return response()->json([
@@ -255,7 +257,8 @@ class VisitanteController extends Controller
             // $visitante = Visitante::findOrFail( $request->get('id'));
             $responsse = $visitante->update( [
                     'is_permitido' => $request->get('is_permitido'),
-                    'description_is_no_permitido' => $request->get('description_is_no_permitido')
+                    'description_is_no_permitido' => $request->get('description_is_no_permitido'),
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ] );
             return response()->json([
                 "isRequest"=> true,
@@ -316,13 +319,13 @@ class VisitanteController extends Controller
                 //ACTUALIZACION DESDE EL MOVIL
                 $responsse = $perfil->update($perfilRequest);
                 $perfil->update( [
-                    'updated_at' => toDay(),
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]);
             }else{
                 //ACTUALIZAR DESDE LA WEB
                 $responsse = $perfil->update($request->all());
                 $perfil->update( [
-                    'updated_at' => toDay(),
+                    'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]); 
             }
             return response()->json([

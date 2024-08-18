@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Vehiculo;
+use App\Models\GaleriaVehiculo;
 use App\Http\Requests\StoreVehiculoRequest;
 use App\Http\Requests\UpdateVehiculoRequest;
 use Illuminate\Http\Request;
@@ -140,7 +141,8 @@ class VehiculoController extends Controller
      */
     public function edit(Vehiculo $vehiculo)
     {
-        return Inertia::render("Vehiculo/CreateUpdate", ['model'=> $vehiculo]);
+        $list_galeria = GaleriaVehiculo::where('vehiculo_id','=',$vehiculo->id)->get();
+        return Inertia::render("Vehiculo/CreateUpdate", ['model'=> $vehiculo, 'listado' => $list_galeria]);
     }
 
     /**

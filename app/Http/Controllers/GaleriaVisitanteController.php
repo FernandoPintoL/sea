@@ -13,14 +13,14 @@ class GaleriaVisitanteController extends Controller
 {
     public function uploadimage(Request $request){
         try{
-            /*return response()->json([
+            /* return response()->json([
                 "isRequest"=> true,
                 "success" => true,
                 "messageError" => false,
-                "messages" => $request->hasFile('image'),
-                "messagesValue" => $request->hasFile('imageValue'),
+                "messages" => $request->hasFile('file'),
+                "messagesValue" => $request->hasFile('file'),
                 "data" => $request->all()
-            ]);*/
+            ]); */
             
             $response = null;
             $path     = null;
@@ -34,22 +34,26 @@ class GaleriaVisitanteController extends Controller
                 $file = $request->file( 'file' );
                 $extension = $file->getClientOriginalExtension();
                 $filename= "cod".$model->id."-visitanteid".$request->get("id").'.'.$extension;
-                $path = $file->storeAs('visitantes', $filename, 'public');
+                // $path      = Storage::putFileAs( 'visitantes', $file, $filename);
+                $path      = Storage::putFile( 'visitantes', $file, 'public' );
+                // $path = $file->storeAs('visitantes', $filename, 'public');
+                if($path == null || $path == 0){
+                    $model->delete();
+                }else{
+                    $url = Storage::url($path);
+                    $response = $model->update([
+                        'photo_path'=> $url,
+                        'detalle'=> $path
+                    ]);
+                }
                 // $path = Storage::putFileAs('/visitantes', $request->file('file'), $filename);
                 // $path = Storage::disk('s3')->put('visitantes', $file);
-                
-                /*ACTUALIZA LA TABLA CON LA RUTA*/
-                $url = Storage::url($path);
-                $response = $model->update([
-                    'photo_path'=> $url,
-                    'detalle'=> $path
-                ]);
             }
             return response()->json([
                 "isRequest"=> true,
-                "success" => $request->hasFile('file'),
-                "messageError" => !$request->hasFile('file'),
-                "message" => isset($path) ? "Archivos subidos" : "Archivos no subidos",
+                "success" => $request->hasFile('file') && ($path != null || $path != 0),
+                "messageError" => !$request->hasFile('file') && ($path == null || $path == 0),
+                "message" => $path != null || $path != 0 ? "Archivos subidos" : "Archivos no subidos",
                 "data" => $response
             ]);
         }catch(\Exception $e){
@@ -168,8 +172,53 @@ class GaleriaVisitanteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(GaleriaVisitante $galeriaVisitante)
+    public function destroy(GaleriaVisitante $galeriavisitante)
     {
-        //
+        try{
+            $responseFile = Storage::delete($galeriavisitante->detalle);
+            $responseData = $galeriavisitante->delete();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $responseData && $responseFile,
+                "messageError" => !$responseData && !$responseFile,
+                "message" => $responseData && $responseFile ? "TRANSACCION CORRECTA": "TRANSACCION INCORRECTA",
+                "data" => []
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Destroy galeria visitantes/ ".$message." Code: ".$code,
+                "data" => []
+            ]);
+        }
+    }
+
+    public function destroyApp(GaleriaVisitante $appgaleriaVisitante)
+    {
+        try{
+            Storage::disk('public')->delete($appgaleriaVisitante->detalle);
+            $responseData = $appgaleriaVisitante->delete();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => $responseData,
+                "messageError" => !$responseData,
+                "message" => $responseData ? "TRANSACCION CORRECTA": "TRANSACCION INCORRECTA",
+                "data" => []
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "success" => false,
+                "messageError" => true,
+                "message" => "Destroy galeria visitantes/ ".$message." Code: ".$code,
+                "data" => []
+            ]);
+        }
     }
 }

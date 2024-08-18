@@ -18,6 +18,7 @@ const props = defineProps({
 })
 
 onMounted(() => {
+  console.log(props.listado)
   reactives.list = props.listado
   // queryList(props.model.id)
 })
@@ -47,8 +48,8 @@ const changeLoad = (value) => {
 
 const queryList = async (id) => {
   changeLoad(true)
-  const url = route('appgaleriavisitante.visitanteid', {
-    visitante_id: id,
+  const url = route('appgaleriavehiculo.vehiculoid', {
+    vehiculo_id: id,
   })
   await axios
     .post(url)
@@ -71,14 +72,8 @@ const cargarImagenes = async () => {
       let formData = new FormData()
       formData.append('id', props.model.id)
       formData.append('file', image.value)
-      // formData.append('imageValue', image.value)
-      /*const url = route('galeriavisitante.uploadimage', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    })*/
       const response = await axios.post(
-        '/api/appgaleriavisitante/uploadimage',
+        '/api/appgaleriavehiculo/uploadimage',
         formData,
         {
           headers: {
@@ -153,7 +148,7 @@ const destroyPhoto = (id) => {
 
 const destroyPhotoModel = async (id) => {
   console.log(id)
-  const url = route('galeriavisitante.destroy', id)
+  const url = route('galeriavehiculo.destroy', id)
   await axios
     .delete(url, id)
     .then((response) => {
