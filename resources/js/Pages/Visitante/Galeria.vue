@@ -245,31 +245,6 @@ const fecha = (fechaData) => {
         GALERIA DE VISITANTE
       </h2>
       <!-- Profile Photo File Input -->
-      <!-- <input
-        id="photo"
-        ref="photoInput"
-        type="file"
-        class="hidden border border-gray-300"
-        @change="updatePhotoPreview"
-      />
-      <InputLabel for="photo" value="Foto" class="hidden" /> -->
-      <!-- <div class="flex justify-between p-2">
-        <SecondaryButton
-          class="mt-2 me-2"
-          type="button"
-          @click.prevent="selectNewPhoto"
-        >
-          Selecciona una foto
-        </SecondaryButton>
-        <button
-          v-show="photoPreview"
-          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
-          @click="cargarImagenes"
-        >
-          <span class="mr-2">Subir Image</span>
-          <i class="fa-solid fa-cloud-arrow-up fa-fw" />
-        </button>
-      </div> -->
       <!-- New Profile Photo Preview -->
       <div v-show="photoPreview" class="my-6">
         <span

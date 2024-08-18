@@ -6,7 +6,7 @@
 
     <title inertia>{{ config('app.name', 'SEA') }}</title>
 
-    <link rel="icon" href="{{ asset('assets/img/favicon.ico') }}">
+    <link rel="icon" href="{{ asset('/assets/img/favicon.ico') }}">
 
     <!-- CSS Preline -->
     <link href="https://preline.co/assets/css/main.min.css" rel="stylesheet">
@@ -17,16 +17,16 @@
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-    <link href="{{ asset('assets/fonts/font-bunny.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/webfonts/fa-regular-400.ttf') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/webfonts/fa-regular-400.woff2') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/webfonts/fa-solid-900.ttf') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/webfonts/fa-solid-900.woff2') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/css/v5-font-face.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/css/brands.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/css/solid.css') }}" rel="stylesheet">
-    <link href="{{ asset('assets/css/fontawesome/css/regular.css') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/fonts/font-bunny.css') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-regular-400.ttf') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-regular-400.woff2') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-solid-900.ttf') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/webfonts/fa-solid-900.woff2') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/css/v5-font-face.min.css') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/css/brands.css') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/css/solid.css') }}" rel="stylesheet">
+    <link href="{{ asset('/assets/css/fontawesome/css/regular.css') }}" rel="stylesheet">
 
     <script src="{{ asset('assets/js/jquery-3.7.1.min.js') }}"></script>
     {{-- <link rel="stylesheet" href="{{ asset('assets/css/select2.min.css') }}">
