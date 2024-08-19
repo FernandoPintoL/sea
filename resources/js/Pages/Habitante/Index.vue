@@ -332,7 +332,9 @@ const destroyData = async (id) => {
                       <span
                         class="block text-sm text-gray-500 dark:text-neutral-500"
                       >
-                        {{ fecha(item.created_at) }}
+                        {{
+                          item.created_at == null ? '' : fecha(item.created_at)
+                        }}
                       </span>
                     </div>
                   </td>

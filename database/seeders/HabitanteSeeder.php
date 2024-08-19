@@ -14,7 +14,7 @@ class HabitanteSeeder extends Seeder
      */
     public function run(): void
     {
-        $perfil = Perfil::create([
+        /* $perfil = Perfil::create([
             'name' => "GLADYS ALBA FRANCO",
             'email' => '',
             'direccion' => '',
@@ -32,6 +32,6 @@ class HabitanteSeeder extends Seeder
             'profile_photo_path' => "",
             "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
             "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
-        ]);
+        ]); */
     }
 }

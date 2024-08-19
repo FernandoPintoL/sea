@@ -38,10 +38,10 @@ class DatabaseSeeder extends Seeder
             TipoViviendaSeeder::class,
             TipoVisitaSeeder::class,
             CondominioSeeder::class,
-            ViviendaSeeder::class,
-            HabitanteSeeder::class,
-            VisitanteSeeder::class,
-            IngresoSeeder::class
+            // ViviendaSeeder::class,
+            // HabitanteSeeder::class,
+            // VisitanteSeeder::class,
+            // IngresoSeeder::class
         ]);
     }
 }

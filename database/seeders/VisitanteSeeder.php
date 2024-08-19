@@ -14,7 +14,7 @@ class VisitanteSeeder extends Seeder
      */
     public function run(): void
     {
-        $perfil = Perfil::create([
+        /* $perfil = Perfil::create([
             'name' => "FERNANDO PINTO LINO",
             'email' => 'pintolinofernando@gmail.com',
             'direccion' => 'B/Conavi, 25',
@@ -29,6 +29,6 @@ class VisitanteSeeder extends Seeder
             'perfil_id' => $perfil->id,
             "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
             "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
-        ]);
+        ]); */
     }
 }

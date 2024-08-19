@@ -13,13 +13,13 @@ class ViviendaSeeder extends Seeder
      */
     public function run(): void
     {
-        Vivienda::create([
+        /* Vivienda::create([
             'nroVivienda' => 'A-18',
             'detalle' => "",
             'nroEspacios' => 5,
             'vivienda_ocupada' => true,
             "tipo_vivienda_id" => 1, ///FK
             "condominio_id" => 1, ///FK
-        ]);
+        ]); */
     }
 }

@@ -18,6 +18,7 @@ class ViviendaController extends Controller
             $responsse = Vivienda::where('nroVivienda','LIKE',"%".$queryUpper."%")
                         ->with('tipoVivienda')
                         ->with('condominio')
+                        ->orderBy('id', 'ASC')
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);

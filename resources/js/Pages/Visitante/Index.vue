@@ -363,6 +363,17 @@ const destroyData = async (id) => {
             </TableGrl>
             <!-- End Table -->
           </div>
+          <div
+            v-else
+            class="mt-2 bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500"
+            role="alert"
+            tabindex="-1"
+            aria-labelledby="hs-solid-color-info-label"
+          >
+            <span id="hs-solid-color-info-label" class="font-bold">
+              Lista vacía
+            </span>
+          </div>
         </div>
       </div>
     </div>
