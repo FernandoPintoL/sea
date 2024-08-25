@@ -4,8 +4,9 @@ import { Link, router } from '@inertiajs/vue3'
 import HeaderIndex from '@/Componentes/HeaderIndex.vue'
 import Loader from '@/Componentes/Loader.vue'
 import TableGrl from '@/Componentes/Tbl-General.vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import FormSearch from '@/Componentes/FormSearch.vue'
+import Alert from '@/Componentes/Alerts.vue'
 
 const Swal = inject('$swal')
 
@@ -103,7 +104,7 @@ const queryList = async (consulta) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 
 const destroyData = async (id) => {
@@ -268,10 +269,7 @@ const destroyData = async (id) => {
           <TableGrl>
             <template #tbl-header>
               <tr>
-                <th
-                  scope="col"
-                  class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start"
-                >
+                <th scope="col" class="px-3 text-start">
                   <div class="flex items-center gap-x-2">
                     <span
                       class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
@@ -284,9 +282,6 @@ const destroyData = async (id) => {
                   scope="col"
                   class="px-6 py-3 text-start text-xs font-semibold text-gray-800 uppercase dark:text-neutral-500"
                 >
-                  <span>RESIDENTE</span>
-                </th>
-                <!-- <th scope="col" class="px-6 py-3 text-start">
                   <div class="flex items-center gap-x-2">
                     <span
                       class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
@@ -294,7 +289,7 @@ const destroyData = async (id) => {
                       RESIDENTE
                     </span>
                   </div>
-                </th> -->
+                </th>
 
                 <th scope="col" class="px-6 py-3 text-start">
                   <div class="flex items-center gap-x-2">
@@ -311,7 +306,7 @@ const destroyData = async (id) => {
             <template #tbl-body>
               <tr v-for="item in datas.list" :key="item.id">
                 <td class="h-px w-72 whitespace-nowrap">
-                  <div class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3">
+                  <div class="px-3 py-1">
                     <div class="flex items-center gap-x-3">
                       <div
                         class="relative w-2 h-2 bg-blue-200 rounded-full flex justify-center items-center text-center p-5 shadow-xl"
@@ -326,8 +321,9 @@ const destroyData = async (id) => {
                       <div class="grow">
                         <p class="py-1">
                           <span
+                            v-if="item.vehiculo_id != null"
                             :class="
-                              item.isAutorizado
+                              item.vehiculo_id != null
                                 ? 'text-teal-800 bg-teal-100 dark:text-teal-500'
                                 : 'text-red-800 bg-red-100 dark:text-red-500'
                             "
@@ -376,7 +372,7 @@ const destroyData = async (id) => {
                           </span>
                         </p>
                         <span
-                          class="block text-sm text-gray-500 dark:text-neutral-500"
+                          class="block text-sm text-gray-900 dark:text-neutral-500"
                         >
                           Registrado:
                           {{ item.created_at != null ? item.created_at : '' }}
@@ -392,7 +388,8 @@ const destroyData = async (id) => {
                         >
                           {{
                             item.salida_created_at != null
-                              ? 'Salida registrada: ' + item.salida_created_at
+                              ? 'SALIDA REGISTRADA: ' +
+                                fecha(item.salida_created_at)
                               : 'SIN REGISTRO DE SALIDA'
                           }}
                         </span>
@@ -424,13 +421,22 @@ const destroyData = async (id) => {
                     <span
                       class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
                     >
-                      {{ item.name_residente.toUpperCase() }}
+                      {{
+                        item.name_residente == null
+                          ? ''
+                          : item.name_residente.toUpperCase()
+                      }}
                     </span>
                     <span
-                      v-if="item.nroDocumento_residente.length > 0"
+                      v-if="item.nroDocumento_residente != null"
                       class="block text-sm text-gray-500 dark:text-neutral-500"
                     >
-                      Nro Doc: {{ item.nroDocumento_residente }}
+                      Nro Doc:
+                      {{
+                        item.nroDocumento_residente == null
+                          ? ''
+                          : item.nroDocumento_residente
+                      }}
                     </span>
                   </div>
                 </td>
@@ -439,12 +445,21 @@ const destroyData = async (id) => {
                     <span
                       class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
                     >
-                      {{ item.name_visitante.toUpperCase() }}
+                      {{
+                        item.name_visitante == null
+                          ? ''
+                          : item.name_visitante.toUpperCase()
+                      }}
                     </span>
                     <span
                       class="block text-sm text-gray-500 dark:text-neutral-500"
                     >
-                      Nro Doc: {{ item.nroDocumento_visitante }}
+                      Nro Doc:
+                      {{
+                        item.nroDocumento_visitante == null
+                          ? ''
+                          : item.nroDocumento_visitante
+                      }}
                     </span>
                   </div>
                 </td>
@@ -453,17 +468,7 @@ const destroyData = async (id) => {
           </TableGrl>
           <!-- END TABLE -->
         </div>
-        <div
-          v-else
-          class="mt-2 bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500"
-          role="alert"
-          tabindex="-1"
-          aria-labelledby="hs-solid-color-info-label"
-        >
-          <span id="hs-solid-color-info-label" class="font-bold">
-            Lista vacía
-          </span>
-        </div>
+        <Alert v-else :message="'Lista Vacia'"></Alert>
       </div>
     </div>
   </div>

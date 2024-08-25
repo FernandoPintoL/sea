@@ -6,7 +6,7 @@ import ActionMessage from '@/Components/ActionMessage.vue'
 import FormSection from '@/Components/FormSection.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import Loader from '@/Componentes/Loader.vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 const Swal = inject('$swal')
 
@@ -295,7 +295,7 @@ const queryTipoVisitas = async (consulta) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 </script>
 
@@ -327,7 +327,11 @@ const fecha = (fechaData) => {
             <span class="font-semibold text-gray-800 leading-tight">
               Creado:
             </span>
-            {{ fecha(props.model.created_at) }}
+            {{
+              props.model.created_at == null
+                ? ''
+                : fecha(props.model.created_at)
+            }}
           </p>
           <p>
             <span class="font-semibold text-gray-800 leading-tight">

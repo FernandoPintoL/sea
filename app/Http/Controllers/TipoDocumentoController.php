@@ -15,7 +15,9 @@ class TipoDocumentoController extends Controller
         try{
             $queryStr = $request->get('query');
             $responsse = TipoDocumento::where('sigla','LIKE','%'.$queryStr.'%')
-                        ->orWhere('detalle','LIKE','%'.$queryStr.'%')->get();
+                        ->orWhere('detalle','LIKE','%'.$queryStr.'%')
+                        ->orderBy('id', 'ASC')
+                        ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
@@ -40,7 +42,7 @@ class TipoDocumentoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    
+
     public function index()
     {
         $tipoDocumento = TipoDocumento::all();
@@ -132,7 +134,7 @@ class TipoDocumentoController extends Controller
                         'sigla' => ['unique:tipo_documentos']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,

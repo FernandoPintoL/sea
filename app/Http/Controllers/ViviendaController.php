@@ -18,7 +18,7 @@ class ViviendaController extends Controller
             $responsse = Vivienda::where('nroVivienda','LIKE',"%".$queryUpper."%")
                         ->with('tipoVivienda')
                         ->with('condominio')
-                        ->orderBy('id', 'ASC')
+                        ->orderBy('id', 'DESC')
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
@@ -115,7 +115,7 @@ class ViviendaController extends Controller
                         'nroVivienda' => ['unique:viviendas']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,

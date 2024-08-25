@@ -18,7 +18,7 @@ class HabitanteController extends Controller
             'nroDocumento' => ['unique:perfils']
         ]);
         if ($validator->fails()) {
-            return response()->json( [ 
+            return response()->json( [
                 "isRequest" => true,
                 "success" => false,
                 "messageError" => true,
@@ -27,7 +27,7 @@ class HabitanteController extends Controller
             ], 422 );
         }
     }
-    
+
     /**
      * Display a listing of the resource.
      */
@@ -36,12 +36,20 @@ class HabitanteController extends Controller
             $queryStr  = $request->get( 'query' );
             $queryUpper = strtoupper($queryStr);
             $responsse = DB::table('habitantes as h')
-                        ->select('h.id as id','h.*','p.id as id_perfil','p.name','p.nroDocumento','vd.id as id_vivienda','vd.nroVivienda')
+                        ->select('h.id as id',
+                                'h.*',
+                                'p.id as id_perfil',
+                                'p.name',
+                                'p.nroDocumento',
+                                'p.celular',
+                                'vd.id as id_vivienda',
+                                'vd.nroVivienda')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
                         ->join('viviendas as vd', 'h.vivienda_id', '=', 'vd.id')
                         ->where('p.nroDocumento','LIKE','%'.$queryUpper.'%')
                         ->orWhere('p.name','LIKE','%'.$queryUpper.'%')
                         ->orWhere('vd.nroVivienda','LIKE','%'.$queryUpper.'%')
+                        ->orderBy('id', 'DESC')
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
@@ -64,6 +72,7 @@ class HabitanteController extends Controller
             ]);
         }
     }
+    /* 
     public function queryAutoriza(Request $request){
         try{
             $habitantes = Habitante::with('perfil')->with('responsable')->get();
@@ -85,7 +94,7 @@ class HabitanteController extends Controller
                 "data" => []
             ]);
         }
-    }    
+    } */
     public function index()
     {
         $responsse = DB::table('habitantes as h')
@@ -116,14 +125,14 @@ class HabitanteController extends Controller
                         'email' => ['unique:perfils']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,
                             "message" => $validator->errors(),
                             "data" => []
                         ], 422 );
-                    }    
+                    }
                 }
                 if($perfil['nroDocumento'] != null){
 
@@ -131,7 +140,7 @@ class HabitanteController extends Controller
                         'nroDocumento' => ['unique:perfils']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,
@@ -148,7 +157,7 @@ class HabitanteController extends Controller
             $responsse = Habitante::create([
                 'isDuenho' => $request->isDuenho,
                 'isDependiente' => $request->isDependiente,
-                $request->responsable_id == 0 || $request->responsable_id == null ? null : $request->responsable_id,
+                'responsable_id' => $request->responsable_id == 0 || $request->responsable_id == null ? null : $request->responsable_id,
                 'vivienda_id' => $request->vivienda_id,
                 'perfil_id' => $perfil->id,
                 'profile_photo_path' => '',
@@ -180,7 +189,7 @@ class HabitanteController extends Controller
      */
     public function show(Habitante $apphabitante)
     {
-           
+
     }
 
     public function getVivienda($idvivienda)
@@ -247,7 +256,7 @@ class HabitanteController extends Controller
         $vivienda = $habitante->vivienda;
         $habitante->perfil = $perfil;
         $habitante->vivienda = $vivienda;
-        return Inertia::render("Habitante/CreateUpdate", ['model'=> $habitante]);   
+        return Inertia::render("Habitante/CreateUpdate", ['model'=> $habitante]);
     }
 
     /**
@@ -263,7 +272,7 @@ class HabitanteController extends Controller
                         'email' => ['unique:perfils']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,
@@ -278,7 +287,7 @@ class HabitanteController extends Controller
                         'nroDocumento' => ['unique:perfils']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,

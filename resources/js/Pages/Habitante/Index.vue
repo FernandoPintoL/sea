@@ -5,9 +5,9 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import HeaderIndex from '@/Componentes/HeaderIndex.vue'
 import Loader from '@/Componentes/Loader.vue'
 import TableGrl from '@/Componentes/Tbl-General.vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
 import FormSearch from '@/Componentes/FormSearch.vue'
-
+import Alert from '@/Componentes/Alerts.vue'
 const props = defineProps({
   listado: {
     type: Array,
@@ -102,7 +102,7 @@ const queryList = async (consulta) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 
 const destroyData = async (id) => {
@@ -232,10 +232,7 @@ const destroyData = async (id) => {
             <TableGrl>
               <template #tbl-header>
                 <tr>
-                  <th
-                    scope="col"
-                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start"
-                  >
+                  <th scope="col" class="px-3 text-start">
                     <div class="flex items-center gap-x-2">
                       <span
                         class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
@@ -287,12 +284,14 @@ const destroyData = async (id) => {
                       <span
                         class="block text-sm font-semibold text-gray-800 dark:text-neutral-200"
                       >
-                        NroDocumento: {{ item.nroDocumento }}
+                        NroDocumento:
+                        {{ item.nroDocumento == null ? '' : item.nroDocumento }}
                       </span>
                       <span
                         class="block text-sm text-gray-500 dark:text-neutral-500"
                       >
-                        Nro Vivienda: {{ item.nroVivienda }}
+                        Nro Vivienda:
+                        {{ item.nroVivienda == null ? '' : item.nroVivienda }}
                       </span>
                     </div>
                   </td>
@@ -301,7 +300,7 @@ const destroyData = async (id) => {
                       <span
                         class="block text-sm text-gray-500 dark:text-neutral-500"
                       >
-                        {{ item.name }}
+                        {{ item.name == null ? '' : item.name }}
                       </span>
                       <span
                         :class="
@@ -354,17 +353,7 @@ const destroyData = async (id) => {
             </TableGrl>
             <!-- End Table -->
           </div>
-          <div
-            v-else
-            class="mt-2 bg-blue-600 text-sm text-white rounded-lg p-4 dark:bg-blue-500"
-            role="alert"
-            tabindex="-1"
-            aria-labelledby="hs-solid-color-info-label"
-          >
-            <span id="hs-solid-color-info-label" class="font-bold">
-              Lista vacía
-            </span>
-          </div>
+          <Alert v-else :message="'Lista Vacia'"></Alert>
         </div>
       </div>
     </div>

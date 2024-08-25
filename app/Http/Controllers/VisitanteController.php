@@ -23,7 +23,7 @@ class VisitanteController extends Controller
                         ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
                         ->where('v.is_permitido','=', false)
-                        ->orderBy('v.created_at', 'DESC')
+                        ->orderBy('v.id', 'DESC')
                         ->get();
             }else{
                 $responsse = DB::table('visitantes as v')
@@ -31,10 +31,10 @@ class VisitanteController extends Controller
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
                         ->where('p.name','LIKE',"%".$queryUpper."%")
                         ->orWhere('p.nroDocumento','LIKE',"%".$queryUpper."%")
-                        ->orderBy('v.created_at', 'DESC')
+                        ->orderBy('v.id', 'DESC')
                         ->get();
             }
-            
+
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
@@ -116,7 +116,7 @@ class VisitanteController extends Controller
                     'tipo_documento_id' => ['required', 'numeric']
                 ]);
                 if ($validator->fails()) {
-                    return response()->json( [ 
+                    return response()->json( [
                         "isRequest" => true,
                         "success" => false,
                         "messageError" => true,
@@ -125,16 +125,16 @@ class VisitanteController extends Controller
                     ], 422 );
                 }
                 $perfil = Perfil::create($perfil);
-                $perfil->update( [ 
+                $perfil->update( [
                     'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
                     'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
-                ]); 
+                ]);
             }else{
                 $perfil = Perfil::create($request->all());
-                $perfil->update( [ 
+                $perfil->update( [
                     'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
                     'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
-                ]); 
+                ]);
             }
             $responsse = Visitante::create([
                 'is_permitido' => $request->is_permitido,
@@ -224,7 +224,7 @@ class VisitanteController extends Controller
                 $responsse = $perfil->update($request->perfil);
                 $perfil->update( [
                     'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
-                ]); 
+                ]);
             }else{
                 //ACTUALIZAR DESDE LA WEB
                 $responsse = $perfil->update($request->all());
@@ -307,7 +307,7 @@ class VisitanteController extends Controller
                         'nroDocumento' => ['unique:perfils']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,
@@ -326,7 +326,7 @@ class VisitanteController extends Controller
                 $responsse = $perfil->update($request->all());
                 $perfil->update( [
                     'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
-                ]); 
+                ]);
             }
             return response()->json([
                 "isRequest"=> true,

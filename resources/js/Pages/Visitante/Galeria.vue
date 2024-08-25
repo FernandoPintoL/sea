@@ -4,8 +4,8 @@ import { Link, router, useForm } from '@inertiajs/vue3'
 import Loader from '@/Componentes/Loader.vue'
 import SectionBorder from '@/Components/SectionBorder.vue'
 import imageCompression from 'browser-image-compression'
-
-import moment from 'moment'
+import moment from 'moment-timezone'
+import Alert from '@/Componentes/Alerts.vue'
 
 const Swal = inject('$swal')
 
@@ -184,7 +184,7 @@ const destroyPhotoModel = async (id) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 </script>
 
@@ -265,7 +265,9 @@ const fecha = (fechaData) => {
           alt="No Encontrado"
         />
         <span class="w-full text-sm px-1 font-bold">ID: {{ item.id }} /</span>
-        <span class="w-full text-sm px-1">Creado: {{ item.created_at }}</span>
+        <span class="w-full text-sm px-1">
+          Creado: {{ item.created_at == null ? '' : item.created_at }}
+        </span>
         <div class="inline-flex rounded-lg shadow-sm">
           <button
             type="button"

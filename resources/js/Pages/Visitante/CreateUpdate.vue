@@ -7,7 +7,8 @@ import PrimaryButton from '@/Components/PrimaryButton.vue'
 import InputError from '@/Components/InputError.vue'
 import Galeria from './Galeria.vue'
 import Loader from '@/Componentes/Loader.vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
+import Alert from '@/Componentes/Alerts.vue'
 
 const Swal = inject('$swal')
 
@@ -248,13 +249,13 @@ const queryDocument = async (consulta) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 </script>
 
 <template>
   <AppLayout title="Craear Visitante">
-    <div class="w-full mr-4">
+    <div class="w-full mr-4" v-show="props.model != null">
       <button
         type="button"
         @click="changeShowGaleria"
@@ -299,13 +300,21 @@ const fecha = (fechaData) => {
               <span class="font-semibold text-gray-800 leading-tight">
                 Creado:
               </span>
-              {{ fecha(props.model.created_at) }}
+              {{
+                props.model.created_at == null
+                  ? ''
+                  : fecha(props.model.created_at)
+              }}
             </p>
             <p v-if="props.model != null">
               <span class="font-semibold text-gray-800 leading-tight">
                 Actualizado:
               </span>
-              {{ fecha(props.model.updated_at) }}
+              {{
+                props.model.updated_at == null
+                  ? ''
+                  : fecha(props.model.updated_at)
+              }}
             </p>
             <p>
               Complete correctamente los datos personales

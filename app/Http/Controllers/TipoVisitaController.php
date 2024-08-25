@@ -14,7 +14,9 @@ class TipoVisitaController extends Controller
         try{
             $queryStr = $request->get('query');
             $responsse = TipoVisita::where('sigla','LIKE','%'.$queryStr.'%')
-                        ->orWhere('detalle','LIKE','%'.$queryStr.'%')->get();
+                        ->orWhere('detalle','LIKE','%'.$queryStr.'%')
+                        ->orderBy('id', 'DESC')
+                        ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
@@ -128,7 +130,7 @@ class TipoVisitaController extends Controller
                         'sigla' => ['unique:tipo_visitas']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,

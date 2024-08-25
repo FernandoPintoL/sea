@@ -21,13 +21,13 @@ class GaleriaVisitanteController extends Controller
                 "messagesValue" => $request->hasFile('file'),
                 "data" => $request->all()
             ]); */
-            
+
             $response = null;
             $path     = null;
 
             if($request->hasFile('file')){
                 $model = GaleriaVisitante::create([
-                    "visitante_id" => $request->get("id"), 
+                    "visitante_id" => $request->get("id"),
                     'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
                     'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
                 ]);
@@ -66,7 +66,7 @@ class GaleriaVisitanteController extends Controller
                 "message" => $message." Code: ".$code,
                 "data" => []
             ]);
-        }   
+        }
     }
 
     public function getGaleriaVisitante(Request $request){
@@ -99,6 +99,7 @@ class GaleriaVisitanteController extends Controller
     public function query(Request $request){
         try{
             $responsse = GaleriaVisitante::with('visitante')
+                        ->orderBy('id', 'DESC')
                          ->get();
             return response()->json([
                 "isRequest"=> true,
@@ -150,7 +151,7 @@ class GaleriaVisitanteController extends Controller
      */
     public function show(GaleriaVisitante $galeriaVisitante)
     {
-        
+
     }
 
     /**

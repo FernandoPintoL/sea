@@ -23,6 +23,7 @@ class CondominioController extends Controller
                         ->with('user')
                         ->where('propietario', 'LIKE', "%".$queryUpper."%")
                         ->orWhere('razonSocial', 'LIKE', "%".$queryUpper."%")
+                        ->orderBy('id', 'DESC')
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
@@ -83,7 +84,7 @@ class CondominioController extends Controller
                                 'nroDocumento' => ['unique:perfils']
                             ]);
             if ($validatorPerfil->fails()) {
-                return response()->json( [ 
+                return response()->json( [
                     "isRequest" => true,
                     "success" => false,
                     "messageError" => true,
@@ -96,7 +97,7 @@ class CondominioController extends Controller
                                 'usernick' => ['unique:users']
                             ]);
             if ($validatorUser->fails()) {
-                return response()->json( [ 
+                return response()->json( [
                     "isRequest" => true,
                     "success" => false,
                     "messageError" => true,
@@ -111,8 +112,8 @@ class CondominioController extends Controller
                 'email' => $userRequest['email'],
                 'usernick' => $userRequest['usernick'],
                 'password' => Hash::make($userRequest['password']),
-                'created_at' => $request->created_at,
-                'updated_at' => $request->updated_at
+                'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
+                'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             $responsse = Condominio::create([
                 'propietario' => $condominio['propietario'],
@@ -176,7 +177,7 @@ class CondominioController extends Controller
                                 'razonSocial' => ['unique:condominios']
                             ]);
                 if ($validator->fails()) {
-                    return response()->json( [ 
+                    return response()->json( [
                         "isRequest" => true,
                         "success" => false,
                         "messageError" => true,
@@ -190,7 +191,7 @@ class CondominioController extends Controller
                                 'nit' => ['unique:condominios']
                             ]);
                 if ($validator->fails()) {
-                    return response()->json( [ 
+                    return response()->json( [
                         "isRequest" => true,
                         "success" => false,
                         "messageError" => true,
@@ -203,7 +204,7 @@ class CondominioController extends Controller
                                 'nroDocumento' => ['unique:perfils']
                             ]);
                 if ($validator->fails()) {
-                    return response()->json( [ 
+                    return response()->json( [
                         "isRequest" => true,
                         "success" => false,
                         "messageError" => true,
@@ -214,7 +215,7 @@ class CondominioController extends Controller
             }
             $perfilToUpdate = $condominio->perfil;
             $userToUpdate = $condominio->user;
-            $propietario    = strtoupper( $datas['propietario'] ); 
+            $propietario    = strtoupper( $datas['propietario'] );
             $perfilToUpdate->update([
                 'name' => $propietario,
                 'nroDocumento' => $datas['nit']

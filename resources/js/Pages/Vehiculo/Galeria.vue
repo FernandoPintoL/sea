@@ -5,7 +5,8 @@ import Loader from '@/Componentes/Loader.vue'
 import SectionBorder from '@/Components/SectionBorder.vue'
 import imageCompression from 'browser-image-compression'
 
-import moment from 'moment'
+import moment from 'moment-timezone'
+import Alert from '@/Componentes/Alerts.vue'
 
 const Swal = inject('$swal')
 
@@ -179,7 +180,7 @@ const destroyPhotoModel = async (id) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 </script>
 
@@ -281,7 +282,7 @@ const fecha = (fechaData) => {
         </div>
       </div>
     </div>
-
+    <!--
     <div
       v-else
       class="flex items-center p-4 mb-4 text-sm text-blue-800 rounded-lg bg-blue-50 dark:bg-gray-800 dark:text-blue-400"
@@ -310,6 +311,20 @@ const fecha = (fechaData) => {
           no encontrada
         </p>
       </div>
-    </div>
+    </div> -->
+    <Alert v-else :message="''">
+      <template #body>
+        <div>
+          <p>GALERIA VACIA...</p>
+          <p v-if="reactives.query.length != 0">
+            Consulta con:
+            <span class="font-semibold text-blue-800 leading-tight">
+              {{ reactives.query.toUpperCase() }}
+            </span>
+            no encontrada
+          </p>
+        </div>
+      </template>
+    </Alert>
   </div>
 </template>

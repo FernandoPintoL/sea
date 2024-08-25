@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('vehiculos', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('visitante_id')->nullable();
             $table->string('placa')->default('')->nullable();
             $table->string('photo_path')->default('')->nullable();
             $table->string('detalle')->default('')->nullable();
             $table->enum('tipo_vehiculo', ['automóvil','motocicleta','camión', 'bicicleta','otro'])->default('automóvil')->nullable();
             $table->timestamps();
+            $table->foreign( 'visitante_id' )->references( 'id' )->on('visitantes')->noActionOnDelete()->noActionOnUpdate();
         });
     }
 

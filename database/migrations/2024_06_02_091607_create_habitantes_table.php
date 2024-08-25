@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedBigInteger('perfil_id')->nullable();
             $table->unsignedBigInteger('vivienda_id')->default(1)->nullable();
             $table->timestamps();
-            $table->string('profile_photo_path', 2048)->default('')->nullable();
+            $table->string('profile_photo_path')->default('')->nullable();
             $table->foreign( 'perfil_id' )->references( 'id' )->on('perfils')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'responsable_id' )->references( 'id' )->on('habitantes')->noActionOnDelete()->noActionOnUpdate();
             $table->foreign( 'vivienda_id' )->references( 'id' )->on('viviendas')->noActionOnDelete()->noActionOnUpdate();

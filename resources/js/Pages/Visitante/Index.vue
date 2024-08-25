@@ -232,10 +232,7 @@ const destroyData = async (id) => {
             <TableGrl>
               <template #tbl-header>
                 <tr>
-                  <th
-                    scope="col"
-                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start"
-                  >
+                  <th scope="col" class="px-3 text-start">
                     <div class="flex items-center gap-x-2">
                       <span
                         class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
@@ -297,35 +294,29 @@ const destroyData = async (id) => {
                   <td
                     class="px-3 py-3 text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {{ item.vid != null ? item.vid : item.id }}
+                    {{ item.id }}
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
                     <span>
-                      {{ item.name != null ? item.name : item.perfil.name }}
+                      {{ item.name != null ? item.name : '' }}
                     </span>
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
-                    {{
-                      item.nroDocumento != null
-                        ? item.nroDocumento
-                        : item.perfil.nroDocumento
-                    }}
+                    {{ item.nroDocumento != null ? item.nroDocumento : '' }}
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
-                    {{
-                      item.celular != null ? item.celular : item.perfil.celular
-                    }}
+                    {{ item.celular != null ? item.celular : '' }}
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
-                    {{ item.created_at != null ? fecha(item.created_at) : '' }}
+                    {{ item.created_at != null ? item.created_at : '' }}
                   </td>
                   <!-- <td class="px-6 py-4">
                 {{

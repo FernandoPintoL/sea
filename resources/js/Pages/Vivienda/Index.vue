@@ -5,7 +5,8 @@ import AppLayout from '@/Layouts/AppLayout.vue'
 import HeaderIndex from '@/Componentes/HeaderIndex.vue'
 import Loader from '@/Componentes/Loader.vue'
 import TableGrl from '@/Componentes/Tbl-General.vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
+import Alert from '@/Componentes/Alerts.vue'
 import FormSearch from '@/Componentes/FormSearch.vue'
 
 const props = defineProps({
@@ -102,7 +103,7 @@ const queryList = async (consulta) => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 
 const destroyData = async (id) => {
@@ -232,10 +233,7 @@ const destroyData = async (id) => {
             <TableGrl>
               <template #tbl-header>
                 <tr>
-                  <th
-                    scope="col"
-                    class="ps-6 lg:ps-3 xl:ps-0 pe-6 py-3 text-start"
-                  >
+                  <th scope="col" class="px-3 text-start">
                     <div class="flex items-center gap-x-2">
                       <span
                         class="text-xs font-semibold uppercase tracking-wide text-gray-800 dark:text-neutral-200"
@@ -321,25 +319,33 @@ const destroyData = async (id) => {
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
                     <span>
-                      {{ item.nroVivienda }}
+                      {{ item.nroVivienda == null ? '' : item.nroVivienda }}
                     </span>
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
-                    {{ item.tipo_vivienda.detalle }}
+                    {{
+                      item.tipo_vivienda.detalle == null
+                        ? ''
+                        : item.tipo_vivienda.detalle
+                    }}
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
-                    {{ item.condominio.razonSocial }}
+                    {{
+                      item.condominio.razonSocial == null
+                        ? ''
+                        : item.condominio.razonSocial
+                    }}
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
                     <!-- {{ item.vivienda_ocupada ? 'Ocupada' : 'No Ocupada' }} -->
                     <div class="grow">
-                      <p class="py-1">
+                      <p class="py-1" v-if="item.vivienda_ocupada != null">
                         <span
                           :class="
                             item.vivienda_ocupada
@@ -363,7 +369,11 @@ const destroyData = async (id) => {
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"
                   >
-                    {{ item.condominio.detalle }}
+                    {{
+                      item.condominio.detalle == null
+                        ? ''
+                        : item.condominio.detalle
+                    }}
                   </td>
                   <td
                     class="px-3 py-3 text-sm text-gray-500 whitespace-nowrap dark:text-white"

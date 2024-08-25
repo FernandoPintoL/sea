@@ -15,7 +15,9 @@ class TipoViviendaController extends Controller
         try{
             $queryStr = $request->get('query');
             $responsse = TipoVivienda::where('sigla','LIKE','%'.$queryStr.'%')
-                        ->orWhere('detalle','LIKE','%'.$queryStr.'%')->get();
+                        ->orWhere('detalle','LIKE','%'.$queryStr.'%')
+                        ->orderBy('id', 'DESC')
+                        ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
@@ -129,7 +131,7 @@ class TipoViviendaController extends Controller
                         'sigla' => ['unique:tipo_viviendas']
                     ]);
                     if ($validator->fails()) {
-                        return response()->json( [ 
+                        return response()->json( [
                             "isRequest" => true,
                             "success" => false,
                             "messageError" => true,

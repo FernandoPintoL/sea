@@ -60,13 +60,14 @@ class GaleriaVehiculoController extends Controller
                 "message" => $message." Code: ".$code,
                 "data" => []
             ]);
-        }   
+        }
     }
 
     public function getGaleriaVehiculo(Request $request){
         try{
             $responsse = GaleriaVehiculo::where('vehiculo_id','=',$request->get('vehiculo_id'))
                         ->with('vehiculo')
+                        ->orderBy('id', 'DESC')
                         ->get();
             $cantidad = count( $responsse );
             $str = strval($cantidad);

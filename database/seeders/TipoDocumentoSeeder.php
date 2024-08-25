@@ -20,6 +20,18 @@ class TipoDocumentoSeeder extends Seeder
             "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
         DB::table('tipo_documentos')->insert([
+            'sigla' => "LIC",
+            'detalle' => "(LIC) Licencia de conducir",
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
+        ]);
+        DB::table('tipo_documentos')->insert([
+            'sigla' => "TIC",
+            'detalle' => "(TIC) Tarjeta de identifiación del conductor",
+            "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
+            "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
+        ]);
+        DB::table('tipo_documentos')->insert([
             'sigla' => "DNI",
             'detalle' => "(DNI) Documento Nacional de Identidad",
             "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
@@ -33,15 +45,16 @@ class TipoDocumentoSeeder extends Seeder
         ]);
         DB::table('tipo_documentos')->insert([
             'sigla' => "PAS",
-            'detalle' => "Pasaporte",
+            'detalle' => "(PAS) Pasaporte",
             "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
             "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
         DB::table('tipo_documentos')->insert([
-            'sigla' => "otro",
-            'detalle' => "Otro",
+            'sigla' => "OTRO",
+            'detalle' => "OTRO",
             "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
             "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);
+
     }
 }

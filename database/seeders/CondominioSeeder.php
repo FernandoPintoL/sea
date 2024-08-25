@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Condominio;
 use App\Models\perfil;
+use Carbon\Carbon;
 class CondominioSeeder extends Seeder
 {
     /**
@@ -19,7 +20,7 @@ class CondominioSeeder extends Seeder
             'direccion' => 'B/Conavi, 15',
             'celular' => '3936031',
             'nroDocumento' => '109623235',
-            'tipo_documento_id' => 3,
+            'tipo_documento_id' => 5,
             "created_at"=> date_create('now')->format('Y-m-d H:i:s'),
             "updated_at"=> date_create('now')->format('Y-m-d H:i:s')
         ]);

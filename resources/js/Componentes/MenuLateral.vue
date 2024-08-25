@@ -127,6 +127,15 @@ import { router } from '@inertiajs/vue3'
             <li>
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
+                :href="route('tipovivienda.index')"
+              >
+                <i class="fa-solid fa-house-flag"></i>
+                Tipo Vivienda
+              </a>
+            </li>
+            <li>
+              <a
+                class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('vehiculo.index')"
               >
                 <i class="fa-solid fa-car"></i>

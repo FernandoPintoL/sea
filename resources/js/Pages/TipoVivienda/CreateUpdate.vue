@@ -8,7 +8,7 @@ import InputError from '@/Components/InputError.vue'
 import InputLabel from '@/Components/InputLabel.vue'
 import PrimaryButton from '@/Components/PrimaryButton.vue'
 import TextInput from '@/Components/TextInput.vue'
-import moment from 'moment'
+import moment from 'moment-timezone'
 
 const Swal = inject('$swal')
 
@@ -184,7 +184,7 @@ const updateInformation = async () => {
 }
 
 const fecha = (fechaData) => {
-  return moment(fechaData).format('YYYY-MM-DD HH:MM:SS')
+  return moment.tz(fechaData, 'America/La_Paz').format('YYYY-MM-DD HH:MM a')
 }
 </script>
 
@@ -195,7 +195,8 @@ const fecha = (fechaData) => {
         v-if="props.model != null"
         class="font-semibold text-xl text-gray-800 leading-tight"
       >
-        ACTUALIZAR TIPO VIVIENDA {{ props.model.sigla }}
+        ACTUALIZAR TIPO VIVIENDA
+        {{ props.model.sigla != null ? '' : props.model.sigla }}
       </h2>
       <h2 v-else class="font-semibold text-xl text-gray-800 leading-tight">
         CREAR TIPO VIVIENDA
@@ -241,13 +242,13 @@ const fecha = (fechaData) => {
             <span class="font-semibold text-gray-800 leading-tight">
               Creado:
             </span>
-            {{ fecha(props.model.created_at) }}
+            {{ props.model.created_at ? '' : fecha(props.model.created_at) }}
           </p>
           <p v-if="props.model != null">
             <span class="font-semibold text-gray-800 leading-tight">
               Actualizado:
             </span>
-            {{ fecha(props.model.updated_at) }}
+            {{ props.model.updated_at ? '' : fecha(props.model.updated_at) }}
           </p>
           <p>
             Complete correctamente los datos personales
