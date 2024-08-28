@@ -21,7 +21,7 @@ class IngresoController extends Controller
         try{
             $queryStr    = $request->get('query');
             $queryUpper = strtoupper($queryStr);
-            $response = [];
+            $responsse = [];
             if($request->get('skip') == null && $request->get('take') == null){
                 $responsse = DB::table('ingresos as i')
                         ->select('i.id as id',
@@ -40,14 +40,13 @@ class IngresoController extends Controller
                                 'tv.sigla as tv_sigla',
                                 'tv.detalle as tv_detalle')
                         ->join('habitantes as h', 'h.id', '=', 'i.residente_habitante_id')
-                        ->join('viviendas as vvd', 'vvd.id', '=', 'h.id')
+                        ->join('viviendas as vvd', 'h.vivienda_id', '=', 'vvd.id')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
                         ->join('visitantes as v', 'v.id', '=', 'i.visitante_id')
                         ->join('perfils as pv', 'v.perfil_id', '=', 'pv.id')
                         ->join('tipo_visitas as tv', 'i.tipo_visita_id', '=', 'tv.id')
                         ->where('p.name','LIKE','%'.$queryUpper.'%')
                         ->orWhere('pv.name','LIKE','%'.$queryUpper.'%')
-                        //->orWhereBetween('i.created_at',[$start, $end])
                         ->orderBy('id', 'DESC')
                         ->get();
             }else{
@@ -70,22 +69,19 @@ class IngresoController extends Controller
                                 'tv.sigla as tv_sigla',
                                 'tv.detalle as tv_detalle')
                         ->join('habitantes as h', 'h.id', '=', 'i.residente_habitante_id')
-                        ->join('viviendas as vvd', 'vvd.id', '=', 'h.id')
+                        ->join('viviendas as vvd', 'h.vivienda_id', '=', 'vvd.id')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
                         ->join('visitantes as v', 'v.id', '=', 'i.visitante_id')
                         ->join('perfils as pv', 'v.perfil_id', '=', 'pv.id')
                         ->join('tipo_visitas as tv', 'i.tipo_visita_id', '=', 'tv.id')
                         ->where('p.name','LIKE','%'.$queryUpper.'%')
                         ->orWhere('pv.name','LIKE','%'.$queryUpper.'%')
-                        //->orWhereBetween('i.created_at',[$start, $end])
                         ->skip($skip)
                         ->take($take)
                         ->orderBy('id', 'DESC')
                         ->get();
 
             }
-
-
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
@@ -129,7 +125,7 @@ class IngresoController extends Controller
                                 'tv.sigla as tv_sigla',
                                 'tv.detalle as tv_detalle')
                         ->join('habitantes as h', 'h.id', '=', 'i.residente_habitante_id')
-                        ->join('viviendas as vvd', 'vvd.id', '=', 'h.id')
+                        ->join('viviendas as vvd', 'h.vivienda_id', '=', 'vvd.id')
                         ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
                         ->join('visitantes as v', 'v.id', '=', 'i.visitante_id')
                         ->join('perfils as pv', 'v.perfil_id', '=', 'pv.id')
@@ -204,8 +200,8 @@ class IngresoController extends Controller
             ]);
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "success" => $responsse != null || $responsse != 0,
+                "messageError" => $responsse != null || $responsse != 0,
                 "message" => $responsse != null ? "Registro de datos correcto" : "Error!!!",
                 "data" => $responsse
             ]);
