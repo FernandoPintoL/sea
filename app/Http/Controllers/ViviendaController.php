@@ -8,6 +8,8 @@ use App\Http\Requests\UpdateViviendaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\DB;
+
 
 class ViviendaController extends Controller
 {
@@ -15,29 +17,49 @@ class ViviendaController extends Controller
         try{
             $queryStr    = $request->get('query');
             $queryUpper = strtoupper($queryStr);
-            $responsse = Vivienda::where('nroVivienda','LIKE',"%".$queryUpper."%")
-                        ->with('tipoVivienda')
-                        ->with('condominio')
-                        ->orderBy('id', 'DESC')
-                        ->get();
-            $cantidad = count( $responsse );
+            if($request->get('skip') == null && $request->get('take') == null){
+                $listado = DB::table('viviendas as v')
+                            ->select('v.id as id', 'v.*', 'c.razonSocial', 'tv.detalle')
+                            ->join('condominios as c', 'c.id','=','v.condominio_id')
+                            ->join('tipo_viviendas as tv', 'tv.id','=','v.tipo_vivienda_id')
+                            ->where('v.nroVivienda','LIKE', '%'.$queryUpper.'%')
+                            ->orWhere('c.razonSocial','LIKE', '%'.$queryUpper.'%')
+                            ->orWhere('tv.detalle','LIKE', '%'.$queryUpper.'%')
+                            ->get();
+            }else{
+                $skip = $request->get('skip');
+                $take = $request->get('take');
+                $listado = DB::table('viviendas as v')
+                            ->select('v.id as id', 'v.*', 'c.razonSocial', 'tv.detalle')
+                            ->join('condominios as c', 'c.id','=','v.condominio_id')
+                            ->join('tipo_viviendas as tv', 'tv.id','=','v.tipo_vivienda_id')
+                            ->skip($skip)
+                            ->take($take)
+                            ->orderBy('id', 'DESC')
+                            ->get();
+            }
+            $cantidad = count( $listado );
             $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "$str datos encontrados",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $listado,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta vivienda/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -46,9 +68,12 @@ class ViviendaController extends Controller
      */
     public function index()
     {
-        $listado = Vivienda::with('tipoVivienda')
-                        ->with('condominio')
-                        ->get();
+        $listado = DB::table('viviendas as v')
+                            ->select('v.id as id', 'v.*', 'c.razonSocial', 'tv.detalle')
+                            ->join('condominios as c', 'c.id','=','v.condominio_id')
+                            ->join('tipo_viviendas as tv', 'tv.id','=','v.tipo_vivienda_id')
+                            ->orderBy('v.id', 'DESC')
+                            ->get();
         return Inertia::render("Vivienda/Index", ['listado'=> $listado]);
     }
 
@@ -69,20 +94,24 @@ class ViviendaController extends Controller
             $model = Vivienda::create($request->all());
             return response()->json([
                 "isRequest"=> true,
-                "success" => $model != null,
-                "messageError" => $model != null,
+                "isSuccess" => $model != null,
+                "isMessageError" => $model != null,
                 "message" => $model != null ? "Solicitud completada" : "Error!!!",
-                "data" => $model
+                "messageError" => "",
+                "data" => $model,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -117,30 +146,36 @@ class ViviendaController extends Controller
                     if ($validator->fails()) {
                         return response()->json( [
                             "isRequest" => true,
-                            "success" => false,
-                            "messageError" => true,
+                            "isSuccess" => false,
+                            "isMessageError" => true,
                             "message" => $validator->errors(),
-                            "data" => []
+                            "messageError" => $validator->errors(),
+                            "data" => [],
+                            "statusCode" => 422
                         ], 422 );
                     }
             }
             $response = $vivienda->update($request->all());
             return response()->json([
                 "isRequest"=> true,
-                "success" => $response,
-                "messageError" => !$response,
+                "isSuccess" => $response,
+                "isMessageError" => !$response,
                 "message" => $response ? "Datos actualizados correctamente" : "Datos no actualizados",
-                "data" => $response
+                "messageError" => "",
+                "data" => $response,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }

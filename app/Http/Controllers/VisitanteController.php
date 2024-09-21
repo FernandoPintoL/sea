@@ -18,6 +18,7 @@ class VisitanteController extends Controller
         try{
             $queryStr    = $request->get('query');
             $queryUpper = strtoupper($queryStr);
+
             if($request->get('black_list')){
                 $responsse = DB::table('visitantes as v')
                         ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
@@ -26,33 +27,51 @@ class VisitanteController extends Controller
                         ->orderBy('v.id', 'DESC')
                         ->get();
             }else{
-                $responsse = DB::table('visitantes as v')
+                if($request->get('skip') == null && $request->get('take') == null){
+                    $responsse = DB::table('visitantes as v')
                         ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
                         ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
                         ->where('p.name','LIKE',"%".$queryUpper."%")
                         ->orWhere('p.nroDocumento','LIKE',"%".$queryUpper."%")
                         ->orderBy('v.id', 'DESC')
                         ->get();
+                }else{
+                    $skip = $request->get('skip');
+                    $take = $request->get('take');
+                    $responsse = DB::table('visitantes as v')
+                            ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
+                            ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
+                            ->where('p.name','LIKE',"%".$queryUpper."%")
+                            ->orWhere('p.nroDocumento','LIKE',"%".$queryUpper."%")
+                            ->skip($skip)
+                            ->take($take)
+                            ->orderBy('v.id', 'DESC')
+                            ->get();
+                }
             }
 
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "$str datos encontrados",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta visitante/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -65,20 +84,24 @@ class VisitanteController extends Controller
                         ->get();
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "Consulta visitante realizada correctamente...",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta visitante/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -87,9 +110,13 @@ class VisitanteController extends Controller
      */
     public function index()
     {
-        $listado = DB::table( 'visitantes as v' )
-            ->select( 'v.id as id', 'v.*', 'p.name', 'p.nroDocumento', 'p.celular' )
-            ->join( 'perfils as p', 'v.perfil_id', '=', 'p.id' )->get();
+        $listado = $responsse = DB::table('visitantes as v')
+                            ->select('v.id as id','v.*','p.name','p.nroDocumento', 'p.celular')
+                            ->join('perfils as p', 'v.perfil_id', '=', 'p.id')
+                            ->skip(0)
+                            ->take(20)
+                            ->orderBy('v.id', 'DESC')
+                            ->get();
         return Inertia::render("Visitante/Index", ['listado'=> $listado]);
     }
 
@@ -118,10 +145,12 @@ class VisitanteController extends Controller
                 if ($validator->fails()) {
                     return response()->json( [
                         "isRequest" => true,
-                        "success" => false,
-                        "messageError" => true,
+                        "isSuccess" => false,
+                        "isMessageError" => true,
                         "message" => $validator->errors(),
-                        "data" => []
+                        "messageError" => $validator->errors(),
+                        "data" => [],
+                        "statusCode" => 422
                     ], 422 );
                 }
                 $perfil = Perfil::create($perfil);
@@ -149,20 +178,24 @@ class VisitanteController extends Controller
 
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse == null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse == null,
                 "message" => $responsse != null ? "Registro completo" : "Error!!!",
-                "data" => $datas
+                "messageError" => "",
+                "data" => $datas,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -182,20 +215,24 @@ class VisitanteController extends Controller
                         ->first();*/
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "Show Visitante realizada correctamente...",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -234,20 +271,24 @@ class VisitanteController extends Controller
             }
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Registro completo" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -262,20 +303,24 @@ class VisitanteController extends Controller
             ] );
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Registro completo" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -309,10 +354,12 @@ class VisitanteController extends Controller
                     if ($validator->fails()) {
                         return response()->json( [
                             "isRequest" => true,
-                            "success" => false,
-                            "messageError" => true,
+                            "isSuccess" => false,
+                            "isMessageError" => true,
                             "message" => $validator->errors(),
-                            "data" => []
+                            "messageError" => $validator->errors(),
+                            "data" => [],
+                            "statusCode" => 422
                         ], 422 );
                     }
                 }
@@ -330,20 +377,24 @@ class VisitanteController extends Controller
             }
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Actualización completa" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -369,20 +420,24 @@ class VisitanteController extends Controller
             //$response = $model->delete();
             return response()->json([
                 "isRequest"=> true,
-                "success" => $response,
-                "messageError" => !$response,
+                "isSuccess" => $response,
+                "isMessageError" => !$response,
                 "message" => $response != null ? "Eliminado Correctamente" : "Error!!!",
-                "data" => $model
+                "messageError" => "",
+                "data" => $model,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }

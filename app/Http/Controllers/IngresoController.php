@@ -86,20 +86,24 @@ class IngresoController extends Controller
             $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "$str datos encontrados",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta ingreso/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -137,20 +141,24 @@ class IngresoController extends Controller
             $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "$str datos encontrados",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta ingreso/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -159,7 +167,32 @@ class IngresoController extends Controller
      */
     public function index()
     {
-        $listado = Vehiculo::all();
+        $listado = DB::table('ingresos as i')
+                        ->select('i.id as id',
+                                'i.*',
+                                'h.id as id_residente',
+                                'p.name as name_residente',
+                                'p.nroDocumento as nroDocumento_residente',
+                                'vvd.id as id_vivienda',
+                                'vvd.nroVivienda',
+                                'v.id as id_visitante',
+                                'v.is_permitido',
+                                'v.description_is_no_permitido',
+                                'pv.nroDocumento as nroDocumento_visitante',
+                                'pv.name as name_visitante',
+                                'tv.id as tv_id',
+                                'tv.sigla as tv_sigla',
+                                'tv.detalle as tv_detalle')
+                        ->join('habitantes as h', 'h.id', '=', 'i.residente_habitante_id')
+                        ->join('viviendas as vvd', 'h.vivienda_id', '=', 'vvd.id')
+                        ->join('perfils as p', 'h.perfil_id', '=', 'p.id')
+                        ->join('visitantes as v', 'v.id', '=', 'i.visitante_id')
+                        ->join('perfils as pv', 'v.perfil_id', '=', 'pv.id')
+                        ->join('tipo_visitas as tv', 'i.tipo_visita_id', '=', 'tv.id')
+                        ->skip(0)
+                        ->take(10)
+                        ->orderBy('id', 'DESC')
+                        ->get();
         return Inertia::render("Ingreso/Index", ['listado'=> $listado]);
     }
 
@@ -200,20 +233,24 @@ class IngresoController extends Controller
             ]);
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null || $responsse != 0,
-                "messageError" => $responsse != null || $responsse != 0,
+                "isSuccess" => $responsse != null || $responsse != 0,
+                "isMessageError" => $responsse != null || $responsse != 0,
                 "message" => $responsse != null ? "Registro de datos correcto" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -227,20 +264,24 @@ class IngresoController extends Controller
             ]);
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Datos de salida actualizados correctamente" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -253,20 +294,24 @@ class IngresoController extends Controller
         try{
             return response()->json([
                 "isRequest"=> true,
-                "success" => $appingreso != null,
-                "messageError" => $appingreso != null,
+                "isSuccess" => $appingreso != null,
+                "isMessageError" => $appingreso != null,
                 "message" => $appingreso != null ? "Registro completo" : "Error!!!",
-                "data" => $appingreso
+                "messageError" => "",
+                "data" => $appingreso,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -307,20 +352,24 @@ class IngresoController extends Controller
             ]);
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Registro completo" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -343,20 +392,24 @@ class IngresoController extends Controller
             ]);
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Solicitud completo" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }

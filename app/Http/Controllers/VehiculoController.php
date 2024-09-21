@@ -16,49 +16,72 @@ class VehiculoController extends Controller
         try{
             $queryStr    = $request->get('query');
             $queryUpper = strtoupper($queryStr);
-            $responsse = Vehiculo::where('placa','LIKE',"%".$queryUpper."%")->orderBy('id', 'DESC')->get();
+            $responsse  = [];
+            if($request->get('skip') == null && $request->get('take') == null){
+                $responsse = Vehiculo::where('placa','LIKE',"%".$queryUpper."%")
+                            ->orderBy('id', 'DESC')
+                            ->get();
+            }else{
+                $skip = $request->get('skip');
+                $take = $request->get('take');
+                $responsse = Vehiculo::where('placa','LIKE',"%".$queryUpper."%")
+                            ->skip($skip)
+                            ->take($take)
+                            ->orderBy('id', 'DESC')
+                            ->get();
+            }
             $cantidad = count( $responsse );
             $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "$str datos encontrados",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta vehiculo/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
-    
+
     public function queryId(Request $request){
         try{
             $queryStr    = $request->get('query');
-            $response = Vehiculo::where('id','=',$queryStr)->get();
+            $responsse = Vehiculo::where('id','=',$queryStr)->get();
+            $cantidad = count( $responsse );
+            $str = strval($cantidad);
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
-                "message" => "Consulta Vehiculo realizada correctamente...",
-                "data" => $response
+                "isSuccess" => true,
+                "isMessageError" => false,
+                "message" => "$str datos encontrados",
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => "Consulta vehiculo/ ".$message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -67,7 +90,10 @@ class VehiculoController extends Controller
      */
     public function index()
     {
-        $listado = Vehiculo::all();
+        $listado = Vehiculo::skip(0)
+                    ->take(20)
+                    ->orderBy('id', 'DESC')
+                    ->get();
         return Inertia::render("Vehiculo/Index", ['listado'=> $listado]);
     }
 
@@ -86,26 +112,30 @@ class VehiculoController extends Controller
     {
         try{
             $responsse = Vehiculo::create($request->all());
-            $responsse->update([                
+            $responsse->update([
                 'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
                 'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Transacción correcta" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -118,20 +148,24 @@ class VehiculoController extends Controller
         try{
             return response()->json([
                 "isRequest"=> true,
-                "success" => true,
-                "messageError" => false,
+                "isSuccess" => true,
+                "isMessageError" => false,
                 "message" => "Transacción Correcta...",
-                "data" => $appvehiculo
+                "messageError" => "",
+                "data" => $appvehiculo,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -154,20 +188,24 @@ class VehiculoController extends Controller
             $responsse = $appvehiculo->update($request->all());
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Transacción correcta" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -178,20 +216,24 @@ class VehiculoController extends Controller
             $responsse = $vehiculo->update($request->all());
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Transacción correcta" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }
@@ -205,20 +247,24 @@ class VehiculoController extends Controller
             $responsse = $appvehiculo->delete();
             return response()->json([
                 "isRequest"=> true,
-                "success" => $responsse != null,
-                "messageError" => $responsse != null,
+                "isSuccess" => $responsse != null,
+                "isMessageError" => $responsse != null,
                 "message" => $responsse != null ? "Transacción correcta" : "Error!!!",
-                "data" => $responsse
+                "messageError" => "",
+                "data" => $responsse,
+                "statusCode" => 200
             ]);
         }catch(\Exception $e){
             $message = $e->getMessage();
             $code = $e->getCode();
             return response()->json([
                 "isRequest"=> true,
-                "success" => false,
-                "messageError" => true,
-                "message" => $message." Code: ".$code,
-                "data" => []
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
             ]);
         }
     }

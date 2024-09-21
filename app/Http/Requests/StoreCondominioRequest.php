@@ -24,27 +24,25 @@ class StoreCondominioRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'razonSocial' => ['required', 'unique:condominios', 'min:5'],
-            'nit' => ['required', 'unique:condominios', 'min:5']
+            'propietario' => ['unique:condominios']
         ];
     }
     public function messages(){
         return [
-            'razonSocial.required' => ' :attribute es requerido.',
-            'razonSocial.unique' => ' :attribute ya está siendo ocupado.',
-            'razonSocial.min' => ' :attribute debe tener un minimo de 5 caracteres.',
-            'nit.required' => ' :attribute es requerido.',
-            'nit.unique' => ' :attribute ya esta siendo ocupado.',
-            'nit.min' => ' :attribute debe tener un minimo de 5 caracteres.',
+            'propietario.unique' => ' :attribute ya está siendo ocupado.',
+            /*'razonSocial.unique' => ' :attribute ya está siendo ocupado.',
+            'nit.unique' => ' :attribute ya esta siendo ocupado.'*/
         ];
     }
     protected function failedValidation(Validator $validator){
         throw new HttpResponseException(response()->json([
             "isRequest"=> true,
-            "success" => false,
-            "messageError" => true,
+            "isSuccess" => false,
+            "isMessageError" => true,
             "message" => $validator->errors(),
-            "data" => []
+            "messageError" => $validator->errors(),
+            "data" => [],
+            "statusCode" => 422
         ], 422));
     }
 }
