@@ -1,5 +1,9 @@
 <script setup>
 import { router } from '@inertiajs/vue3'
+
+const logout = () => {
+  router.post(route('logout'))
+}
 </script>
 <template>
   <div
@@ -18,10 +22,10 @@ import { router } from '@inertiajs/vue3'
             src="/assets/images/sealog.jpeg"
             alt="SEA"
           />
-          <span
-            class="top-0 left-7 absolute w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"
-          ></span>
         </div>
+        <span class="dark:border-gray-800">
+          {{ $page.props.auth.user.name }}
+        </span>
         <!-- End Logo -->
       </div>
 
@@ -59,6 +63,23 @@ import { router } from '@inertiajs/vue3'
             </li>
             <li>
               <a
+                class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:bg-neutral-700 dark:text-white"
+                :href="route('profile.show')"
+              >
+                <i class="fa-solid fa-address-card"></i>
+                Mi Perfil
+              </a>
+            </li>
+            <li
+              v-if="
+                $page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('CONDOMINIO.LISTAR') ||
+                $page.props.user.permissions.includes('CONDOMINIO.MOSTRAR') ||
+                $page.props.user.permissions_roles.includes('CONDOMINIO.LISTAR') ||
+                $page.props.user.permissions_roles.includes('CONDOMINIO.MOSTRAR')
+              "
+            >
+              <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-700 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('condominio.index')"
               >
@@ -67,7 +88,15 @@ import { router } from '@inertiajs/vue3'
               </a>
             </li>
 
-            <li>
+            <li
+              v-if="
+                $page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('INGRESO.LISTAR') ||
+                $page.props.user.permissions.includes('INGRESO.MOSTRAR')||
+                $page.props.user.permissions_roles.includes('INGRESO.LISTAR') ||
+                $page.props.user.permissions_roles.includes('INGRESO.MOSTRAR')
+              "
+            >
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('ingreso.index')"
@@ -76,7 +105,15 @@ import { router } from '@inertiajs/vue3'
                 Ingresos
               </a>
             </li>
-            <li>
+            <li
+              v-if="
+                $page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('HABITANTE.LISTAR') ||
+                $page.props.user.permissions.includes('HABITANTE.MOSTRAR')||
+                $page.props.user.permissions_roles.includes('HABITANTE.LISTAR') ||
+                $page.props.user.permissions_roles.includes('HABITANTE.MOSTRAR')
+              "
+            >
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('habitante.index')"
@@ -97,7 +134,15 @@ import { router } from '@inertiajs/vue3'
                 Residentes
               </a>
             </li>
-            <li>
+            <li
+              v-if="
+                $page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('VISITANTE.LISTAR') ||
+                $page.props.user.permissions.includes('VISITANTE.MOSTRAR')||
+                $page.props.user.permissions_roles.includes('VISITANTE.LISTAR') ||
+                $page.props.user.permissions_roles.includes('VISITANTE.MOSTRAR')
+              "
+            >
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('visitante.index')"
@@ -106,7 +151,7 @@ import { router } from '@inertiajs/vue3'
                 Visitantes
               </a>
             </li>
-            <li>
+            <li v-if="$page.props.user.roles.includes('super-admin')">
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('tipodocumento.index')"
@@ -115,7 +160,7 @@ import { router } from '@inertiajs/vue3'
                 Tipo Documento
               </a>
             </li>
-            <li>
+            <li v-if="$page.props.user.roles.includes('super-admin')">
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('tipovisita.index')"
@@ -124,7 +169,7 @@ import { router } from '@inertiajs/vue3'
                 Tipo Visita
               </a>
             </li>
-            <li>
+            <li v-if="$page.props.user.roles.includes('super-admin')">
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('tipovivienda.index')"
@@ -133,7 +178,15 @@ import { router } from '@inertiajs/vue3'
                 Tipo Vivienda
               </a>
             </li>
-            <li>
+            <li
+              v-if="
+                $page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('VEHICULO.LISTAR') ||
+                $page.props.user.permissions.includes('VEHICULO.MOSTRAR')||
+                $page.props.user.permissions_roles.includes('VEHICULO.LISTAR') ||
+                $page.props.user.permissions_roles.includes('VEHICULO.MOSTRAR')
+              "
+            >
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('vehiculo.index')"
@@ -142,13 +195,30 @@ import { router } from '@inertiajs/vue3'
                 Vehiculo
               </a>
             </li>
-            <li>
+            <li
+              v-if="
+                $page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('VIVIENDA.LISTAR') ||
+                $page.props.user.permissions.includes('VIVIENDA.MOSTRAR') ||
+                $page.props.user.permissions_roles.includes('VIVIENDA.LISTAR') ||
+                $page.props.user.permissions_roles.includes('VIVIENDA.MOSTRAR')
+              "
+            >
               <a
                 class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
                 :href="route('vivienda.index')"
               >
-                <i class="fa-solid fa-car"></i>
+                <i class="fa-solid fa-house-chimney"></i>
                 Viviendas
+              </a>
+            </li>
+            <li v-if="$page.props.user.roles.includes('super-admin')">
+              <a
+                class="flex items-center gap-x-3.5 py-2 px-2.5 text-sm text-gray-800 rounded-lg hover:bg-gray-100 dark:hover:bg-neutral-900 dark:text-neutral-200 dark:hover:text-neutral-300"
+                :href="route('users.index')"
+              >
+                <i class="fa-regular fa-user"></i>
+                Usuarios
               </a>
             </li>
             <li>

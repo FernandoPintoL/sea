@@ -257,6 +257,16 @@ const fecha = (fechaData) => {
   <AppLayout title="Craear Visitante">
     <div class="w-full mr-4" v-show="props.model != null">
       <button
+      v-if="$page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('GALERIA_VISITANTE.LISTAR') ||
+                $page.props.user.permissions.includes('GALERIA_VISITANTE.MOSTRAR') ||
+                $page.props.user.permissions.includes('GALERIA_VISITANTE.CREAR') ||
+                $page.props.user.permissions.includes('GALERIA_VISITANTE.EDITAR') ||
+                $page.props.user.permissions_roles.includes('GALERIA_VISITANTE.MOSTRAR') ||
+                $page.props.user.permissions_roles.includes('GALERIA_VISITANTE.LISTAR') ||
+                $page.props.user.permissions_roles.includes('GALERIA_VISITANTE.CREAR') ||
+                $page.props.user.permissions_roles.includes('GALERIA_VISITANTE.EDITAR')
+            "
         type="button"
         @click="changeShowGaleria"
         :class="
@@ -447,7 +457,12 @@ const fecha = (fechaData) => {
 
           <template #actions>
             <PrimaryButton
-              v-if="!reactives.isLoad"
+                v-if="$page.props.user.roles.includes('super-admin') ||
+                $page.props.user.permissions.includes('VISITANTE.CREAR') ||
+                $page.props.user.permissions.includes('VISITANTE.EDITAR') ||
+                $page.props.user.permissions_roles.includes('VISITANTE.CREAR') ||
+                $page.props.user.permissions_roles.includes('VISITANTE.EDITAR')
+            "
               :class="{ 'opacity-25': form.processing }"
               :disabled="form.processing"
             >

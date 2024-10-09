@@ -149,6 +149,8 @@ class CondominioController extends Controller
                 'created_at' => $request->created_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->created_at,
                 'updated_at' => $request->updated_at == null ? date_create('now')->format('Y-m-d H:i:s') : $request->updated_at
             ]);
+            $user->assignRole(['CONDOMINIO']);
+
             $responsse = Condominio::create([
                 'propietario' => $condominio['propietario'],
                 'razonSocial' => $condominio['razonSocial'],
@@ -297,6 +299,31 @@ class CondominioController extends Controller
      */
     public function destroy(Condominio $condominio)
     {
-        //
+        try{
+            $responseData  = $condominio->delete();
+            $delete_user = $condominio->user->delete();
+            $delete_perfil = $condominio->perfil->delete();
+            return response()->json([
+                "isRequest"=> true,
+                "isSuccess" => $responseData != 0 && $responseData != null,
+                "isMessageError" => !$responseData != 0 || $responseData == null,
+                "message" => $responseData != 0 && $responseData != null? "TRANSACCION CORRECTA": "TRANSACCION INCORRECTA",
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => 200
+            ]);
+        }catch(\Exception $e){
+            $message = $e->getMessage();
+            $code = $e->getCode();
+            return response()->json([
+                "isRequest"=> true,
+                "isSuccess" => false,
+                "isMessageError" => true,
+                "message" => $message,
+                "messageError" => "",
+                "data" => [],
+                "statusCode" => $code
+            ]);
+        }
     }
 }

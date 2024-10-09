@@ -1,5 +1,8 @@
 <script setup>
 import { Head, Link, router } from '@inertiajs/vue3'
+const logout = () => {
+  router.post(route('logout'))
+}
 </script>
 <template>
   <header
@@ -19,12 +22,12 @@ import { Head, Link, router } from '@inertiajs/vue3'
             id="logo-menu"
             src="/assets/images/sealog.jpeg"
           />
-          <!-- <span
-            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
-          >
-            SEA (SEGURIDAD ELECTRONICA AUTOMATIZADA TECNOLOGICA)
-          </span> -->
         </a>
+        <span
+          class="self-center text-sm text-dark font-semibold sm:text-2xl whitespace-nowrap dark:text-white"
+        >
+          {{ $page.props.auth.user.name }}
+        </span>
         <!-- End Logo -->
       </div>
 
@@ -42,7 +45,7 @@ import { Head, Link, router } from '@inertiajs/vue3'
             <span>SEGURIDAD ELECTRONICA AUTOMATIZADA</span>
           </div>
 
-          <!-- Dropdown -->
+          <!-- Dropdown MENU IZQUIERDO -->
           <div
             class="hs-dropdown [--placement:bottom-right] relative inline-flex"
           >
@@ -103,7 +106,7 @@ import { Head, Link, router } from '@inertiajs/vue3'
                   </svg>
                   Inicio
                 </a>
-                <!-- <a
+                <a
                   class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
                   :href="route('profile.show')"
                 >
@@ -132,7 +135,7 @@ import { Head, Link, router } from '@inertiajs/vue3'
                     <path d="m20.7 13.8 1-.4" />
                   </svg>
                   Perfil
-                </a> -->
+                </a>
                 <form @submit.prevent="logout">
                   <button
                     class="w-full flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-neutral-300 dark:focus:bg-neutral-700 dark:focus:text-neutral-300"
