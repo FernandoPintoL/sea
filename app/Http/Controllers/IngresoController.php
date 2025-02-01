@@ -25,7 +25,7 @@ class IngresoController extends Controller
     {
         try {
             $responsse = [];
-            $queryStr    = $request->get('query');
+            $queryStr    = $request->get('query', '');
             $queryUpper = strtoupper($queryStr);
 
             $condominioId = $request->get('condominio_id');
@@ -44,7 +44,21 @@ class IngresoController extends Controller
             $responsse = DB::table('ingresos as i')
                 ->select(
                     'i.id as id',
-                    'i.*',
+                    'i.tipo_ingreso',
+                    'i.detalle',
+                    'i.detalle_salida',
+                    'i.isAutorizado',
+                    'i.visitante_id',
+                    'i.residente_habitante_id',
+                    'i.autoriza_habitante_id',
+                    'i.ingresa_habitante_id',
+                    'i.vehiculo_id',
+                    'i.tipo_visita_id',
+                    'i.user_id',
+                    'i.salida_created_at',
+                    'i.salida_updated_at',
+                    'i.created_at',
+                    'i.updated_at',
                     'h.id as id_residente',
                     'p.name as name_residente',
                     'p.nroDocumento as nroDocumento_residente',
@@ -99,18 +113,23 @@ class IngresoController extends Controller
                     $query->whereBetween('i.salida_created_at', [$salida_start, $salida_end]);
                 })
 
-                ->when(!is_null($salidas_registradas) && $salidas_registradas, function ($query) use ($salidas_registradas) {
-                    $query->whereNotNull('i.salida_created_at');
+                ->when($salidas_registradas !== null, function ($query) use ($salidas_registradas) {
+                    if ($salidas_registradas) {
+                        $query->whereNotNull('i.salida_created_at');
+                    } else {
+                        $query->whereNull('i.salida_created_at');
+                    }
                 })
 
                 ->when(!is_null($salidas_registradas) && !$salidas_registradas, function ($query) use ($salidas_registradas) {
                     $query->whereNull('i.salida_created_at');
                 })
                 // SKIP O TAKE
-                ->when(!is_null($skip) && !is_null($take), function ($query) use ($skip, $take) {
+                ->when(is_numeric($skip) && is_numeric($take), function ($query) use ($skip, $take) {
                     // $query->where('i.salida_created_at', $salidaCreatedAt);
                     // $query->whereBetween('i.salida_created_at', [$salida_start, $salida_end]);
-                    $query->skip($skip)->take($take);
+                    //$query->skip($skip)->take($take);
+                    $query->skip(intval($skip))->take(intval($take));
                 })
                 // Ordenar por ID de ingreso en orden descendente
                 ->orderBy('i.id', 'DESC')
