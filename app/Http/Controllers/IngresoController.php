@@ -20,7 +20,10 @@ use Illuminate\Support\Facades\Validator;
 
 class IngresoController extends Controller
 {
-    public function querySkipTake(Request $request) {}
+    //ESTE COMENTARIO PARA VER LA ACTUALIZACION
+    public function querySkipTake(Request $request) {
+        return [];
+    }
     public function query(Request $request)
     {
         try {
